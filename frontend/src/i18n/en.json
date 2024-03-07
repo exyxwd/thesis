@@ -1,0 +1,145 @@
+{
+    "menus": {
+        "Tiszta Tisza": "Clean Tisza",
+        "map": "Map",
+        "contact": "Contact",
+        "about_us": "About us"
+    },
+    "status": {
+        "StillHere": "Still contaminated",
+        "Cleaned": "Cleaned",
+        "updateNeeded": "Update needed"
+    },
+    "details": {
+        "More": "More to clean",
+        "Bag": "Fits in a bag",
+        "Wheelbarrow": "Can be transported by wheelbarrow",
+        "Car": "Car required",
+        "createTime": "Creation time",
+        "updateTime": "Update time",
+        "note": "Note",
+        "image": "Image",
+        "longitude": "Longitude",
+        "latitude": "Latitude",
+        "id": "ID"
+    },
+    "types": {
+        "Plastic": "Plastic",
+        "Metal": "Metal",
+        "Glass": "Glass",
+        "Domestic": "Household waste",
+        "Construction": "Construction waste",
+        "Liquid": "Liquid",
+        "Dangerous": "Dangerous waste",
+        "Automotive": "Car parts",
+        "Electronic": "Electronic waste",
+        "Organic": "Organic waste",
+        "DeadAnimals": "Animal remains"
+    },
+    "location": {
+        "Country": "Country",
+        "Tisza": "Tisza",
+        "Kraszna": "Kraszna",
+        "Bodrog": "Bodrog",
+        "Szamos": "Szamos",
+        "Túr": "Túr",
+        "Kőrös-ér": "Kőrös-ér",
+        "Duna": "Duna",
+        "Place": "Location",
+        "subLocality": "Sublocality",
+        "locality": "Locality",
+        "accessibilities": "Accessibilities",
+        "ByCar": "By car",
+        "UnderWater": "Under water",
+        "InCave": "In cave",
+        "NotForGeneralCleanup": "Not for general clean up"
+    },
+    "file": {
+        "file_name": "Garbage report"
+    },
+    "size": {
+        "Size": "Size",
+        "size": "Size"
+    },
+    "type": {
+        "Type": "Type",
+        "types": "Types"
+    },
+    "state": {
+        "State": "State",
+        "status": "Status"
+    },
+    "country": {
+        "country": "Country",
+        "rivers": "Rivers",
+        "images": "Images",
+        "Hungary": "Hungary",
+        "Ukraine": "Ukraine",
+        "Romania": "Romania",
+        "Serbia": "Serbia",
+        "Slovakia": "Slovakia"
+    },
+    "user": {
+        "username": "Username",
+        "password": "Password",
+        "login": "Login",
+        "logout": "Logout",
+        "forgotten_password": "Forgotten password",
+        "register": "Register",
+        "register_user": "Register new user",
+        "wrong_creds": "Wrong username or password.",
+        "registry_fail": "Registration failed.",
+        "registry_success": "Registration successful.",
+        "select_role": "Select role",
+        "role": "Role",
+        "Editor": "Editor",
+        "Admin": "Admin"
+    },
+    "location_types": {
+        "Anchor": "Anchor",
+        "Center": "Center",
+        "Restaurant": "Restaurant",
+        "Adopted_Bank": "Adopted Bank",
+        "School": "School",
+        "Floating_Port": "Floating Port",
+        "Vehicle": "Vehicle",
+        "Past_PET_Cup_event": "Past PET Cup event",
+        "Plastic_Pirates_observation_point": "Plastic Pirates observation point",
+        "add_location": "Add location"
+    },
+    "about": {
+        "about_title": "About the map",
+        "about_desc1": "The Clean Tisza Map shows the current trash situation of the river and its tributaries.",
+        "about_desc2": "The more we know about the centres of pollution, the more effectively we can get rid of trash once and for all. Tisza connects countries, thus only together we can make it clean by our combined forces!",
+        "about_desc3": "The map displays information from the worldwide used TrashOut applications known information, on a standard online surface. The application is available in 11 languages. In 2020. teams, volunteers and participants of Plastic Cup explored the floodplains of the river and a few tributaries from the source to estuary in order to obtain a full pollution map.",
+        "about_col1_title": "Take your part to clean the Tisza!",
+        "about_col1_desc1": "Download the ",
+        "about_col1_desc2": ", and mark any illegally deposited pile at the riverbanks or floodplains.",
+        "about_col1_link": "free TRASHOUT app",
+        "about_col2_title": "This is how we use the TrashOut during Plastic Cup",
+        "about_col2_desc1": "TRASHOUT ",
+        "about_col2_link": "User Manual",
+        "about_col3_title": "Get to know, ",
+        "about_col3_desc1": " and what we do to stop pollution!",
+        "about_col3_link": "how Plastic Cup discovers the trashpoints",
+        "about_note1": "The Plastic Cup involves volunteers, professionals, committed employees of companies and residents who track down the trash and arrange environmental protecting programmes. The „Clean Tisza Map” project has been supported by the ",
+        "about_note2": " funded by International Investment Bank. The professional supporter of the program is the ",
+        "about_note3": ", and out IT partner is ",
+        "about_link1": "Clean Water, Happy Tisza program",
+        "about_link2": "Hungarian Association of Environmental Enterprises",
+        "about_link3": "Konasoft",
+        "loading_error": "Data loading error. Please try again later.",
+        "date_less_than_a_day": "Less than a day ago",
+        "date_more_days": "days ago",
+        "date_about": "About ",
+        "date_one_month": "a month ago",
+        "date_more_months": "months ago",
+        "date_one_year": "a year ago",
+        "date_more_years": "years ago"
+    },
+    "contact": {
+        "contact_follow": "Follow us",
+        "contact_ideas": "Creators",
+        "contact_sponsor": "Sponsors"
+    }
+  }

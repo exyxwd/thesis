@@ -1,0 +1,145 @@
+{
+    "menus": {
+      "Tiszta Tisza": "Tiszta Tisza",
+      "map": "Térkép",
+      "contact": "Kapcsolat",
+      "about_us": "Rólunk"
+    },
+    "status": {
+      "StillHere": "Még szennyezett",
+      "Cleaned": "Megtisztítva",
+      "updateNeeded": "Frissítés szükséges"
+    },
+    "details": {
+      "More": "Még több",
+      "Bag": "Belefér egy zsákba",
+      "Wheelbarrow": "Talicskával szállítható",
+      "Car": "Gépkocsi szükséges",
+      "createTime": "Létrehozás ideje",
+      "updateTime": "Frissítés ideje",
+      "note": "Megjegyzés",
+      "image": "Kép",
+      "longitude": "Hosszúság",
+      "latitude": "Szélesség",
+      "id": "Azonosító"
+    },
+    "types": {
+      "Plastic": "Műanyag",
+      "Metal": "Fém",
+      "Glass": "Üveg",
+      "Domestic": "Háztartási hulladék",
+      "Construction": "Építkezési hulladék",
+      "Liquid": "Folyadék",
+      "Dangerous": "Veszélyes hulladék",
+      "Automotive": "Autóalkatrész",
+      "Electronic": "Elektronikai hulladék",
+      "Organic": "Szerves hulladék",
+      "DeadAnimals": "Állati tetemek"
+    },
+    "location": {
+      "Country": "Ország",
+      "Tisza": "Tisza",
+      "Kraszna": "Kraszna",
+      "Bodrog": "Bodrog",
+      "Szamos": "Szamos",
+      "Túr": "Túr",
+      "Kőrös-ér": "Kőrös-ér",
+      "Duna": "Duna",
+      "Place": "Hely",
+      "subLocality": "Terület",
+      "locality": "Helység",
+      "accessibilities": "Megközelíthetőség",
+      "ByCar": "Autóval",
+      "UnderWater": "Víz alatt",
+      "InCave": "Barlangban",
+      "NotForGeneralCleanup": "Nem általános takarításra"
+    },
+    "file": {
+      "file_name": "Szennyezettség bejelentések"
+    },
+    "size": {
+      "Size": "Méret",
+      "size": "Méret"
+    },
+    "type": {
+      "Type": "Típus",
+      "types": "Típusok"
+    },
+    "state": {
+      "State": "Állapot",
+      "status": "Állapot"
+    },
+    "country": {
+      "country": "Ország",
+      "rivers": "Folyók",
+      "images": "Képek",
+      "Hungary": "Magyarország",
+      "Ukraine": "Ukrajna",
+      "Romania": "Románia",
+      "Serbia": "Szerbia",
+      "Slovakia": "Szlovákia"
+    },
+    "user": {
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "login": "Belépés",
+      "logout": "Kijelentkezés",
+      "forgotten_password": "Elfelejtett jelszó",
+      "register": "Regisztráció",
+      "register_user": "Új felhasználó regisztrálása",
+      "wrong_creds": "Hibás felhasználónév vagy jelszó.",
+      "registry_fail": "Sikertelen regisztráció.",
+      "registry_success": "Sikeres regisztráció.",
+      "select_role": "Hatáskör választása",
+      "role": "Hatáskör",
+      "Editor": "Szerkesztő",
+      "Admin": "Adminisztrátor"
+    },
+    "location_types": {
+      "Anchor": "Folyómentő horgonyhely",
+      "Center": "Folyómentő központ",
+      "Restaurant": "Folyómentő étterem/büfé",
+      "Adopted_Bank": "Örökbefogadott partszakasz",
+      "School": "Folyómentő iskola",
+      "Floating_Port": "Folyómentő lebegő kikötő",
+      "Vehicle": "Folyómentő jármű",
+      "Past_PET_Cup_event": "PET Kupa verseny",
+      "Plastic_Pirates_observation_point": "Plastic Pirates mérési pont",
+      "add_location": "Lokáció hozzáadása"
+    },
+    "about": {
+      "about_title": "A térképről",
+      "about_desc1": "A Tiszta Tisza Térkép a folyó és mellékfolyóinak hulladékhelyzetét mutatja be.",
+      "about_desc2": "Minél jobban ismerjük a szennyezés gócpontjait, annál hatékonyabban léphetünk fel a szennyezés felszámolása érdekében. A Tisza országokat köt össze, csak közösen, együttes erővel tehetjük újra tisztává! ",
+      "about_desc3": "A térkép a nemzetközileg népszerű, TrashOut hulladéktérképező applikáció adatait jeleníti meg, egységes online felületen. Az alkalmazás 11 nyelven, köztük magyarul is elérhető. A PET Kupa csapatai, önkéntesei és zászlóvivői 2020-ban a forrásvidéktől egészen a torkolatig feltérképezik a folyót és egyes mellékfolyóit. ",
+      "about_col1_title": "Tedd hozzá te is a részedet a Tiszta Tiszához!",
+      "about_col1_desc1": "Töltsd le az ",
+      "about_col1_desc2": " és jelöld, ha illegálisan lerakott hulladékkal találkozol a folyók partján vagy árterében!",
+      "about_col1_link": "ingyenes TrashOut applikációt",
+      "about_col2_title": "Mi így használjuk a TrashOutot a PET Kupa versenyeken",
+      "about_col2_desc1": "TRASHOUT ",
+      "about_col2_link": "Használati útmutató",
+      "about_col3_title": "Ismerd meg,",
+      "about_col3_desc1": " és mit tesz a szennyezés megállítására!",
+      "about_col3_link": "hogyan térképezi fel a hulladék gócpontjai a PET Kupa",
+      "about_note1": "A PET Kupa önkéntesek, szakemberek, céges támogatók és a lakosság bevonásával térképezi fel a hulladékot és szervezi környezetvédelmi programjait. A Tiszta Tisza Térkép a Nemzetközi Beruházási Bank által támogatott ",
+      "about_note2": " keretében valósul meg. A program szakmai támogatója a ",
+      "about_note3": ", informatika szolgáltatója és támogatója a ",
+      "about_link1": "Tiszta Víz, Boldog Tisza program",
+      "about_link2": "Környezetvédelmi Szolgáltatók és Gyártók Szövetsége",
+      "about_link3": "Konasoft",
+      "loading_error": "Hiba az adatok betöltése során. Próbálja újra később.",
+      "date_less_than_a_day": "Kevesebb, mint egy nap",
+      "date_more_days": "napja",
+      "date_about": "Körülbelül ",
+      "date_one_month": "egy hónapja",
+      "date_more_months": "hónapja",
+      "date_one_year": "egy éve",
+      "date_more_years": "éve"
+    },
+    "contact": {
+      "contact_follow": "Kövess minket",
+      "contact_ideas": "A kezdeményezés ötletgazdái",
+      "contact_sponsor": "Támogatóink"
+    }
+  }
