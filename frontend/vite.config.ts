@@ -20,5 +20,8 @@ export default defineConfig({
     },
     // tsconfigPaths is so the src dir is the base url - TODOFINAL
     plugins: [react(), tsconfigPaths()],
-    base: "/thesis/frontend",
+    base: "/thesis/frontend/dist",
+    build: {
+        outDir: 'dist',
+      },
 })
