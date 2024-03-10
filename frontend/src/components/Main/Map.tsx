@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 // import 'css/map.scss';
-import { TrashType, MinimalTrashData, ExpandedTrashData } from 'models/models';
+import {  MinimalTrashData } from 'models/models';
 import blueMarkerIcon from 'images/marker_blue.png';
 import greenMarkerIcon from 'images/marker_green.png';
 // import { useActiveFilters, useSelectedTime } from './FilterContext';
@@ -131,9 +131,9 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
             if (clusterLayer.current) {
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
-                // marker.on('click', () => {
-                //     onMarkerClick(e.id)
-                // });
+                marker.on('click', () => {
+                    onMarkerClick(e.id)
+                });
             }
         });
 

@@ -1,6 +1,6 @@
 import { MinimalTrashData } from 'models/models';
 // const baseURL = window.location.origin;
-const baseURL = 'http://localhost:8080/api';
+// const baseURL = 'http://localhost:8080/api';
 
 /**
  * Fetches reduced data of all garbage dumps

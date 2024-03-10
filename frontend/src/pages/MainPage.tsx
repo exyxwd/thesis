@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useQuery } from 'react-query';
 import Map from 'components/Main/Map';
-import { MinimalTrashData, TrashCountry, TrashSize, TrashType, TrashStatus } from 'models/models';
+import { MinimalTrashData } from 'models/models';
 // import { Filters } from 'components/Main/Filters';
 import { fetchGarbageData } from 'API/queryUtils';
 // import { ActiveFiltersProvider } from 'components/Main/FilterContext';
@@ -27,17 +27,17 @@ const MainPage: React.FC = (): React.ReactElement => {
     else{
         console.log(garbageData);
     }
-    const example: MinimalTrashData[] = [{
-        id: 1,
-        latitude: 0,
-        longitude: 0,
-        country: TrashCountry.Hungary,
-        size: TrashSize.Bag,
-        status: TrashStatus.StillHere,
-        types: [TrashType.Plastic],
-        rivers: ['Duna'],
-        updateTime: 'idk'
-    }];
+    // const example: MinimalTrashData[] = [{
+    //     id: 1,
+    //     latitude: 0,
+    //     longitude: 0,
+    //     country: TrashCountry.Hungary,
+    //     size: TrashSize.Bag,
+    //     status: TrashStatus.StillHere,
+    //     types: [TrashType.Plastic],
+    //     rivers: ['Duna'],
+    //     updateTime: 'idk'
+    // }];
 
     const handleMarkerClick = (id: number) => {
         console.log(id);
