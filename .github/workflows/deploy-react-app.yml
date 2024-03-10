@@ -19,25 +19,24 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v1
 
-    #   - name: Install bun
-    #     run: npm install -g bun
-
       # cache the dependencies to speed up the build
-    #   - name: Cache dependencies
-    #     uses: actions/cache@v2
-    #     with:
-    #       path: ~/.bun
-    #       key: ${{ runner.os }}-node-${{ hashFiles('**/frontend/package-lock.json') }}
-    #       restore-keys: |
-    #         ${{ runner.os }}-node-
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.bun
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       # install dependencies
       - name: Install dependencies
-        run: cd frontend && bun i
+        run: bun i
+        working-directory: frontend
 
       # build the react app
       - name: Build
-        run: cd frontend && bun run build
+        run: bun run build
+        working-directory: frontend
 
       # deploy the react app to github pages
       - name: Deploy
