@@ -16,9 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # setup nodejs environment
+      # setup nodejs environment and install bun
       - name: Setup Node.js environment
-        run: curl -fsSL https://bun.sh/install | bash
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: "18.16.1"
+
+      - name: Install bun
+        run: npm install -g bun
 
       # cache the dependencies to speed up the build
       - name: Cache dependencies
