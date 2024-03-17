@@ -8,8 +8,9 @@ $link-hover: skyblue;
 $nav-height: 63px;
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
-@import './navigation.scss';
 
+@import './navigation.scss';
+@import './map.scss';
 
 body {
     margin: 0;

@@ -8,7 +8,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "wastes")
-@Getter @Setter 
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Waste {
     public enum WasteCountry {
@@ -59,7 +59,10 @@ public class Waste {
     @Enumerated(EnumType.STRING)
     private WasteCountry country;
 
+    @Column(columnDefinition="text")
     private String locality;
+
+    @Column(columnDefinition="text")
     private String sublocality;
 
     @Enumerated(EnumType.STRING)
@@ -77,9 +80,10 @@ public class Waste {
 
     private boolean updateNeeded;
 
-    @ElementCollection
-    private List<String> images;
+    @Column(columnDefinition = "text")
+    private String imageUrl;
 
+    @Column(columnDefinition="text")
     private String note;
 
     @ElementCollection
