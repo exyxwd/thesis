@@ -133,6 +133,7 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
 
                 marker.on('click', () => {
                     onMarkerClick(e.id)
+                    console.log(e);
                 });
             }
         });
