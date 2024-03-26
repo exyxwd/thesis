@@ -1,15 +1,17 @@
 package hu.exyxwd.tisztatisza.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "wastes")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Waste {
     public enum WasteCountry {
         HUNGARY,
@@ -26,7 +28,7 @@ public class Waste {
     }
 
     public enum WasteStatus {
-        STILL_HERE,
+        STILLHERE,
         CLEANED,
         MORE,
     }
@@ -42,12 +44,10 @@ public class Waste {
         AUTOMOTIVE,
         ELECTRONIC,
         ORGANIC,
-        DEAD_ANIMALS,
+        DEADANIMALS,
     }
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private double latitude;
@@ -59,10 +59,10 @@ public class Waste {
     @Enumerated(EnumType.STRING)
     private WasteCountry country;
 
-    @Column(columnDefinition="text")
+    @Column(columnDefinition = "text")
     private String locality;
 
-    @Column(columnDefinition="text")
+    @Column(columnDefinition = "text")
     private String sublocality;
 
     @Enumerated(EnumType.STRING)
@@ -83,9 +83,37 @@ public class Waste {
     @Column(columnDefinition = "text")
     private String imageUrl;
 
-    @Column(columnDefinition="text")
+    @Column(columnDefinition = "text")
     private String note;
 
     @ElementCollection
     private List<String> rivers;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Waste waste = (Waste) o;
+
+        return Double.compare(waste.latitude, latitude) == 0 &&
+                Double.compare(waste.longitude, longitude) == 0 &&
+                updateNeeded == waste.updateNeeded &&
+                Objects.equals(id, waste.id) &&
+                Objects.equals(accessibilities, waste.accessibilities) &&
+                country == waste.country &&
+                Objects.equals(locality, waste.locality) &&
+                Objects.equals(sublocality, waste.sublocality) &&
+                size == waste.size &&
+                status == waste.status &&
+                Objects.equals(types, waste.types) &&
+                Objects.equals(createTime, waste.createTime) &&
+                Objects.equals(updateTime, waste.updateTime) &&
+                Objects.equals(imageUrl, waste.imageUrl) &&
+                Objects.equals(note, waste.note) &&
+                Objects.equals(rivers, waste.rivers);
+    }
 }
