@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
-import java.time.OffsetDateTime;
+import java.time.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import hu.exyxwd.tisztatisza.model.Waste;
@@ -17,8 +19,8 @@ import hu.exyxwd.tisztatisza.repository.WasteRepository;
 @Service
 public class TrashOutService {
     private static final String GOOGLE_PASSWORD_URL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
-    private static final String TRASH_OUT_URL = "https://api.trashout.ngo/v1/trash/?attributesNeeded=id,gpsShort,gpsFull,types,size,note,"
-            + "userInfo,anonymous,status,cleanedByMe,images,updateTime,updateHistory,url,created,accessibility,updateNeeded,unreviewed,spam&limit=99999&geoAreaContinent=Europe";
+    private static final String TRASH_OUT_URL = "https://api.trashout.ngo/v1/trash/?attributesNeeded=id,gpsFull,types,size,note,"
+            + "status,images,updateTime,created,spam&limit=999999&geoAreaContinent=Europe";
 
     private final WasteRepository wasteRepository;
     private RestTemplate restTemplate;
@@ -35,6 +37,8 @@ public class TrashOutService {
         }
     }
 
+    // Get authentication token from Google Identity Toolkit for later TrashOut API
+    // requests
     public String getToken() {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", config.get("Login:Email"));
@@ -58,7 +62,7 @@ public class TrashOutService {
         }
     }
 
-    public String getTrashListFromTrashOut(String token) {
+    public String getWasteListFromTrashOut(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("x-token", token);
@@ -70,104 +74,118 @@ public class TrashOutService {
                     String.class);
             return response.getBody();
         } catch (HttpServerErrorException e) {
-            System.out.println("Error occurred while trying to get trash list from TrashOut: " + e.getStatusCode());
+            System.out.println("Error occurred while trying to get wastes from TrashOut: " + e.getStatusCode());
             return null;
         }
     }
 
-    public List<Waste> parseTrashList(String trashList) {
-        List<Waste> wastes = new ArrayList<>();
-        JSONParser parser = new JSONParser();
+    public Waste parseWaste(JSONObject wasteJSON) {
+        Waste waste = new Waste();
 
-        try {
-            JSONArray trashArray = (JSONArray) parser.parse(trashList);
+        // Set GPS coordinates and country
+        JSONObject gps = (JSONObject) wasteJSON.get("gps");
+        if (gps != null) {
+            waste.setLatitude((Double) gps.get("lat"));
+            waste.setLongitude((Double) gps.get("long"));
 
-            for (Object o : trashArray) {
-                try {
-                    JSONObject trash = (JSONObject) o;
+            JSONObject area = (JSONObject) gps.get("area");
 
-                    Waste waste = new Waste();
-                    waste.setId((Long) trash.get("id"));
-                    waste.setLatitude((Double) ((JSONObject) trash.get("gps")).get("lat"));
-                    waste.setLongitude((Double) ((JSONObject) trash.get("gps")).get("long"));
-                    JSONObject gps = (JSONObject) trash.get("gps");
-                    if (gps != null) {
-                        JSONObject area = (JSONObject) gps.get("area");
-                        if (area != null) {
-                            String country = (String) area.get("country");
-                            if (country != null) {
-                                waste.setCountry(Waste.WasteCountry.valueOf(country.toUpperCase()));
-                            }
-                        }
-                    }
-                    // waste.setLocality(
-                    // (String) ((JSONObject) ((JSONObject)
-                    // trash.get("gps")).get("area")).get("locality"));
-                    // waste.setSublocality(
-                    // (String) ((JSONObject) ((JSONObject)
-                    // trash.get("gps")).get("area")).get("subLocality"));
-                    waste.setSize(Waste.WasteSize.valueOf(trash.get("size").toString().toUpperCase()));
-                    waste.setStatus(Waste.WasteStatus.valueOf(trash.get("status").toString().toUpperCase()));
-                    waste.setCreateTime(OffsetDateTime.parse(trash.get("created").toString()).toLocalDateTime());
-                    waste.setUpdateTime(OffsetDateTime.parse(trash.get("updateTime").toString()).toLocalDateTime());
-                    waste.setUpdateNeeded(((Long) trash.get("updateNeeded")) != 0);
-                    String note = (String) trash.get("note");
-                    // if (note != null && note.length() >= 255) {
-                    //     note = "Redacted";
-                    // }
-                    // System.out.println("Note: " + note);
-                    waste.setNote(note);
+            if (area != null) {
+                String country = (String) area.get("country");
 
-                    JSONArray typesArray = (JSONArray) trash.get("types");
-                    List<Waste.WasteType> types = new ArrayList<>();
-                    for (Object type : typesArray) {
-                        types.add(Waste.WasteType.valueOf(type.toString().toUpperCase()));
-                    }
-                    waste.setTypes(types);
-
-                    JSONArray imagesArray = (JSONArray) trash.get("images");
-                    if (imagesArray.size() > 0) {
-                        JSONObject firstImageObject = (JSONObject) imagesArray.get(0);
-                        String image = (String) firstImageObject.get("fullDownloadUrl");
-                        waste.setImageUrl(image);
-                    }
-                    // String image = imagesArray[0];
-                    // for (Object image : imagesArray) {
-                    //     String imageUrl = (String) ((JSONObject) image).get("fullDownloadUrl");
-                    //     if (imageUrl != null && imageUrl.length() > 255) {
-                    //         // System.out.println("Image URL too long: " + imageUrl);
-                    //         // imageUrl = imageUrl.substring(0, 255);
-                    //     }
-                    //     images.add(imageUrl);
-                    // }
-
-                    wastes.add(waste);
-                } catch (IllegalArgumentException e) {
-                    // Skip this object and continue with the next one
-                    continue;
+                if (country != null) {
+                    waste.setCountry(Waste.WasteCountry.valueOf(country.toUpperCase()));
                 }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
-        return wastes;
+        // Set types
+        JSONArray typesArray = (JSONArray) wasteJSON.get("types");
+        List<Waste.WasteType> types = new ArrayList<>();
+        for (Object type : typesArray) {
+            types.add(Waste.WasteType.valueOf(type.toString().toUpperCase()));
+        }
+        waste.setTypes(types);
+
+        // Set images
+        JSONArray imagesArray = (JSONArray) wasteJSON.get("images");
+        if (imagesArray.size() > 0) {
+            JSONObject firstImageObject = (JSONObject) imagesArray.get(0);
+            String image = (String) firstImageObject.get("fullDownloadUrl");
+            waste.setImageUrl(image);
+        }
+
+        // Set other fields
+        waste.setId((Long) wasteJSON.get("id"));
+        waste.setLocality(
+                (String) ((JSONObject) ((JSONObject) wasteJSON.get("gps")).get("area")).get("locality"));
+        waste.setSublocality(
+                (String) ((JSONObject) ((JSONObject) wasteJSON.get("gps")).get("area")).get("subLocality"));
+        waste.setSize(Waste.WasteSize.valueOf(wasteJSON.get("size").toString().toUpperCase()));
+        waste.setStatus(Waste.WasteStatus.valueOf(wasteJSON.get("status").toString().toUpperCase()));
+        waste.setCreateTime(OffsetDateTime.parse(wasteJSON.get("created").toString()).toLocalDateTime());
+        waste.setUpdateTime(OffsetDateTime.parse(wasteJSON.get("updateTime").toString()).toLocalDateTime());
+        Long updateNeeded = (Long) wasteJSON.get("updateNeeded");
+        waste.setUpdateNeeded(updateNeeded != null && updateNeeded != 0);
+        waste.setNote((String) wasteJSON.get("note"));
+
+        return waste;
     }
 
     @PostConstruct
     public void updateDatabase() {
-        String token = getToken();
-        String trashList = getTrashListFromTrashOut(token);
+        // String token = getToken();
 
-        if (trashList != null) {
-            // Parse the trashList and convert it into Waste objects
-            List<Waste> wastes = parseTrashList(trashList);
+        // Token for dev purposes from the Trashout serverside code
+        String AuthToken = config.get("Login:AuthToken").toString();
+        String wasteList = getWasteListFromTrashOut(AuthToken);
 
-            // Save the Waste objects to the database
-            wasteRepository.saveAll(wastes);
+        if (wasteList != null) {
+            JSONParser parser = new JSONParser();
+
+            try {
+                LocalDateTime sixYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
+
+                // Delete all wastes that are older than 6 years
+                List<Waste> oldWastes = wasteRepository.findAllOlderThan(sixYearsAgo);
+                wasteRepository.deleteAll(oldWastes);
+
+                // Parse the JSON array from TrashOut
+                JSONArray wasteArray = (JSONArray) parser.parse(wasteList);
+
+                // Fetch all existing wastes from the database
+                List<Waste> existingWastes = wasteRepository.findAll();
+
+                // Convert the list to a map for faster lookup
+                Map<Long, Waste> existingWastesMap = existingWastes.stream()
+                        .collect(Collectors.toMap(Waste::getId, Function.identity()));
+
+                List<Waste> wastesToSave = new ArrayList<>();
+
+                for (Object o : wasteArray) {
+                    try {
+                        JSONObject wasteJSON = (JSONObject) o;
+                        Waste newWaste = parseWaste(wasteJSON);
+
+                        // Check if the waste's ID is already in the database
+                        Waste existingWaste = existingWastesMap.get(newWaste.getId());
+
+                        // Only save the waste if it had an update in the past 6 years and it is not in
+                        // the database or it has been updated
+                        if (newWaste.getUpdateTime().isAfter(sixYearsAgo)
+                                && (existingWaste == null || !newWaste.equals(existingWaste))) {
+                            wastesToSave.add(newWaste);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        continue;
+                    }
+                }
+                wasteRepository.saveAll(wastesToSave);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         } else {
-            System.out.println("Error: trashList is null");
+            System.out.println("Error: wasteList is null");
         }
-
     }
 }

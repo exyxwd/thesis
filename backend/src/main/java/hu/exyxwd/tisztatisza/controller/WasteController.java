@@ -27,7 +27,7 @@ public class WasteController {
 	@GetMapping("/wastes")
 	public List<Waste> getAllWastes(){
 		return wasteRepository.findAll();
-	}		
+	}
 	
 	// create waste rest api
 	@PostMapping("/wastes")
