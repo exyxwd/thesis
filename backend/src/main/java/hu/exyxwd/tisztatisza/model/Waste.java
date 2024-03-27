@@ -53,9 +53,6 @@ public class Waste {
     private double latitude;
     private double longitude;
 
-    @ElementCollection
-    private List<String> accessibilities;
-
     @Enumerated(EnumType.STRING)
     private WasteCountry country;
 
@@ -71,14 +68,12 @@ public class Waste {
     @Enumerated(EnumType.STRING)
     private WasteStatus status;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<WasteType> types;
 
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-
-    private boolean updateNeeded;
 
     @Column(columnDefinition = "text")
     private String imageUrl;
@@ -101,9 +96,7 @@ public class Waste {
 
         return Double.compare(waste.latitude, latitude) == 0 &&
                 Double.compare(waste.longitude, longitude) == 0 &&
-                updateNeeded == waste.updateNeeded &&
                 Objects.equals(id, waste.id) &&
-                Objects.equals(accessibilities, waste.accessibilities) &&
                 country == waste.country &&
                 Objects.equals(locality, waste.locality) &&
                 Objects.equals(sublocality, waste.sublocality) &&

@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class TrashOutService {
@@ -125,14 +126,13 @@ public class TrashOutService {
         waste.setStatus(Waste.WasteStatus.valueOf(wasteJSON.get("status").toString().toUpperCase()));
         waste.setCreateTime(OffsetDateTime.parse(wasteJSON.get("created").toString()).toLocalDateTime());
         waste.setUpdateTime(OffsetDateTime.parse(wasteJSON.get("updateTime").toString()).toLocalDateTime());
-        Long updateNeeded = (Long) wasteJSON.get("updateNeeded");
-        waste.setUpdateNeeded(updateNeeded != null && updateNeeded != 0);
         waste.setNote((String) wasteJSON.get("note"));
 
         return waste;
     }
 
     @PostConstruct
+    @Transactional
     public void updateDatabase() {
         // String token = getToken();
 
