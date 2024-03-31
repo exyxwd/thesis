@@ -5,13 +5,13 @@ import org.json.simple.parser.*;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.*;
 import java.time.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
@@ -23,6 +23,7 @@ public class TrashOutService {
     private static final String TRASH_OUT_URL = "https://api.trashout.ngo/v1/trash/?attributesNeeded=id,gpsFull,types,size,note,"
             + "status,images,updateTime,created,spam&limit=999999&geoAreaContinent=Europe";
 
+    @Autowired
     private final WasteRepository wasteRepository;
     private RestTemplate restTemplate;
     private JSONObject config;
@@ -70,14 +71,19 @@ public class TrashOutService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(TRASH_OUT_URL, HttpMethod.GET, entity,
-                    String.class);
-            return response.getBody();
-        } catch (HttpServerErrorException e) {
-            System.out.println("Error occurred while trying to get wastes from TrashOut: " + e.getStatusCode());
-            return null;
+        // Get waste list from TrashOut, retry if an error occurs
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            try {
+                ResponseEntity<String> response = restTemplate.exchange(TRASH_OUT_URL, HttpMethod.GET, entity,
+                        String.class);
+                return response.getBody();
+            } catch (HttpServerErrorException e) {
+                System.out.println("Error occurred while trying to get wastes from TrashOut (Attempt " + attempt + "): "
+                        + e.getStatusCode());
+            }
         }
+        // If all attempts fail, return null
+        return null;
     }
 
     public Waste parseWaste(JSONObject wasteJSON) {
@@ -102,7 +108,7 @@ public class TrashOutService {
 
         // Set types
         JSONArray typesArray = (JSONArray) wasteJSON.get("types");
-        List<Waste.WasteType> types = new ArrayList<>();
+        Set<Waste.WasteType> types = new HashSet<>();
         for (Object type : typesArray) {
             types.add(Waste.WasteType.valueOf(type.toString().toUpperCase()));
         }
@@ -131,7 +137,6 @@ public class TrashOutService {
         return waste;
     }
 
-    @PostConstruct
     @Transactional
     public void updateDatabase() {
         // String token = getToken();
@@ -140,52 +145,52 @@ public class TrashOutService {
         String AuthToken = config.get("Login:AuthToken").toString();
         String wasteList = getWasteListFromTrashOut(AuthToken);
 
-        if (wasteList != null) {
-            JSONParser parser = new JSONParser();
-
-            try {
-                LocalDateTime sixYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
-
-                // Delete all wastes that are older than 6 years
-                List<Waste> oldWastes = wasteRepository.findAllOlderThan(sixYearsAgo);
-                wasteRepository.deleteAll(oldWastes);
-
-                // Parse the JSON array from TrashOut
-                JSONArray wasteArray = (JSONArray) parser.parse(wasteList);
-
-                // Fetch all existing wastes from the database
-                List<Waste> existingWastes = wasteRepository.findAll();
-
-                // Convert the list to a map for faster lookup
-                Map<Long, Waste> existingWastesMap = existingWastes.stream()
-                        .collect(Collectors.toMap(Waste::getId, Function.identity()));
-
-                List<Waste> wastesToSave = new ArrayList<>();
-
-                for (Object o : wasteArray) {
-                    try {
-                        JSONObject wasteJSON = (JSONObject) o;
-                        Waste newWaste = parseWaste(wasteJSON);
-
-                        // Check if the waste's ID is already in the database
-                        Waste existingWaste = existingWastesMap.get(newWaste.getId());
-
-                        // Only save the waste if it had an update in the past 6 years and it is not in
-                        // the database or it has been updated
-                        if (newWaste.getUpdateTime().isAfter(sixYearsAgo)
-                                && (existingWaste == null || !newWaste.equals(existingWaste))) {
-                            wastesToSave.add(newWaste);
-                        }
-                    } catch (IllegalArgumentException e) {
-                        continue;
-                    }
-                }
-                wasteRepository.saveAll(wastesToSave);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else {
+        if (wasteList == null) {
             System.out.println("Error: wasteList is null");
+            return;
+        }
+
+        JSONParser parser = new JSONParser();
+        try {
+            LocalDateTime sixYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
+
+            // Delete all wastes that are older than 6 years
+            List<Waste> oldWastes = wasteRepository.findAllOlderThan(sixYearsAgo);
+            wasteRepository.deleteAll(oldWastes);
+
+            // Parse the JSON array from TrashOut
+            JSONArray wasteArray = (JSONArray) parser.parse(wasteList);
+
+            // Fetch all existing wastes from the database
+            List<Waste> existingWastes = wasteRepository.findAll();
+
+            // Convert the list to a map for faster lookup
+            Map<Long, Waste> existingWastesMap = existingWastes.stream()
+                    .collect(Collectors.toMap(Waste::getId, Function.identity()));
+
+            List<Waste> wastesToSave = new ArrayList<>();
+
+            for (Object o : wasteArray) {
+                try {
+                    JSONObject wasteJSON = (JSONObject) o;
+                    Waste newWaste = parseWaste(wasteJSON);
+
+                    // Check if the waste's ID is already in the database
+                    Waste existingWaste = existingWastesMap.get(newWaste.getId());
+
+                    // Only save the waste if it had an update in the past 6 years and it is not in
+                    // the database or it has been updated
+                    if (newWaste.getUpdateTime().isAfter(sixYearsAgo)
+                            && (existingWaste == null || !newWaste.equals(existingWaste))) {
+                        wastesToSave.add(newWaste);
+                    }
+                } catch (IllegalArgumentException e) {
+                    continue;
+                }
+            }
+            wasteRepository.saveAll(wastesToSave);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }
