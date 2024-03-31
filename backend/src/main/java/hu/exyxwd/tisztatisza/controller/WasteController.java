@@ -2,9 +2,7 @@ package hu.exyxwd.tisztatisza.controller;
 
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,6 @@ import hu.exyxwd.tisztatisza.repository.WasteRepository;
 import hu.exyxwd.tisztatisza.model.Waste;
 
 
-// @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/")
 public class WasteController {
@@ -85,8 +82,8 @@ public class WasteController {
 			public Waste.WasteCountry country = waste.getCountry();
 			public Waste.WasteSize size = waste.getSize();
 			public Waste.WasteStatus status = waste.getStatus();
-			public List<Waste.WasteType> types = waste.getTypes();
-			public List<String> rivers = waste.getRivers();
+			public Set<Waste.WasteType> types = waste.getTypes();
+			public Set<String> rivers = waste.getRivers();
 			public LocalDateTime updateTime = waste.getUpdateTime();
 		}).collect(Collectors.toList());
 	}

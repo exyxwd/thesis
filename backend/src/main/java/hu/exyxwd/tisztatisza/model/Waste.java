@@ -70,7 +70,7 @@ public class Waste {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private List<WasteType> types;
+    private Set<WasteType> types;
 
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
@@ -82,7 +82,7 @@ public class Waste {
     private String note;
 
     @ElementCollection
-    private List<String> rivers;
+    private Set<String> rivers;
 
     @Override
     public boolean equals(Object o) {
