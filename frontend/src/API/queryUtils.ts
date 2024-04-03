@@ -8,7 +8,7 @@ import { MinimalTrashData } from 'models/models';
  * @returns {MinimalTrashData[]} - reduced data of all garbage dumps
  */
 export const fetchGarbageData = async (): Promise<MinimalTrashData[]> => {
-    const response = await fetch(`api/wastes`, {method: 'GET'});
+    const response = await fetch(`api/wastes/mapData`, {method: 'GET'});
     if (!response.ok) {
         throw new Error('Network response was not ok.');
     }
