@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.*;
 import java.util.*;
 import java.time.*;
+import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -92,8 +93,8 @@ public class TrashOutService {
         // Set GPS coordinates and country
         JSONObject gps = (JSONObject) wasteJSON.get("gps");
         if (gps != null) {
-            waste.setLatitude((Double) gps.get("lat"));
-            waste.setLongitude((Double) gps.get("long"));
+            waste.setLatitude(BigDecimal.valueOf((Double) gps.get("lat")));
+            waste.setLongitude(BigDecimal.valueOf((Double) gps.get("long")));
 
             JSONObject area = (JSONObject) gps.get("area");
 

@@ -75,7 +75,7 @@ public class RiverService {
     public Set<String> getNearbyRivers(Waste waste, double threshold) {
         GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
         // Create a point from the waste's coordinates
-        Coordinate wasteCoordinates = new Coordinate(waste.getLongitude(), waste.getLatitude());
+        Coordinate wasteCoordinates = new Coordinate(waste.getLongitude().doubleValue(), waste.getLatitude().doubleValue());
         Point wasteLocation = factory.createPoint(wasteCoordinates);
 
         Set<String> nearbyRivers = new HashSet<>();

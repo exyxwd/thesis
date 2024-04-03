@@ -1,6 +1,7 @@
 package hu.exyxwd.tisztatisza.model;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.*;
 
 import jakarta.persistence.*;
@@ -50,8 +51,10 @@ public class Waste {
     @Id
     private Long id;
 
-    private double latitude;
-    private double longitude;
+    @Column(precision = 7, scale = 5)
+    private BigDecimal latitude;
+    @Column(precision = 8, scale = 5)
+    private BigDecimal longitude;
 
     @Enumerated(EnumType.STRING)
     private WasteCountry country;
@@ -94,8 +97,8 @@ public class Waste {
 
         Waste waste = (Waste) o;
 
-        return Double.compare(waste.latitude, latitude) == 0 &&
-                Double.compare(waste.longitude, longitude) == 0 &&
+        return Objects.equals(latitude, waste.latitude) &&
+                Objects.equals(longitude, waste.longitude) &&
                 Objects.equals(id, waste.id) &&
                 country == waste.country &&
                 Objects.equals(locality, waste.locality) &&
