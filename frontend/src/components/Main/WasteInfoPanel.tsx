@@ -48,13 +48,13 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
      */
     const handleClickElsewhere = (e: MouseEvent) => {
         const target = e.target as HTMLElement
-        if (!panelRef.current?.contains(target)) {
+        if (panelRef.current && !panelRef.current.contains(target)) {
             onClose();
             navigate('/');
         }
     }
     /**
-     * Calculates the time since the given date
+     * Calculates the time since the given date and returns a formatted and translated string
      *
      * @param {Date} d The click event
      * @returns formatted string of approximate time
@@ -129,7 +129,6 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
 
     useEffect(() => {
         setImageLoaded(false);
-        console.log('Images set');
     }, [data?.imageUrl]);
 
     if (!data) return (<></>)
@@ -192,7 +191,7 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
                         <Trans i18nKey='details.note'>Megjegyzés</Trans>
                     </div>
                     <div className='row waste-panel-note'>
-                        <div className='col'>{data.note}</div>
+                        <div className='col'>{data.note ? data.note : <p className='no-note'>-</p>}</div>
                     </div>
                 </div>
             </div>

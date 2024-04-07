@@ -11,7 +11,8 @@
     position: fixed;
     left: 0;
     width: 0;
-    height: 100vh;
+    height: calc(100vh - $nav-height);
+    overflow-y: auto;
     overflow-x: hidden;
     transition: 0.5s;
     background-color: #5F6A8B;
@@ -59,7 +60,7 @@
 
 .waste-panel-base {
     margin-top: 10px;
-    margin-left: -50px;
+    margin-left: 0;
     direction: ltr;
 }
 
@@ -100,6 +101,7 @@
 
 .waste-panel-note-header {
     margin-top: 20px;
+    margin-left: 20px;
     font-size: 20px;
     font-weight: bold;
     direction: ltr;
@@ -107,7 +109,22 @@
 
 .waste-panel-note {
     margin-top: 10px;
-    padding-left: 20px;
+    padding: 20px;
+    padding-top: 0;
+    text-align: center;
     border-radius: 5px;
     direction: ltr;
+}
+
+.no-note {
+    font-size: 2rem;
+    text-align: center;
+    margin-left: -10px;
+}
+
+
+@media (max-width: 768px) {
+    .waste-panel.open {
+        width: 100%;
+    }
 }
