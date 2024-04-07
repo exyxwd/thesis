@@ -51,7 +51,7 @@ public class RiverService {
                     // Create a LineString from the coordinates
                     LineString lineString = geometryFactory.createLineString(coordinates.toArray(new Coordinate[0]));
                     // Extract the name of the river from the name property
-                    String riverName = feature.get("properties").get("name").asText().split(",")[0];
+                    String riverName = feature.get("properties").get("name").asText().split(",")[0].toUpperCase();
                     this.rivers.put(lineString, riverName);
                 }
             }
