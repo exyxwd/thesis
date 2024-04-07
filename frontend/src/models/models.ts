@@ -1,35 +1,35 @@
 export enum TrashStatus {
-    StillHere = 'StillHere',
-    Cleaned = 'Cleaned',
-    More = 'More'
+    StillHere = 'STILLHERE',
+    Cleaned = 'CLEANED',
+    More = 'MORE'
 }
 
 export enum TrashCountry {
-    Hungary = 'Hungary',
-    Ukraine = 'Ukraine',
-    Romania = 'Romania',
-    Serbia = 'Serbia',
-    Slovakia = 'Slovakia'
+    Hungary = 'HUNGARY',
+    Ukraine = 'UKRAINE',
+    Romania = 'ROMANIA',
+    Serbia = 'SERBIA',
+    Slovakia = 'SLOVAKIA'
 }
 
 export enum TrashSize {
-    Bag = 'Bag',
-    Wheelbarrow = 'Wheelbarrow',
-    Car = 'Car'
+    Bag = 'BAG',
+    Wheelbarrow = 'WHEELBARROW',
+    Car = 'CAR'
 }
 
 export enum TrashType {
-    Plastic = 'Plastic',
-    Metal = 'Metal',
-    Glass = 'Glass',
-    Domestic = 'Domestic',
-    Construction = 'Construction',
-    Liquid = 'Liquid',
-    Dangerous = 'Dangerous',
-    Automotive = 'Automotive',
-    Electronic = 'Electronic',
-    Organic = 'Organic',
-    DeadAnimals = 'DeadAnimals'
+    Plastic = 'PLASTIC',
+    Metal = 'METAL',
+    Glass = 'GLASS',
+    Domestic = 'DOMESTIC',
+    Construction = 'CONSTRUCTION',
+    Liquid = 'LIQUID',
+    Dangerous = 'DANGEROUS',
+    Automotive = 'AUTOMOTIVE',
+    Electronic = 'ELECTRONIC',
+    Organic = 'ORGANIC',
+    DeadAnimals = 'DEADANIMALS'
 }
 
 export interface MinimalTrashData{
@@ -46,9 +46,9 @@ export interface MinimalTrashData{
 
 export interface ExpandedTrashData
 {
+    id: number;
     latitude: number;
     longitude: number;
-    accessibilities: string[];
     country: TrashCountry;
     locality: string;
     sublocality: string;
@@ -58,7 +58,7 @@ export interface ExpandedTrashData
     createTime: string;
     updateTime: string;
     updateNeeded: boolean;
-    images: string[];
+    imageUrl: string;
     note: string;
     rivers: string[];
 }

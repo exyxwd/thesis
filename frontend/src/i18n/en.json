@@ -6,15 +6,12 @@
         "about_us": "About us"
     },
     "status": {
-        "StillHere": "Still contaminated",
-        "Cleaned": "Cleaned",
-        "updateNeeded": "Update needed"
+        "stillhere": "Still contaminated",
+        "cleaned": "Cleaned",
+        "updateneeded": "Update needed"
     },
     "details": {
         "More": "More to clean",
-        "Bag": "Fits in a bag",
-        "Wheelbarrow": "Can be transported by wheelbarrow",
-        "Car": "Car required",
         "createTime": "Creation time",
         "updateTime": "Update time",
         "note": "Note",
@@ -24,17 +21,22 @@
         "id": "ID"
     },
     "types": {
-        "Plastic": "Plastic",
-        "Metal": "Metal",
-        "Glass": "Glass",
-        "Domestic": "Household waste",
-        "Construction": "Construction waste",
-        "Liquid": "Liquid",
-        "Dangerous": "Dangerous waste",
-        "Automotive": "Car parts",
-        "Electronic": "Electronic waste",
-        "Organic": "Organic waste",
-        "DeadAnimals": "Animal remains"
+        "plastic": "Plastic",
+        "metal": "Metal",
+        "glass": "Glass",
+        "domestic": "Household waste",
+        "construction": "Construction waste",
+        "liquid": "Liquid",
+        "dangerous": "Dangerous waste",
+        "automotive": "Car parts",
+        "electronic": "Electronic waste",
+        "organic": "Organic waste",
+        "deadanimals": "Animal remains"
+    },
+    "sizes": {
+        "bag": "Fits in a bag",
+        "wheelbarrow": "Fits in wheelbarrow",
+        "car": "Car required"
     },
     "location": {
         "Country": "Country",
@@ -128,18 +130,20 @@
         "about_link1": "Clean Water, Happy Tisza program",
         "about_link2": "Hungarian Association of Environmental Enterprises",
         "about_link3": "Konasoft",
-        "loading_error": "Data loading error. Please try again later.",
-        "date_less_than_a_day": "Less than a day ago",
-        "date_more_days": "days ago",
-        "date_about": "About ",
-        "date_one_month": "a month ago",
-        "date_more_months": "months ago",
-        "date_one_year": "a year ago",
-        "date_more_years": "years ago"
+        "loading_error": "Data loading error. Please try again later."
+    },
+    "date": {
+        "less_than_a_day": "Less than a day ago",
+        "more_days": "days ago",
+        "about": "About ",
+        "one_month": "a month ago",
+        "more_months": "months ago",
+        "one_year": "a year ago",
+        "more_years": "years ago"
     },
     "contact": {
         "contact_follow": "Follow us",
         "contact_ideas": "Creators",
         "contact_sponsor": "Sponsors"
     }
-  }
+}

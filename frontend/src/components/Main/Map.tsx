@@ -5,6 +5,7 @@ import 'leaflet.markercluster';
 import {  MinimalTrashData } from 'models/models';
 import blueMarkerIcon from 'images/marker_blue.png';
 import greenMarkerIcon from 'images/marker_green.png';
+import { useNavigate } from 'react-router-dom';
 // import { useActiveFilters, useSelectedTime } from './FilterContext';
 
 
@@ -80,6 +81,7 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
     // const activeFilters = useActiveFilters();
     // const selectedTime = useSelectedTime();
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         setMapData(garbages);
@@ -106,7 +108,7 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
             //     return;
             // }
             let markerIcon: L.Icon;
-            if (e.status === 'StillHere') {
+            if (e.status === 'STILLHERE') {
                 markerIcon = L.icon({
                     iconUrl: blueMarkerIcon,
                     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -132,8 +134,8 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
                 marker.on('click', () => {
-                    onMarkerClick(e.id)
-                    console.log(e);
+                    onMarkerClick(e.id);
+                    navigate(`/waste/${e.id}`)
                 });
             }
         });

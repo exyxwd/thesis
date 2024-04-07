@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import 'styles/app.scss';
 import 'material-symbols';
@@ -9,18 +10,20 @@ import MainPage from 'pages/MainPage.tsx';
 
 /**
  * Main App component
- * 
- * @returns {JSX.Element} 
+ *
+ * @returns {JSX.Element} The main app component
  */
 function App() {
-    // const baseURL = window.location.origin;
-
     const { i18n } = useTranslation();
 
     return (
         <>
-            <NavBar i18n={i18n}></NavBar>
-            <MainPage />
+            <NavBar i18n={i18n}/>
+            <Routes>
+                <Route path={`/waste/:selectedMarkerId`} element={<MainPage />}></Route>
+                <Route path={'/'} element={<MainPage />}/>
+                <Route path={`/*`} element={<Navigate to={'/'} />} />
+            </Routes>
         </>
     )
 }

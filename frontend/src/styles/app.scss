@@ -9,6 +9,7 @@ $nav-height: 63px;
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+@import './wasteInfoPanel.scss';
 @import './navigation.scss';
 @import './map.scss';
 
@@ -23,6 +24,7 @@ body {
     position: absolute;
     width: 100%;
     height: calc(100dvh - $nav-height);
+    z-index: 0;
 }
 
 /* ################################ LOADING BAR ################################ */
@@ -49,6 +51,13 @@ body {
     width: 100px;
     height: 100px;
     animation: spinner 1.5s linear infinite;
+}
+
+.img-loader {
+    @extend .loader;
+    position: relative;
+    margin-top: 150px;
+    margin-bottom: 85px;
 }
 
 /* ################################ DATA LOADING ERROR MSG ################################ */
