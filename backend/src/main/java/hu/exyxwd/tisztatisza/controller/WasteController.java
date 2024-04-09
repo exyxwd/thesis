@@ -46,19 +46,32 @@ public class WasteController {
         return ResponseEntity.ok(waste);
     }
 
+    // get wastes by ids rest api
+    @PostMapping("/wastes/filteredWastes")
+    public List<Waste> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
+        List<Long> ids = requestData.get("ids");
+        List<Waste> wastes = wasteRepository.findAllById(ids);
+        if (wastes.size() != ids.size()) {
+            throw new ResourceNotFoundException("Some wastes do not exist with the given ids");
+        }
+        return wastes;
+    }
+
     // update waste rest api
     // @PutMapping("/wastes/{id}")
-    // public ResponseEntity<Waste> updatewaste(@PathVariable Long id, @RequestBody Waste wasteDetails) {
-    //     Waste waste = wasteRepository.findById(id)
-    //             .orElseThrow(() -> new ResourceNotFoundException("Waste does not exist with id: " + id));
+    // public ResponseEntity<Waste> updatewaste(@PathVariable Long id, @RequestBody
+    // Waste wasteDetails) {
+    // Waste waste = wasteRepository.findById(id)
+    // .orElseThrow(() -> new ResourceNotFoundException("Waste does not exist with
+    // id: " + id));
 
-    //     waste.setLatitude(wasteDetails.getLatitude());
-    //     waste.setLongitude(wasteDetails.getLongitude());
-    //     waste.setLocality(wasteDetails.getLocality());
-    //     waste.setCountry(wasteDetails.getCountry());
+    // waste.setLatitude(wasteDetails.getLatitude());
+    // waste.setLongitude(wasteDetails.getLongitude());
+    // waste.setLocality(wasteDetails.getLocality());
+    // waste.setCountry(wasteDetails.getCountry());
 
-    //     Waste updatedwaste = wasteRepository.save(waste);
-    //     return ResponseEntity.ok(updatedwaste);
+    // Waste updatedwaste = wasteRepository.save(waste);
+    // return ResponseEntity.ok(updatedwaste);
     // }
 
     // delete waste rest api
