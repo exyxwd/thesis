@@ -1,0 +1,278 @@
+/* ################################ FILTER BUTTON ################################ */
+
+.filter-button {
+    top: 50%;
+    padding: 0;
+    border: 0px;
+    height: 50px;
+    left: -50px;
+    color: $filter-background;
+    position: absolute;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: $secondary-base;
+}
+
+.filter-button:hover {
+    color: $link-hover;
+    background-color: $secondary-base;
+}
+
+.btn.filter-button:active {
+    color: $filter-background;
+    background-color: $secondary-base;
+}
+
+.filter-button span {
+    width: 50px;
+    font-size: 32px;
+    vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+    .filter-button {
+        top: -50px;
+        left: 100%;
+        transform: translate(-100%);
+        border-bottom-left-radius: 0;
+    }
+}
+
+/* ################################ FILTER MENU BODY ################################ */
+
+#filter-menu {
+    z-index: 10;
+    width: 600px;
+    right: -600px;
+    display: flex;
+    position: fixed;
+    transition: 350ms;
+    height: calc(100vh - $nav-height);
+    border-left: 3px solid $secondary-base;
+}
+
+#filter-menu.active {
+    right: 0%;
+    transition: 350ms;
+}
+
+.filter-container {
+    overflow-x: hidden;
+    background-color: $secondary-base;
+}
+
+.filter-row {
+    margin-top: 5px;
+    padding: 10px 0px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: $secondary-base;
+    background-color: $filter-background;
+}
+
+.filter-col {
+    padding: 10px 10px 0px;
+}
+
+@media (max-width: 768px) {
+    #filter-menu.active {
+        top: 30%;
+    }
+
+    #filter-menu {
+        top: 100%;
+        right: 0px;
+        height: 100%;
+        width: 100%;
+        bottom: -300px;
+        border-left: none;
+    }
+
+    .filter-container {
+        height: 70%;
+        width: 100%;
+    }
+}
+
+/* ################################ FILTER ITEMS ################################ */
+
+.filter-item {
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 1.1rem;
+    transition: 300ms;
+    border-radius: 500px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    border: 2px solid $secondary-base;
+}
+
+.filter-item.no-points {
+    color: gray;
+    border-color: gray;
+    background-color: lightgray;
+}
+
+.filter-item.no-points:hover {
+    color: gray;
+    border-color: gray;
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+
+.filter-item:hover {
+    color: $filter-background;
+    transition: all 100ms ease-in;
+    background-color: $secondary-base;
+}
+
+.filter-item.selected {
+    color: $filter-background;
+    background-color: $secondary-base;
+}
+
+.filter-item.selected:hover {
+    color: red;
+    border-color: red;
+    background-color: $filter-background;
+}
+
+.filter-item-count {
+    top: -25%;
+    right: 0px;
+    font-size: 14px;
+    padding: 0px 3px;
+    border-radius: 5px;
+    font-weight: bold;
+    position: absolute;
+    color: $filter-background;
+    background-color: $secondary-base;
+}
+
+/* ################################ FILTER COUNTER ################################ */
+
+.filter-counter {
+    text-align: center;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: $secondary-base;
+    background-color: $filter-background;
+}
+
+.filter-counter * {
+    padding: 0px;
+}
+
+.filter-counter-count {
+    padding: 10px;
+    font-size: 0.8rem;
+}
+
+.filter-counter-count div {
+    font-size: 1.8rem;
+}
+
+/* ################################ FILTER WARNING ################################ */
+
+.filter-category-warning {
+    max-width: 40%;
+    color: yellow;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-align: center;
+    align-content: center;
+    background-color: rgb(117, 124, 50);
+}
+
+/* ################################ DOWNLOAD BUTTON ################################ */
+
+.download-button {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $dwnbtn;
+    color: $filter-background;
+    border-radius: 0px 10px 10px 0px;
+}
+
+.download-button:hover {
+    color: $filter-background;
+    background-color: $dwnbtn-hover;
+}
+
+.btn.download-button:active {
+    color: $filter-background;
+    background-color: $secondary-base;
+}
+
+.download-button span {
+    font-size: 2.7rem;
+    vertical-align: middle;
+    align-content: center;
+}
+
+#download-button-text {
+    font-size: 0.9rem;
+}
+
+/* ################################ TIME SLIDER & DATE SELECTOR ################################ */
+
+#date-input {
+    border: none;
+    outline: none;
+    background-color: $filter-background;
+}
+
+#time-slider {
+    z-index: 10;
+    border: none;
+    outline: none;
+    appearance: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background: transparent;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+#time-slider::-webkit-slider-runnable-track {
+    height: 0.5rem;
+    background: $secondary-base;
+}
+
+#time-slider::-webkit-slider-thumb {
+    width: 1.2rem;
+    height: 1.2rem;
+    appearance: none;
+    margin-top: -6px;
+    border-radius: 30%;
+    -webkit-appearance: none;
+    background-color: $highlight;
+}
+
+#time-slider:focus::-webkit-slider-thumb {
+    background-color: skyblue;
+}
+
+#time-slider::-moz-range-track {
+    height: 0.5rem;
+    background: $secondary-base;
+}
+
+#time-slider::-moz-range-thumb {
+    border: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    transition: 250ms;
+    border-radius: 50%;
+    background-color: $highlight;
+}
+
+#time-slider:hover::-moz-range-thumb {
+    background-color: skyblue;
+}

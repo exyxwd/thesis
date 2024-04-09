@@ -1,70 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import React, { useEffect, useRef, useState } from 'react';
 // import 'css/map.scss';
-import {  MinimalTrashData } from 'models/models';
 import blueMarkerIcon from 'images/marker_blue.png';
 import greenMarkerIcon from 'images/marker_green.png';
+import markerShadow from 'images/marker_shadow.png';
+import { MinimalTrashData, filterRivers } from 'models/models';
 import { useNavigate } from 'react-router-dom';
+import { getFilteredRivers, isFitForFilters } from 'models/functions';
+import { useActiveFilters, useSelectedTime } from './FilterContext';
 // import { useActiveFilters, useSelectedTime } from './FilterContext';
 
-
 /**
- * Decides whether a garbage dump is fit for the active filters
- * 
- * @param {MinimalTrashData} e The data of the garbage dump 
- * @param {string[]} activeFilters The currently active filters 
- * @returns {boolean} Whether the garbage dump is fit for the active filters
+ * The properties of the map
+ *
+ * @interface MapProps
+ * @property {MinimalTrashData[]} wastes The data of the waste dumps
+ * @property {(data: number) => void} onMarkerClick Function to handle clicks on markers
  */
-// const isFitForFilters = (e: MinimalTrashData | ExpandedTrashData, activeFilters: string[], selectedTime: Date): boolean => {
-
-//     const countryFit = activeFilters.includes(e.country)
-//     const riverFit = activeFilters.every((filter) => {
-//         switch (filter) {
-//             case 'Tisza':
-//             case 'Kraszna':
-//             case 'Bodrog':
-//             case 'Szamos':
-//             case 'Túr':
-//             case 'Duna':
-//                 return e.rivers ? activeFilters.some(filter => e.rivers.includes(filter)) : false
-        
-//             default:
-//                 return true;
-//         }
-//     })
-//     const sizeFit = activeFilters.includes(e.size)
-//     const typeFit = activeFilters.every((filter) => {
-//         switch (filter) {
-//             case 'Plastic':
-//             case 'Metal':
-//             case 'Glass':
-//             case 'Domestic':
-//             case 'Construction':
-//             case 'Liquid':
-//             case 'Dangerous':
-//             case 'Automotive':
-//             case 'Electronic':
-//             case 'Organic':
-//             case 'DeadAnimals':
-//                 return e.types.includes(TrashType[filter]);
-        
-//             default:
-//                 return true;
-//         }
-//     })
-
-//     const statusFit = activeFilters.includes(e.status)
-
-//     const timeFit = selectedTime < new Date(e.updateTime)
-
-    
-//     return countryFit && sizeFit && typeFit && statusFit && riverFit && timeFit
-// }
-
 interface MapProps {
-    garbages: MinimalTrashData[];
-    onMarkerClick: (data: number) => void;
+    wastes: MinimalTrashData[];
 }
 
 /**
@@ -73,19 +28,21 @@ interface MapProps {
  * @param {MapProps} param0 garbages: The data of the garbage dumps, onMarkerClick: The function to handle the click on a marker 
  * @returns {React.ReactElement} The map
  */
-const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.ReactElement => {
+const Map: React.FC<MapProps> = ({ wastes }: MapProps): React.ReactElement => {
     const map = useRef<L.Map>();
     const clusterLayer = useRef<L.MarkerClusterGroup>();
     const mapDivRef = useRef<HTMLDivElement>(null);
     const [mapData, setMapData] = useState<MinimalTrashData[]>([]);
-    // const activeFilters = useActiveFilters();
-    // const selectedTime = useSelectedTime();
+    const activeFilters = useActiveFilters();
+    const selectedTime = useSelectedTime();
+    const filteredRivers = getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter)))
+
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        setMapData(garbages);
-    }, [garbages]);
+        setMapData(wastes);
+    }, [wastes]);
 
     useEffect(() => {
         clusterLayer.current?.remove();
@@ -104,14 +61,15 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
         });
 
         mapData.forEach((e) => {
-            // if (!isFitForFilters(e, activeFilters, selectedTime)) {
-            //     return;
-            // }
+            if (!isFitForFilters(e, activeFilters, selectedTime, filteredRivers)) {
+                return;
+            }
             let markerIcon: L.Icon;
+
             if (e.status === 'STILLHERE') {
                 markerIcon = L.icon({
                     iconUrl: blueMarkerIcon,
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    shadowUrl: markerShadow,
                     iconSize: [50, 50],
                     iconAnchor: [25, 50],
                     popupAnchor: [1, -34],
@@ -121,7 +79,7 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
             } else {
                 markerIcon = L.icon({
                     iconUrl: greenMarkerIcon,
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    shadowUrl: markerShadow,
                     iconSize: [50, 50],
                     iconAnchor: [25, 50],
                     popupAnchor: [1, -34],
@@ -134,14 +92,13 @@ const Map: React.FC<MapProps> = ({ garbages, onMarkerClick }: MapProps): React.R
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
                 marker.on('click', () => {
-                    onMarkerClick(e.id);
                     navigate(`/waste/${e.id}`)
                 });
             }
         });
 
         map.current.addLayer(clusterLayer.current);
-    }, [mapData]); // activeFilters, selectedTime
+    }, [mapData, activeFilters, selectedTime]); // activeFilters, selectedTime
 
     useEffect(() => {
         if (!mapDivRef.current || map.current) {

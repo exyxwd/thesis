@@ -11,7 +11,7 @@ const ActiveFiltersContext = createContext<{
 
 /**
  * Getter for active garbage filters
- * 
+ *
  * @returns {string[]} The currently active filters
  */
 export const useActiveFilters = (): string[] => {
@@ -32,7 +32,7 @@ export const useSelectedTime = (): Date => {
 
 /**
  * Setter for the active garbage filters
- * 
+ *
  * @returns {React.Dispatch<React.SetStateAction<string[]>>} The function to set the active filters
  */
 export const useSetActiveFilters = (): React.Dispatch<React.SetStateAction<string[]>> => {
@@ -52,14 +52,14 @@ export const useSetSelectedTime = (): React.Dispatch<React.SetStateAction<Date>>
 }
 
 /**
- * Wraps its children with a context provider that allows managing active filters
+ * Wraps its children with a context provider that allows managing active filters including the selected time
  *
  * @param {Object} props The component props
  * @param {React.ReactNode} props.children The child components that will be wrapped by the context provider
  * @returns {React.ReactElement} A context provider for managing active filters
  */
 export const ActiveFiltersProvider: React.FC<{ children: React.ReactNode }> = ({ children }: { children: React.ReactNode; }): React.ReactElement => {
-    const [activeFilters, setActiveFilters] = useState<string[]>(["HUNGARY", "STILLHERE", "BAG", "TISZA"]);
+    const [activeFilters, setActiveFilters] = useState<string[]>(["HUNGARY", "STILLHERE", "BAG"]);
     const [selectedTime, setSelectedTime] = useState<Date>(new Date(calcRange().def));
 
     return (

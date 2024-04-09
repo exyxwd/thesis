@@ -1,3 +1,12 @@
+@keyframes open {
+    from {
+        left: -500px;
+    }
+
+    to {
+        left: 0px;
+    }
+}
 
 .close-button-container {
     position: absolute;
@@ -7,28 +16,21 @@
     right: 0;
 }
 
-.waste-panel {
+#waste-panel {
     position: fixed;
     left: 0;
-    width: 0;
+    width: 500px;
     height: calc(100vh - $nav-height);
     overflow-y: auto;
     overflow-x: hidden;
-    transition: 0.5s;
     background-color: #5F6A8B;
-    padding: 0 0 0 0;
+    padding: 0;
     box-sizing: border-box;
     direction: rtl;
     z-index: 10;
-}
-
-.waste-panel.open {
-    width: 500px;
-}
-
-.waste-panel-topbar {
-    display: flex;
-    justify-content: flex-end;
+    animation-name: open;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
 }
 
 .waste-panel-close-btn {
@@ -58,14 +60,18 @@
     width: 100%;
 }
 
+.waste-panel-trash-image.hidden {
+    position: absolute;
+    margin: -999px;
+}
+
 .waste-panel-base {
     margin-top: 10px;
     margin-left: 0;
     direction: ltr;
 }
 
-.header-item-icon
-{
+.header-item-icon {
     padding-right: 5px;
 }
 
@@ -101,7 +107,6 @@
 
 .waste-panel-note-header {
     margin-top: 20px;
-    margin-left: 20px;
     font-size: 20px;
     font-weight: bold;
     direction: ltr;

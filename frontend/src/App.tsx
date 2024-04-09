@@ -20,7 +20,7 @@ function App() {
         <>
             <NavBar i18n={i18n}/>
             <Routes>
-                <Route path={`/waste/:selectedMarkerId`} element={<MainPage />}></Route>
+                <Route path={`/waste/:selectedMarkerId`} element={<MainPage />}/>
                 <Route path={'/'} element={<MainPage />}/>
                 <Route path={`/*`} element={<Navigate to={'/'} />} />
             </Routes>

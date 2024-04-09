@@ -1,3 +1,5 @@
+// TODO: Add the waste's filters to the selected filters array,
+// to make sure the current point fits the curreently selected filters
 import { useNavigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from 'react-query';
@@ -17,7 +19,6 @@ import { ExpandedTrashData } from 'models/models';
 
 interface WasteInfoPanelProps {
     id: number;
-    open: boolean;
     onClose: () => void;
 }
 
@@ -28,7 +29,7 @@ interface WasteInfoPanelProps {
  * open: if the sidebar is in open state, onClose: function to close the info panel
  * @returns {React.ReactElement} The waste information panel
  */
-const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.ReactElement => {
+const WasteInfoPanel = ({ id, onClose }: WasteInfoPanelProps): React.ReactElement => {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const panelRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
      * @param {MouseEvent} e The click event
      */
     const handleClickElsewhere = (e: MouseEvent) => {
-        const target = e.target as HTMLElement
+        const target = e.target as HTMLElement;
         if (panelRef.current && !panelRef.current.contains(target)) {
             onClose();
             navigate('/');
@@ -136,10 +137,10 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
     const trashDate = new Date(data.updateTime);
 
     return (
-        <div className={open ? "waste-panel open" : "waste-panel"} ref={panelRef}>
+        <div id='waste-panel' ref={panelRef}>
             <div className='close-button-container'>
                 <button className='waste-panel-close-btn' onClick={() => { onClose(); navigate('/'); }}>
-                    <span className="waste-panel-close-symbol material-symbols-outlined">close</span>
+                    <span className='waste-panel-close-symbol material-symbols-outlined'>close</span>
                 </button>
             </div>
             <div className='row waste-panel-trash-image-container'>
@@ -148,8 +149,7 @@ const WasteInfoPanel = ({ id, open, onClose }: WasteInfoPanelProps): React.React
                 )}
                 <img
                     key={data.imageUrl}
-                    className='waste-panel-trash-image'
-                    style={!imageLoaded ? { position: "absolute", margin: "-999px" } : {}}
+                    className={imageLoaded ? 'waste-panel-trash-image' : 'waste-panel-trash-image hidden'}
                     src={data.imageUrl}
                     onLoad={handleImageLoad}
                 />

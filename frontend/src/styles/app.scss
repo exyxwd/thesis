@@ -1,9 +1,11 @@
 $base: rgb(47, 59, 89);
 $highlight: rgb(64, 83, 133);
 $link-hover: skyblue;
+$secondary-base: rgb(95,107,139);
+$dwnbtn: rgb(70, 191, 66);
+$dwnbtn-hover: rgb(20, 141, 26);
+$filter-background: rgb(250, 249, 246);
 // $link: rgb(19, 131, 206);
-// $dwnbtn: rgb(70, 191, 66);
-// $dwnbtn-hover: rgb(20, 141, 26);
 
 $nav-height: 63px;
 
@@ -11,6 +13,7 @@ $nav-height: 63px;
 
 @import './wasteInfoPanel.scss';
 @import './navigation.scss';
+@import './filters.scss';
 @import './map.scss';
 
 body {
@@ -27,6 +30,24 @@ body {
     z-index: 0;
 }
 
+::-webkit-scrollbar {
+    width: 13px;
+}
+
+/* Set the scrollbar track color */
+::-webkit-scrollbar-track {
+    background: #2f2f2f; /* Dark background color */
+}
+
+/* Set the scrollbar handle color */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Lighter handle color */
+}
+
+/* Set the scrollbar handle hover color */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Even lighter handle color on hover */
+}
 /* ################################ LOADING BAR ################################ */
 
 @keyframes spinner {

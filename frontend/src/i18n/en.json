@@ -11,14 +11,59 @@
         "updateneeded": "Update needed"
     },
     "details": {
-        "More": "More to clean",
         "createTime": "Creation time",
         "updateTime": "Update time",
         "note": "Note",
         "image": "Image",
         "longitude": "Longitude",
         "latitude": "Latitude",
-        "id": "ID"
+        "id": "ID",
+        "sublocality": "Sublocality",
+        "locality": "Locality",
+        "country": "Country",
+        "size": "Size",
+        "status": "Status",
+        "types": "Types",
+        "imageUrl": "Image URL",
+        "rivers": "Rivers",
+        "file_name": "Waste report"
+    },
+    "filters": {
+        "plastic": "Plastic",
+        "metal": "Metal",
+        "glass": "Glass",
+        "domestic": "Household waste",
+        "construction": "Construction waste",
+        "liquid": "Liquid",
+        "dangerous": "Dangerous waste",
+        "automotive": "Car parts",
+        "electronic": "Electronic waste",
+        "organic": "Organic waste",
+        "deadanimals": "Animal remains",
+        "hungary": "Hungary",
+        "ukraine": "Ukraine",
+        "romania": "Romania",
+        "serbia": "Serbia",
+        "slovakia": "Slovakia",
+        "bag": "Fits in a bag",
+        "wheelbarrow": "Fits in wheelbarrow",
+        "car": "Car required",
+        "stillhere": "Still contaminated",
+        "cleaned": "Cleaned",
+        "more": "More"
+    },
+    "filter_names": {
+        "time": "Update time",
+        "state": "State",
+        "type": "Type",
+        "size": "Size",
+        "place": "Sub-basin",
+        "country": "Country",
+        "num_fit_for_filters": "Waste sites",
+        "download_btn_text": "Download data of selected wastes",
+        "country_warning": "Choose country",
+        "size_warning": "Choose size",
+        "state_warning": "Choose status"
     },
     "types": {
         "plastic": "Plastic",
@@ -48,16 +93,11 @@
         "Kőrös-ér": "Kőrös-ér",
         "Duna": "Duna",
         "Place": "Location",
-        "subLocality": "Sublocality",
-        "locality": "Locality",
         "accessibilities": "Accessibilities",
         "ByCar": "By car",
         "UnderWater": "Under water",
         "InCave": "In cave",
         "NotForGeneralCleanup": "Not for general clean up"
-    },
-    "file": {
-        "file_name": "Garbage report"
     },
     "size": {
         "Size": "Size",
@@ -75,11 +115,11 @@
         "country": "Country",
         "rivers": "Rivers",
         "images": "Images",
-        "Hungary": "Hungary",
-        "Ukraine": "Ukraine",
-        "Romania": "Romania",
-        "Serbia": "Serbia",
-        "Slovakia": "Slovakia"
+        "hungary": "Hungary",
+        "ukraine": "Ukraine",
+        "romania": "Romania",
+        "serbia": "Serbia",
+        "slovakia": "Slovakia"
     },
     "user": {
         "username": "Username",

@@ -28,3 +28,28 @@ export const fetchWasteById = async (id: number): Promise<ExpandedTrashData> => 
     }
     return await response.json();
 }
+
+/**
+ * Fetches detailed data of waste dumps from multiple given ids
+ *
+ * @param {number[]} ids - ids of the waste dumps
+ * @returns {SidebarTrashData} - detailed data of the waste dumps
+ */
+export const fetchFilteredWasteData = async (ids: number[]): Promise<ExpandedTrashData[]> => {
+    const requestData = {
+        ids: ids
+    };
+    const response = await fetch(`/api/wastes/filteredWastes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    });
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok.');
+    }
+
+    return response.json();
+};

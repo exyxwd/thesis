@@ -11,14 +11,59 @@
         "updateneeded": "Frissítés szükséges"
     },
     "details": {
-        "More": "Még több",
         "createTime": "Létrehozás ideje",
         "updateTime": "Frissítés ideje",
         "note": "Megjegyzés",
         "image": "Kép",
         "longitude": "Hosszúság",
         "latitude": "Szélesség",
-        "id": "Azonosító"
+        "id": "Azonosító",
+        "sublocality": "Terület",
+        "locality": "Helység",
+        "country": "Country",
+        "size": "Méret",
+        "status": "Státusz",
+        "types": "Típusok",
+        "imageUrl": "Kép URL",
+        "rivers": "Folyók",
+        "file_name": "Szennyezettségi bejelentések"
+    },
+    "filters":{
+        "plastic": "Műanyag",
+        "metal": "Fém",
+        "glass": "Üveg",
+        "domestic": "Háztartási hulladék",
+        "construction": "Építkezési hulladék",
+        "liquid": "Folyadék",
+        "dangerous": "Veszélyes hulladék",
+        "automotive": "Autóalkatrész",
+        "electronic": "Elektronikai hulladék",
+        "organic": "Szerves hulladék",
+        "deadanimals": "Állati tetemek",
+        "hungary": "Magyarország",
+        "ukraine": "Ukrajna",
+        "romania": "Románia",
+        "serbia": "Szerbia",
+        "slovakia": "Szlovákia",
+        "bag": "Belefér egy zsákba",
+        "wheelbarrow": "Talicskával szállítható",
+        "car": "Gépkocsi szükséges",
+        "stillhere": "Még szennyezett",
+        "cleaned": "Megtisztítva",
+        "more": "Még több"
+    },
+    "filter_names": {
+        "time": "Frissítés ideje",
+        "state": "Állapot",
+        "type": "Típus",
+        "size": "Méret",
+        "place": "Vízgyűjtő",
+        "country": "Ország",
+        "num_fit_for_filters": "Kiválasztott szemét",
+        "download_btn_text": "Kiválasztott pontok adatainak letöltése",
+        "country_warning": "Válassz országot",
+        "size_warning": "Válassz méretet",
+        "state_warning": "Válassz állapotot"
     },
     "sizes": {
         "bag": "Belefér egy zsákba",
@@ -56,9 +101,6 @@
         "InCave": "Barlangban",
         "NotForGeneralCleanup": "Nem általános takarításra"
     },
-    "file": {
-        "file_name": "Szennyezettség bejelentések"
-    },
     "size": {
         "Size": "Méret",
         "size": "Méret"
@@ -75,11 +117,11 @@
         "country": "Ország",
         "rivers": "Folyók",
         "images": "Képek",
-        "Hungary": "Magyarország",
-        "Ukraine": "Ukrajna",
-        "Romania": "Románia",
-        "Serbia": "Szerbia",
-        "Slovakia": "Szlovákia"
+        "hungary": "Magyarország",
+        "ukraine": "Ukrajna",
+        "romania": "Románia",
+        "serbia": "Szerbia",
+        "slovakia": "Szlovákia"
     },
     "user": {
         "username": "Felhasználónév",
