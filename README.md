@@ -1,7 +1,7 @@
 # Thesis - EXYXWD
 
 This project is a full-stack application built with React on the frontend, Spring Boot on the backend, and PostgreSQL is used as the database. 
-The aim of the project is the map visualization of illegally disposed wastes mainly around Hungarian bodies of water, the data is provided by Trashout.
+The aim of the project is the map visualization of illegally disposed wastes mainly around Hungarian bodies of water, the data is provided by TrashOut.
 
 ## Prerequisites
 - [Bun](https://bun.sh/docs/installation)
@@ -28,11 +28,15 @@ create user crassus with encrypted password 'crassus';
 ```
 grant all privileges on database wastedb to crassus;
 ```
-5. Build the application in the ```backend``` directory:
+5. Set up config.json at ```/backend/src/main/resources/config.json```: <br>
+An authentication token is needed for the database updates by TrashOut ("Login:AuthToken" in the ```config.json```).
+It can be found in the [TrashOut server side source code](https://github.com/TrashOut/Server).
+
+7. Build the application in the ```/backend``` directory:
 ```bash
 mvn clean install
 ```
-6. Run the application:
+7. Run the application:
 ```bash
 mvn spring-boot:run
 ```
@@ -40,7 +44,7 @@ The backend will start on http://localhost:8080 by default.
 
 ### Frontend
 
-In the ```frontend``` directory:
+In the ```/frontend``` directory:
 
 1. Install dependencies:
 ```bash
