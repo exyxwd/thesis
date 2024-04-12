@@ -2,20 +2,17 @@ package hu.exyxwd.tisztatisza.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
+
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class TimedHostWasteService {
     private final TrashOutService trashOutService;
     private final RiverService riverService;
+    private final CacheService cacheService;
 
-    public TimedHostWasteService(TrashOutService trashOutService, RiverService riverService) {
-        this.trashOutService = trashOutService;
-        this.riverService = riverService;
-    }
-
-    @PostConstruct
     @Scheduled(fixedRate = 4 * 60 * 60 * 1000) // Run every 4 hours
     // @Scheduled(fixedRate = 60 * 1000)
     @Transactional
@@ -26,5 +23,9 @@ public class TimedHostWasteService {
         riverService.loadRivers();
 
         riverService.updateNullRivers();
+
+        System.out.println("Caching");
+        cacheService.cacheInverseFilteredMapData();
+        cacheService.cacheFilteredMapData();
     }
 }

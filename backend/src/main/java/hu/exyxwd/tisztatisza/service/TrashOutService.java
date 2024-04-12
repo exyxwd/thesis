@@ -5,6 +5,7 @@ import org.json.simple.parser.*;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -139,6 +140,7 @@ public class TrashOutService {
     }
 
     @Transactional
+    @CacheEvict(value = {"filteredMapData", "inverseFilteredMapData"}, allEntries = true)
     public void updateDatabase() {
         // String token = getToken();
 
@@ -153,7 +155,7 @@ public class TrashOutService {
 
         JSONParser parser = new JSONParser();
         try {
-            LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(2).toLocalDateTime();
+            LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
 
             // Delete all wastes that are older than 6 years
             List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);

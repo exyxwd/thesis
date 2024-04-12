@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.cache.annotation.Cacheable;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.dto.MapDataDTO;
@@ -110,6 +110,7 @@ public class WasteController {
         }).collect(Collectors.toList());
     }
 
+    @Cacheable(value = "filteredMapData")
     @GetMapping("/wastes/mapDataFiltered")
     public List<MapDataDTO> getFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
@@ -120,6 +121,7 @@ public class WasteController {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable(value = "inverseFilteredMapData")
     @GetMapping("/wastes/mapDataFilteredInverse")
     public List<MapDataDTO> getInverseFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
