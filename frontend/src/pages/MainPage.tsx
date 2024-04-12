@@ -3,23 +3,20 @@ import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
-import { fetchWasteData } from 'API/queryUtils';
+import { fetchFilteredWasteData, fetchFilteredInverseWasteData } from 'API/queryUtils';
 import { ActiveFiltersProvider } from 'components/Main/FilterContext';
 import Filters from 'components/Main/Filters';
 import Map from 'components/Main/Map';
 import WasteInfoPanel from 'components/Main/WasteInfoPanel';
 import { MinimalTrashData } from 'models/models';
 
-/**
- * Wrapper for the components that make up the main page, handles the fetching for the Map component
- *
- * @returns {React.ReactElement} Main page
- */
 const MainPage: React.FC = (): React.ReactElement => {
-    const { data: wasteData, error: wasteFetchError } = useQuery<MinimalTrashData[]>('wastes', fetchWasteData, { staleTime: Infinity, cacheTime: Infinity });
+    const { data: filteredWasteData, error: filteredWasteFetchError } = useQuery<MinimalTrashData[]>('filteredWastes', fetchFilteredWasteData, { staleTime: Infinity, cacheTime: Infinity });
+    const { data: inverseFilteredWasteData, error: inverseFilteredWasteFetchError, isLoading } = useQuery<MinimalTrashData[]>('inverseFilteredWastes', fetchFilteredInverseWasteData, { staleTime: Infinity, cacheTime: Infinity, enabled: !!filteredWasteData });
+
     let { selectedMarkerId } = useParams();
 
-    if (wasteFetchError) return (
+    if (filteredWasteFetchError || inverseFilteredWasteFetchError) return (
         <div className='loading-error'>
             <span className="material-symbols-outlined loading-error-icon">sentiment_dissatisfied</span>
             <div><Trans i18nKey='loading_error'>Hiba az adatok betöltésekor. Próbálja újra később.</Trans></div>
@@ -38,11 +35,13 @@ const MainPage: React.FC = (): React.ReactElement => {
         console.log(id, phase, actualDuration, baseDuration, startTime, commitTime, interactions);
       };
 
+    const wasteData = [...(filteredWasteData || []), ...(inverseFilteredWasteData || [])];
+
     return (
         <ActiveFiltersProvider>
-            {wasteData && <Profiler id="Filters" onRender={callback}><Filters wasteData={wasteData} /></Profiler>}
-            {wasteData ? <Map wastes={wasteData} /> : <div className='loader'></div>}
-            {selectedMarkerId && wasteData && <WasteInfoPanel id={parseInt(selectedMarkerId)}
+            {wasteData.length > 0 && <Profiler id="Filters" onRender={callback}><Filters wasteData={wasteData} isLoading={isLoading} /></Profiler>}
+            {wasteData.length > 0 ? <Map wastes={wasteData} /> : <div className='loader'></div>}
+            {selectedMarkerId && wasteData.length > 0 && <WasteInfoPanel id={parseInt(selectedMarkerId)}
                 onClose={() => { selectedMarkerId = undefined; }} key={selectedMarkerId} />}
         </ActiveFiltersProvider>
     )

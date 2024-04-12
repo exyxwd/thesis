@@ -1,25 +1,12 @@
-import { MinimalTrashData, ExpandedTrashData } from 'models/models';
+import { ExpandedTrashData, MinimalTrashData } from 'models/models';
 // const baseURL = window.location.origin;
 // const baseURL = 'http://localhost:8080/api';
 
 /**
- * Fetches reduced data of all garbage dumps
+ * Fetches detailed data of a waste dump
  *
- * @returns {MinimalTrashData[]} - reduced data of all garbage dumps
- */
-export const fetchWasteData = async (): Promise<MinimalTrashData[]> => {
-    const response = await fetch(`/api/wastes/mapData`, { method: 'GET' });
-    if (!response.ok) {
-        throw new Error('Network response was not ok.');
-    }
-    return response.json();
-};
-
-/**
- * Fetches detailed data of a garbage dump
- *
- * @param {number} id - id of the garbage dump
- * @returns {ExpandedTrashData} - detailed data of the garbage dump
+ * @param {number} id - id of the waste dump
+ * @returns {ExpandedTrashData} - detailed data of the waste dump
  */
 export const fetchWasteById = async (id: number): Promise<ExpandedTrashData> => {
     const response = await fetch(`/api/wastes/${id}`, { method: 'GET' });
@@ -35,7 +22,7 @@ export const fetchWasteById = async (id: number): Promise<ExpandedTrashData> => 
  * @param {number[]} ids - ids of the waste dumps
  * @returns {SidebarTrashData} - detailed data of the waste dumps
  */
-export const fetchFilteredWasteData = async (ids: number[]): Promise<ExpandedTrashData[]> => {
+export const fetchMultipleWasteById = async (ids: number[]): Promise<ExpandedTrashData[]> => {
     const requestData = {
         ids: ids
     };
@@ -51,5 +38,31 @@ export const fetchFilteredWasteData = async (ids: number[]): Promise<ExpandedTra
         throw new Error('Network response was not ok.');
     }
 
+    return response.json();
+};
+
+/**
+ * Fetches reduced data of waste dumps fitting the default filters
+ *
+ * @returns {MinimalTrashData[]} - reduced data of default filter fitting waste dumps
+ */
+export const fetchFilteredWasteData = async (): Promise<MinimalTrashData[]> => {
+    const response = await fetch(`/api/wastes/mapDataFiltered`, { method: 'GET' });
+    if (!response.ok) {
+        throw new Error('Network response was not ok.');
+    }
+    return response.json();
+};
+
+/**
+ * Fetches reduced data of waste dumps not fitting the default filters
+ *
+ * @returns {MinimalTrashData[]} - reduced data of default filter fitting waste dumps
+ */
+export const fetchFilteredInverseWasteData = async (): Promise<MinimalTrashData[]> => {
+    const response = await fetch(`/api/wastes/mapDataFilteredInverse`, { method: 'GET' });
+    if (!response.ok) {
+        throw new Error('Network response was not ok.');
+    }
     return response.json();
 };

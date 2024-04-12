@@ -1,15 +1,12 @@
-import React from 'react'
-import * as XLSX from 'xlsx';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import * as XLSX from 'xlsx';
 
-import { isFitForFilters } from 'models/functions';
-import { useTranslation } from 'react-i18next';
-import { useActiveFilters, useSelectedTime } from './FilterContext';
-import { fetchFilteredWasteData } from 'API/queryUtils';
+import { fetchMultipleWasteById } from 'API/queryUtils';
+import { getFilteredRivers, isFitForFilters } from 'models/functions';
 import { ExpandedTrashData, MinimalTrashData, filterRivers } from 'models/models';
-import { Trans } from 'react-i18next';
-import { getFilteredRivers } from 'models/functions';
+import { Trans, useTranslation } from 'react-i18next';
+import { useActiveFilters, useSelectedTime } from './FilterContext';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)
@@ -96,7 +93,7 @@ const DownloadButton: React.FC<DownloaderProps> = ({ data }: DownloaderProps): R
     const filteredRivers = getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter)))
 
     // Fetch filtered data for the selected waste dumps and trigger the download on success
-    useQuery('filteredData', () => fetchFilteredWasteData(data.filter(item => isFitForFilters(item, activeFilters, selectedTime,filteredRivers)).map(item => item.id)),
+    useQuery('filteredData', () => fetchMultipleWasteById(data.filter(item => isFitForFilters(item, activeFilters, selectedTime,filteredRivers)).map(item => item.id)),
         { enabled: shouldFetch, onSuccess: (fetchedData) => { downloadData(fetchedData, t); setShouldFetch(false); } });
 
     const downloadHandler = () => {
