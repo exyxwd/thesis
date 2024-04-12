@@ -8,7 +8,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "wastes")
+@Table(name = "wastes", indexes = {
+        @Index(columnList = "country"),
+        @Index(columnList = "size"),
+        @Index(columnList = "status"),
+        @Index(columnList = "updateTime")
+})
 @Getter
 @Setter
 @NoArgsConstructor

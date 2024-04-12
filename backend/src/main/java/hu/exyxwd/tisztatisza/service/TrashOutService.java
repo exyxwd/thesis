@@ -6,6 +6,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.*;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.*;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class TrashOutService {
@@ -153,10 +153,10 @@ public class TrashOutService {
 
         JSONParser parser = new JSONParser();
         try {
-            LocalDateTime sixYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
+            LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(2).toLocalDateTime();
 
             // Delete all wastes that are older than 6 years
-            List<Waste> oldWastes = wasteRepository.findAllOlderThan(sixYearsAgo);
+            List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);
             wasteRepository.deleteAll(oldWastes);
 
             // Parse the JSON array from TrashOut
@@ -181,7 +181,7 @@ public class TrashOutService {
 
                     // Only save the waste if it had an update in the past 6 years and it is not in
                     // the database or it has been updated
-                    if (newWaste.getUpdateTime().isAfter(sixYearsAgo)
+                    if (newWaste.getUpdateTime().isAfter(XYearsAgo)
                             && (existingWaste == null || !newWaste.equals(existingWaste))) {
                         wastesToSave.add(newWaste);
                     }

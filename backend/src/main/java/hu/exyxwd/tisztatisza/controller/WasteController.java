@@ -1,17 +1,23 @@
 package hu.exyxwd.tisztatisza.controller;
 
-import java.util.stream.Collectors;
-import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.HashMap;
 import java.math.BigDecimal;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
-import hu.exyxwd.tisztatisza.repository.WasteRepository;
+
 import hu.exyxwd.tisztatisza.model.Waste;
+import hu.exyxwd.tisztatisza.dto.MapDataDTO;
+import hu.exyxwd.tisztatisza.dto.mapper.WasteMapper;
+import hu.exyxwd.tisztatisza.repository.WasteRepository;
+import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/api/")
@@ -19,6 +25,9 @@ public class WasteController {
 
     @Autowired
     private WasteRepository wasteRepository;
+
+    @Autowired
+    private WasteMapper wasteMapper;
 
     // get all wastes
     @GetMapping("/wastes")
@@ -102,38 +111,22 @@ public class WasteController {
     }
 
     @GetMapping("/wastes/mapDataFiltered")
-    public List<Object> getFilteredWastes() {
-        LocalDateTime twoYearsAgo = LocalDateTime.now().minusYears(2);
+    public List<MapDataDTO> getFilteredWastes() {
+        LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
         List<Waste> wastes = wasteRepository.findByFilters(Waste.WasteCountry.HUNGARY, Waste.WasteSize.BAG,
-                Waste.WasteStatus.STILLHERE, twoYearsAgo);
-        return wastes.stream().map(waste -> new Object() {
-            public Long id = waste.getId();
-            public BigDecimal latitude = waste.getLatitude();
-            public BigDecimal longitude = waste.getLongitude();
-            public Waste.WasteCountry country = waste.getCountry();
-            public Waste.WasteSize size = waste.getSize();
-            public Waste.WasteStatus status = waste.getStatus();
-            public Set<Waste.WasteType> types = waste.getTypes();
-            public Set<String> rivers = waste.getRivers();
-            public LocalDateTime updateTime = waste.getUpdateTime();
-        }).collect(Collectors.toList());
+                Waste.WasteStatus.STILLHERE, oneYearAgo);
+        return wastes.stream()
+                .map(wasteMapper::toMapData)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/wastes/mapDataFilteredInverse")
-    public List<Object> getInverseFilteredWastes() {
-        LocalDateTime twoYearsAgo = LocalDateTime.now().minusYears(2);
+    public List<MapDataDTO> getInverseFilteredWastes() {
+        LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
         List<Waste> wastes = wasteRepository.findByFiltersInverse(Waste.WasteCountry.HUNGARY, Waste.WasteSize.BAG,
-                Waste.WasteStatus.STILLHERE, twoYearsAgo);
-        return wastes.stream().map(waste -> new Object() {
-            public Long id = waste.getId();
-            public BigDecimal latitude = waste.getLatitude();
-            public BigDecimal longitude = waste.getLongitude();
-            public Waste.WasteCountry country = waste.getCountry();
-            public Waste.WasteSize size = waste.getSize();
-            public Waste.WasteStatus status = waste.getStatus();
-            public Set<Waste.WasteType> types = waste.getTypes();
-            public Set<String> rivers = waste.getRivers();
-            public LocalDateTime updateTime = waste.getUpdateTime();
-        }).collect(Collectors.toList());
+                Waste.WasteStatus.STILLHERE, oneYearAgo);
+        return wastes.stream()
+                .map(wasteMapper::toMapData)
+                .collect(Collectors.toList());
     }
 }
