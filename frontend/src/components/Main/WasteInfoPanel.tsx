@@ -2,7 +2,6 @@
 // to make sure the current point fits the curreently selected filters
 import { useNavigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from 'react-query';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,12 +12,18 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { fetchWasteById } from 'API/queryUtils';
 import { ExpandedTrashData } from 'models/models';
+import { useActiveFilters, useSelectedTime, useSetActiveFilters, useSetSelectedTime } from 'components/Main/FilterContext';
 
-
+/**
+ * The properties of the waste information panel
+ *
+ * @interface WasteInfoPanelProps
+ * @property {ExpandedTrashData} data The data of the selected waste dump
+ * @property {() => void} onClose Function to trigger on close of the info panel
+ */
 interface WasteInfoPanelProps {
-    id: number;
+    data: ExpandedTrashData;
     onClose: () => void;
 }
 
@@ -29,11 +34,18 @@ interface WasteInfoPanelProps {
  * open: if the sidebar is in open state, onClose: function to close the info panel
  * @returns {React.ReactElement} The waste information panel
  */
-const WasteInfoPanel = ({ id, onClose }: WasteInfoPanelProps): React.ReactElement => {
+const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElement => {
+    console.log('PANEL component rendered');
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+    const setActiveFilters = useSetActiveFilters();
     const panelRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const setSelectedTime = useSetSelectedTime();
+    const activeFilters = useActiveFilters();
+    const selectedTime = useSelectedTime();
+
 
     useEffect(() => {
         document.addEventListener("click", handleClickElsewhere, true);
@@ -118,15 +130,31 @@ const WasteInfoPanel = ({ id, onClose }: WasteInfoPanelProps): React.ReactElemen
     const handleImageLoad = () => {
         setImageLoaded(true);
     };
-    const queryClient = useQueryClient();
 
     useEffect(() => {
-        queryClient.resetQueries('detailedWasteData');
-    }, [id, queryClient]);
+        if (data) {
+            const newFilters = [...activeFilters];
 
-    const { data } = useQuery<ExpandedTrashData>('detailedWasteData', () => {
-        return fetchWasteById(id);
-    });
+            if (!newFilters.includes(data.country)) {
+                newFilters.push(data.country);
+            }
+
+            if (!newFilters.includes(data.size)) {
+                newFilters.push(data.size);
+            }
+
+            if (!newFilters.includes(data.status)) {
+                newFilters.push(data.status);
+            }
+            
+            setActiveFilters(newFilters);
+
+            const wasteUpdateTime = new Date(data.updateTime);
+            if (wasteUpdateTime < selectedTime) {
+                setSelectedTime(wasteUpdateTime);
+            }
+        }
+    }, [data]);
 
     useEffect(() => {
         setImageLoaded(false);
@@ -160,7 +188,7 @@ const WasteInfoPanel = ({ id, onClose }: WasteInfoPanelProps): React.ReactElemen
                 </div>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
                     <FontAwesomeIcon className='header-item-icon' icon={faTrashCan} />
-                    {data.status == "STILLHERE" ?
+                    {data.status == "STILLHERE" || data.status == "MORE" ?
                         <Trans i18nKey="status.stillhere">Még szennyezett</Trans> :
                         <Trans i18nKey="status.cleaned">Megtisztítva</Trans>}
                 </div>

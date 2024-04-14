@@ -6,15 +6,15 @@ import hu from './hu.json';
 import en from './en.json';
 
 interface NativeNames {
-  [key: string]: {
-    nativeName: string;
-    flag: string;
-  };
+    [key: string]: {
+        nativeName: string;
+        flag: string;
+    };
 }
 
 export const languages: NativeNames = {
-  hu: { nativeName: 'Magyar', flag: 'hu' },
-  en: { nativeName: 'English', flag: 'gb' }
+    hu: { nativeName: 'Magyar', flag: 'hu' },
+    en: { nativeName: 'English', flag: 'gb' }
 };
 
 const resources = {
@@ -29,15 +29,16 @@ const resources = {
 };
 
 i18n
-//   .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    debug: true,
-    resources,
-    fallbackLng: 'hu',
-    interpolation: {
-      escapeValue: false
-    }
-  });
+    //   .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+        debug: false,
+        resources,
+        fallbackLng: 'hu',
+        interpolation: {
+            escapeValue: false
+        },
+        missingKeyHandler: () => { },
+    });
 
 export default i18n;

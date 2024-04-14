@@ -1,9 +1,9 @@
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import TimeSlider from './TimeSlider';
 import FilterItem from './FilterItem';
-import Timeslider from './Timeslider';
 import DownloadButton from './DownloadButton';
 import { MinimalTrashData, filterRivers } from 'models/models';
 import { useActiveFilters, useSelectedTime, useSetActiveFilters } from './FilterContext';
@@ -18,7 +18,7 @@ const filtersData = {
     size: ["BAG", "WHEELBARROW", "CAR"],
     type: ["PLASTIC", "METAL", "GLASS", "DOMESTIC", "CONSTRUCTION", "LIQUID",
         "DANGEROUS", "AUTOMOTIVE", "ELECTRONIC", "ORGANIC", "DEADANIMALS"],
-    status: ["STILLHERE", "CLEANED", "MORE"]
+    status: ["STILLHERE", "MORE", "CLEANED"]
 };
 
 interface FilterName {
@@ -35,7 +35,7 @@ const filterNames: FilterName = {
 
 /**
  * Props for the filter menu
- * 
+ *
  * @param {boolean} isLoading Whether the data is still loading (has not fetched yet)
  * @param {MinimalTrashData[]} wasteData The data to filter
  */
@@ -166,7 +166,7 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
                                     </div>
                                 </div>
                             </div>
-                            <Timeslider />
+                            <TimeSlider />
                             {Object.entries(filtersData).map(([category, filters]) => ((
                                 <div className='container' key={category}>
                                     <div className='row'>

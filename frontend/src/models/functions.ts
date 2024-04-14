@@ -8,13 +8,14 @@ import { ExpandedTrashData, MinimalTrashData, River, TrashType, filterRivers } f
 export function calcRange(): { min: number, max: number, def: number } {
     const maxDate = new Date();
     const minDate = new Date();
+    const defDate = new Date();
 
-    minDate.setFullYear(maxDate.getFullYear() - 1);
+    minDate.setFullYear(maxDate.getFullYear() - 6);
+    defDate.setFullYear(maxDate.getFullYear() - 1);
 
     const max = maxDate.getTime();
     const min = minDate.getTime();
-
-    const def = min; // (max*2+min)/3
+    const def = defDate.getTime();
 
     return { min, max, def };
 }

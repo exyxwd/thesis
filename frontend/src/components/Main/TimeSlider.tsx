@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { calcRange } from 'models/functions';
+import React, { useState } from 'react';
 import { useSetSelectedTime } from './FilterContext';
 
 /**
@@ -7,7 +7,7 @@ import { useSetSelectedTime } from './FilterContext';
  *
  * @returns {React.ReactElement} The time slider and date input
  */
-const Timeslider = (): React.ReactElement => {
+const TimeSlider = (): React.ReactElement => {
     const [st, setSt] = useState(new Date(calcRange().def));
     const setSelectedTime = useSetSelectedTime();
 
@@ -62,4 +62,4 @@ const Timeslider = (): React.ReactElement => {
     );
 };
 
-export default Timeslider;
+export default TimeSlider;
