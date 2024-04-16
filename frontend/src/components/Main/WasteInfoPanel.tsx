@@ -1,6 +1,3 @@
-// TODO: Add the waste's filters to the selected filters array,
-// to make sure the current point fits the curreently selected filters
-import { useNavigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -35,12 +32,10 @@ interface WasteInfoPanelProps {
  * @returns {React.ReactElement} The waste information panel
  */
 const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElement => {
-    console.log('PANEL component rendered');
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const setActiveFilters = useSetActiveFilters();
     const panelRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
-    const navigate = useNavigate();
 
     const setSelectedTime = useSetSelectedTime();
     const activeFilters = useActiveFilters();
@@ -63,7 +58,6 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
         const target = e.target as HTMLElement;
         if (panelRef.current && !panelRef.current.contains(target)) {
             onClose();
-            navigate('/');
         }
     }
     /**
@@ -134,21 +128,24 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     useEffect(() => {
         if (data) {
             const newFilters = [...activeFilters];
-
+    
             if (!newFilters.includes(data.country)) {
                 newFilters.push(data.country);
             }
-
+    
             if (!newFilters.includes(data.size)) {
                 newFilters.push(data.size);
             }
-
+    
             if (!newFilters.includes(data.status)) {
                 newFilters.push(data.status);
             }
-            
-            setActiveFilters(newFilters);
-
+    
+            // Only call setActiveFilters if the new filters are different from the current active filters
+            if (JSON.stringify(newFilters.sort()) !== JSON.stringify(activeFilters.sort())) {
+                setActiveFilters(newFilters);
+            }
+    
             const wasteUpdateTime = new Date(data.updateTime);
             if (wasteUpdateTime < selectedTime) {
                 setSelectedTime(wasteUpdateTime);
@@ -167,7 +164,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     return (
         <div id='waste-panel' ref={panelRef}>
             <div className='close-button-container'>
-                <button className='waste-panel-close-btn' onClick={() => { onClose(); navigate('/'); }}>
+                <button className='waste-panel-close-btn' onClick={() => { onClose(); }}>
                     <span className='waste-panel-close-symbol material-symbols-outlined'>close</span>
                 </button>
             </div>

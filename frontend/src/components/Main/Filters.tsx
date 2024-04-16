@@ -1,13 +1,13 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import TimeSlider from './TimeSlider';
-import FilterItem from './FilterItem';
-import DownloadButton from './DownloadButton';
-import { MinimalTrashData, filterRivers } from 'models/models';
-import { useActiveFilters, useSelectedTime, useSetActiveFilters } from './FilterContext';
 import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
+import { MinimalTrashData, filterRivers } from 'models/models';
+import DownloadButton from './DownloadButton';
+import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
+import FilterItem from './FilterItem';
+import TimeSlider from './TimeSlider';
 
 /**
  * Grouped waste filters
@@ -52,14 +52,13 @@ interface filterProps {
 const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
     const selectedTime = useSelectedTime();
     const activeFilters = useActiveFilters();
+    const selectedWastes = useSelectedWastes();
     const filterRef = useRef<HTMLDivElement>(null);
     const setActiveFilters = useSetActiveFilters();
     const [menuOpen, setMenuOpen] = useState(false);
     filtersData.locality = getSelectableRivers(activeFilters);
-
-    const { data: filterMap, refetch: updateCounts } = useQuery<Map<string, number>>('filtercounts', () => createFilterCountMap());
-
-    const filteredRivers = useMemo(() => getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter))), [activeFilters]);
+    const [countFitForFilters, setCountFitForFilters] = useState(0);
+    const {data: filterMap, refetch: updateCounts} = useQuery<Map<string,number>>('filtercounts', () => filterCount());
 
     useEffect(() => {
         document.addEventListener("click", handleClickElsewhere, true);
@@ -68,41 +67,53 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
         }
     }, []);
 
+    useEffect(() => {
+        updateCounts();
+    }, [wasteData, countFitForFilters, selectedTime]);
+
+    useEffect(() => {
+        setCountFitForFilters(selectedWastes.length);
+    }, [selectedWastes, activeFilters, selectedTime]);
+
+    async function filterCount():Promise<Map<string,number>> {
+        const map = new Map<string,number>();
+        
+        const notSelectedWastes = wasteData.filter(waste => !selectedWastes.includes(waste));
+        Object.entries(filtersData).map(([filterType, filters]) => (
+            filters.map((filter) => {
+                // If the filter is active, the count is the number of currently selected wastes
+                if (activeFilters.includes(filter)) {
+                    map.set(filter, countFitForFilters);
+                    return;
+                }
+                const riversIfSelected = getFilteredRivers(filterRivers.filter((river) => [filter,...activeFilters].some((filter) => river.name == filter)));
+
+                // If the filter is type or locality filter, only count through the selected wastes since the filter will only narrow them down
+                // Otherwise count through the not selected wastes, since the filter will expand the selection, keeping all currently selected
+                const isFilterConstrictType = filterType === 'type' || filterType === 'locality';
+                const dataToIterate = isFilterConstrictType ? selectedWastes : notSelectedWastes;
+
+                let count = 0;
+                dataToIterate.forEach((waste) => {
+                    if (isFitForFilters(waste, [filter, ...activeFilters], selectedTime, riversIfSelected)) {
+                        count++;
+                    }
+                });
+
+                // Add the number of currently selected wastes to the count if the filter is not a type or locality filter,
+                // because only the not selected wastes were counted
+                map.set(filter, isFilterConstrictType ? count : count + countFitForFilters);
+            })
+        ))
+        return map;
+    }
+
     const handleClickElsewhere = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (filterRef.current && !filterRef.current.contains(target)) {
             setMenuOpen(false);
         }
     }
-
-    useEffect(() => {
-        updateCounts();
-    }, [activeFilters, selectedTime]);
-
-    const createFilterCountMap = useCallback(async (): Promise<Map<string, number>> => {
-        let count = 0;
-        const map = new Map<string, number>();
-
-        Object.entries(filtersData).map(([_, filters]) => (
-            filters.map((f) => {
-                const riversIfSelected = getFilteredRivers(filterRivers.filter((river) => [f, ...activeFilters].some((filter) => river.name == filter)));
-                wasteData.forEach((d) => {
-                    if (isFitForFilters(d, [f, ...activeFilters], selectedTime, riversIfSelected)) count++;
-                });
-                map.set(f, count);
-                count = 0;
-            })
-        ))
-        return new Promise<Map<string, number>>(resolve => { resolve(map) });
-    }, [activeFilters, selectedTime, wasteData]);
-
-    const countFitForFilters = useMemo((): number => {
-        let count = 0;
-        wasteData.forEach((d) => {
-            if (isFitForFilters(d, activeFilters, selectedTime, filteredRivers)) count++;
-        })
-        return count;
-    }, [activeFilters, selectedTime, wasteData, filteredRivers]);
 
     function showWarning(category: string): boolean {
         switch (category) {
@@ -155,7 +166,7 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
                                         <Trans i18nKey="filter_names.num_fit_for_filters"></Trans>
                                     </div>
                                     <div className='col-8 filter-counter-button'>
-                                        {wasteData ? <DownloadButton data={wasteData} /> : <></>}
+                                        {wasteData ? <DownloadButton /> : <></>}
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +194,7 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
                                                 <FilterItem
                                                     content={filter}
                                                     selected={activeFilters.includes(filter)}
-                                                    count={filterMap ? filterMap.get(filter) : -1}
+                                                    count={!filterMap ? 1 : filterMap.get(filter)}
                                                     OnSelect={(str) => setFilterState(str)}
                                                 />
                                             </div>

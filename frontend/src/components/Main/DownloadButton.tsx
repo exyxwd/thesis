@@ -3,10 +3,9 @@ import { useQuery } from 'react-query';
 import * as XLSX from 'xlsx';
 
 import { fetchMultipleWasteById } from 'API/queryUtils';
-import { getFilteredRivers, isFitForFilters } from 'models/functions';
-import { ExpandedTrashData, MinimalTrashData, filterRivers } from 'models/models';
 import { Trans, useTranslation } from 'react-i18next';
-import { useActiveFilters, useSelectedTime } from './FilterContext';
+import { useSelectedWastes } from './FilterContext';
+import { ExpandedTrashData } from 'models/models';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)
@@ -27,8 +26,12 @@ function formatDateTime(inputDateTime: string): string {
 
 /**
  * Prepares data for download (translates it, sets column widths) and downloads it as xlsx
+ *
+ * @param {ExpandedTrashData[]} fetchedData The data to download
+ * @param {(key: string) => string} t The translation function
+ * @returns {void}
  */
-function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => string) {
+function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => string): void {
     // Translate the data and format the date
     const translatedData = fetchedData.map(item => ({
         ...item,
@@ -75,25 +78,18 @@ function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => stri
     XLSX.writeFile(wb, `${t('details.file_name')}.xlsx`);
 }
 
-interface DownloaderProps {
-    data: MinimalTrashData[];
-}
-
 /**
  * Creates the download button for selected waste dumps and triggers the download
- * 
- * @param {DownloaderProps} param0 data: the data that gets filtered by the selected filters
+ *
  * @returns {React.ReactElement} Download button
  */
-const DownloadButton: React.FC<DownloaderProps> = ({ data }: DownloaderProps): React.ReactElement => {
-    const selectedTime = useSelectedTime();
-    const activeFilters = useActiveFilters();
-    const { t } = useTranslation();
+const DownloadButton: React.FC = (): React.ReactElement => {
     const [shouldFetch, setShouldFetch] = useState<boolean>(false);
-    const filteredRivers = getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter)))
+    const selectedWastes = useSelectedWastes();
+    const { t } = useTranslation();
 
-    // Fetch filtered data for the selected waste dumps and trigger the download on success
-    useQuery('filteredData', () => fetchMultipleWasteById(data.filter(item => isFitForFilters(item, activeFilters, selectedTime,filteredRivers)).map(item => item.id)),
+    // Fetch the selected waste dumps data and trigger the download on success
+    useQuery('filteredData', () => fetchMultipleWasteById(selectedWastes.map(item => item.id)),
         { enabled: shouldFetch, onSuccess: (fetchedData) => { downloadData(fetchedData, t); setShouldFetch(false); } });
 
     const downloadHandler = () => {
@@ -102,9 +98,10 @@ const DownloadButton: React.FC<DownloaderProps> = ({ data }: DownloaderProps): R
 
     return (
         <button className='btn download-button' onClick={downloadHandler}>
-            <span className='material-symbols-outlined' >
-                download
-            </span>
+            {shouldFetch ? <div className='download-loader'></div>
+                : <span className='material-symbols-outlined' >
+                    download
+                </span>}
             <div id='download-button-text'>
                 <Trans i18nKey="filter_names.download_btn_text"></Trans>
             </div>

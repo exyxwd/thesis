@@ -1,5 +1,6 @@
-import { calcRange } from 'models/functions';
 import React, { useState } from 'react';
+
+import { calcRange } from 'models/functions';
 import { useSetSelectedTime } from './FilterContext';
 
 /**
@@ -25,28 +26,26 @@ const TimeSlider = (): React.ReactElement => {
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             const newTime = new Date(e.target.value);
-            setSt(newTime);
             setSelectedTime(newTime);
+            setSt(newTime);
         } else {
             // Handle the case when the user clears or sets the calendar to "today"
-            setSt(new Date());
             setSelectedTime(new Date());
+            setSt(new Date());
         }
     };
 
     return (
         <div className='container'>
             <div className='row filter-row'>
-                {/* <div>{st.toDateString()}</div> */}
                 <input
                     type='range'
                     id='time-slider'
                     min={calcRange().min}
                     max={calcRange().max}
                     value={st.getTime()}
-                    step={86400000}
                     onChange={(e) => handleTimeChange(e)}
-                    onInput={(e) => handleInput(e)}
+                    onMouseUp={(e) => handleInput(e)}
                 />
                 <input
                     type='date'

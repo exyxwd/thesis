@@ -8,52 +8,46 @@ import markerShadow from 'images/marker_shadow.png';
 import greenMarkerIcon from 'images/marker_green.png';
 import yellowMarkerIcon from 'images/marker_yellow.png';
 
-import { useActiveFilters, useSelectedTime } from './FilterContext';
-import { getFilteredRivers, isFitForFilters } from 'models/functions';
-import { ExpandedTrashData, MinimalTrashData, filterRivers } from 'models/models';
+import { ExpandedTrashData } from 'models/models';
+import { useSelectedWastes } from './FilterContext';
 
 /**
  * The properties of the map
  *
  * @interface MapProps
- * @property {MinimalTrashData[]} wastes The data of the waste dumps
  * @property {(data: number) => void} onMarkerClick Function to handle clicks on markers
  */
 interface MapProps {
-    wastes: MinimalTrashData[];
     selectedWaste: ExpandedTrashData | undefined;
 }
 
 /**
  * Sets up the map and its markers
- * 
+ *
  * @param {MapProps} param0 garbages: The data of the garbage dumps, onMarkerClick: The function to handle tselectedWastehe click on a marker 
  * @returns {React.ReactElement} The map
  */
-const Map: React.FC<MapProps> = memo(({ wastes, selectedWaste }: MapProps): React.ReactElement => {
-
-    const map = useRef<L.Map>();
+const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactElement => {
     const clusterLayer = useRef<L.MarkerClusterGroup>();
     const mapDivRef = useRef<HTMLDivElement>(null);
-    const [mapData, setMapData] = useState<MinimalTrashData[]>([]);
-    const activeFilters = useActiveFilters();
-    const selectedTime = useSelectedTime();
+    const selectedWastes = useSelectedWastes();
+
     let { selectedMarkerId } = useParams();
-    const filteredRivers = getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter)))
+    const [cameFromMarker, setCameFromMarker] = useState<boolean>(true);
+
+    const map = useRef<L.Map>();
 
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        setMapData(wastes);
-    }, [wastes]);
-
-    useEffect(() => {
-        clusterLayer.current?.remove();
-
-        if (!map.current) {
+        if (!selectedMarkerId && cameFromMarker) {
+            setCameFromMarker(false);
             return;
         }
+        clusterLayer.current?.remove();
+
+        if (!map.current) return;
 
         if (clusterLayer && clusterLayer.current) {
             map.current.removeLayer(clusterLayer.current);
@@ -64,11 +58,7 @@ const Map: React.FC<MapProps> = memo(({ wastes, selectedWaste }: MapProps): Reac
             spiderfyOnMaxZoom: false
         });
 
-        mapData.forEach((e) => {
-            if (!isFitForFilters(e, activeFilters, selectedTime, filteredRivers)) {
-                return;
-            }
-
+        selectedWastes.forEach((e) => {
             let iconUrl: string;
 
             if (e.id == Number(selectedMarkerId)) iconUrl = yellowMarkerIcon
@@ -89,6 +79,7 @@ const Map: React.FC<MapProps> = memo(({ wastes, selectedWaste }: MapProps): Reac
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
                 marker.on('click', () => {
+                    setCameFromMarker(true);
                     navigate(`/waste/${e.id}`, { state: { key: "markerClick" }  });
                 });
 
@@ -99,7 +90,7 @@ const Map: React.FC<MapProps> = memo(({ wastes, selectedWaste }: MapProps): Reac
         });
 
         map.current.addLayer(clusterLayer.current);
-    }, [mapData, activeFilters, selectedTime]);
+    }, [selectedWastes, cameFromMarker, selectedMarkerId]);
 
     useEffect(() => {
         if (!mapDivRef.current || map.current) {

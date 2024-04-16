@@ -81,6 +81,14 @@ body {
     margin-bottom: 85px;
 }
 
+.download-loader {
+    @extend .loader;
+    width: 45px;
+    height: 45px;
+    position: relative;
+    border-top: 6px solid $filter-background;
+}
+
 /* ################################ DATA LOADING ERROR MSG ################################ */
 
 .loading-error {

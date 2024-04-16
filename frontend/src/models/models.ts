@@ -51,15 +51,15 @@ export interface ExpandedTrashData {
     country: TrashCountry;
     locality: string;
     sublocality: string;
+    rivers: string[];
     size: TrashSize;
     status: TrashStatus;
     types: TrashType[];
     createTime: string;
     updateTime: string;
     updateNeeded: boolean;
-    imageUrl: string;
     note: string;
-    rivers: string[];
+    imageUrl: string;
 }
 
 export interface River {

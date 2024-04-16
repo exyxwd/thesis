@@ -1,4 +1,4 @@
-import { ExpandedTrashData, MinimalTrashData, River, TrashType, filterRivers } from "./models";
+import { ExpandedTrashData, MinimalTrashData, River, TrashCountry, TrashSize, TrashStatus, TrashType, filterRivers } from "./models";
 
 /**
  * Calculates the range of the slider (minimum and maximum) and the default value
@@ -21,11 +21,11 @@ export function calcRange(): { min: number, max: number, def: number } {
 }
 
 /**
- * Decides whether a garbage dump is fit for the active filters
+ * Decides whether a waste dump is fit for the active filters
  *
- * @param {MinimalTrashData} e The data of the garbage dump
+ * @param {MinimalTrashData} e The data of the waste dump
  * @param {string[]} activeFilters The currently active filters
- * @returns {boolean} Whether the garbage dump is fit for the active filters
+ * @returns {boolean} Whether the waste dump is fit for the active filters
  */
 export const isFitForFilters = (e: MinimalTrashData | ExpandedTrashData, activeFilters: string[], selectedTime: Date, filteredRivers: (string[] | undefined)): boolean => {
     // Update Time
@@ -45,24 +45,8 @@ export const isFitForFilters = (e: MinimalTrashData | ExpandedTrashData, activeF
 
     // Types
     const typeFit = activeFilters.every((filter) => {
-        switch (filter) {
-            case 'PLASTIC':
-            case 'METAL':
-            case 'GLASS':
-            case 'DOMESTIC':
-            case 'CONSTRUCTION':
-            case 'LIQUID':
-            case 'DANGEROUS':
-            case 'AUTOMOTIVE':
-            case 'ELECTRONIC':
-            case 'ORGANIC':
-            case 'DEADANIMALS':
-                const formattedFilter = filter.toLowerCase().charAt(0).toUpperCase() + filter.toLowerCase().slice(1);
-                return e.types.includes(TrashType[formattedFilter as keyof typeof TrashType]);
-
-            default:
-                return true;
-        }
+        const formattedFilter = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
+        return !(TrashType[formattedFilter as keyof typeof TrashType] && !e.types.includes(TrashType[formattedFilter as keyof typeof TrashType]));
     });
     if (!typeFit) return false;
 
