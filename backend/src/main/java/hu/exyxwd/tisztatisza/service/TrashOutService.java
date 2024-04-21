@@ -79,6 +79,11 @@ public class TrashOutService {
                 ResponseEntity<String> response = restTemplate.exchange(TRASH_OUT_URL, HttpMethod.GET, entity,
                         String.class);
                 return response.getBody();
+            } catch (HttpClientErrorException.Unauthorized e) {
+                System.out.println("Error occurred while trying to get wastes from TrashOut (Attempt "
+                        + attempt + "). The token might not be correct: "
+                        + e.getStatusCode());
+                return null;
             } catch (HttpServerErrorException e) {
                 System.out.println("Error occurred while trying to get wastes from TrashOut (Attempt " + attempt + "): "
                         + e.getStatusCode());
