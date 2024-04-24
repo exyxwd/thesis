@@ -164,6 +164,11 @@ public class TrashOutService {
 
             // Delete all wastes that are older than 6 years
             List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);
+            for (Waste waste : oldWastes) {
+                waste.getTypes().clear();
+                wasteRepository.save(waste);
+            }
+            
             wasteRepository.deleteAll(oldWastes);
 
             // Parse the JSON array from TrashOut
