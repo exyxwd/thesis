@@ -49,6 +49,7 @@
     transition: 350ms;
     height: calc(100vh - $nav-height);
     border-left: 3px solid $secondary-base;
+    color: $filter-background;
 }
 
 #filter-menu.active {

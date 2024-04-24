@@ -13,14 +13,15 @@ $nav-height: 63px;
 
 @import './wasteInfoPanel.scss';
 @import './navigation.scss';
+@import './dashboard.scss';
 @import './filters.scss';
 @import './map.scss';
 
 body {
     margin: 0;
     padding: 0;
-    color: white;
-    background: rgb(64, 83, 133);
+    // color: white;
+    background: rgba($highlight, 0.2);
 }
 
 #map{

@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { i18n as i18nType } from 'i18next';
 
 import LanguageSelector from './LanguageSelector';
@@ -18,11 +18,25 @@ interface NavigationProps {
  */
 const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.ReactElement => {
     const [showNavigation, setShowNavigation] = useState(false)
-
     const baseURL = window.location.origin;
+    const navRef = useRef<HTMLElement>(null);
 
     function handleNavigationButton() {
         setShowNavigation(prevState => !prevState)
+    }
+
+    useEffect(() => {
+        document.addEventListener("click", handleClickElsewhere, true);
+        return () => {
+            document.removeEventListener("click", handleClickElsewhere);
+        }
+    }, []);
+
+    const handleClickElsewhere = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (navRef.current && !navRef.current.contains(target)) {
+            setShowNavigation(false);
+        }
     }
 
     return (
@@ -47,7 +61,7 @@ const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.Rea
                 <LanguageSelector i18n={i18n} />
             </nav>
             <nav className='navbar small-Navbar'> */}
-            <nav>
+            <nav id='nav-bar' ref={navRef}>
                 <Link to={`${baseURL}`}>
                     <img src={petLogo} alt='PETkupa logo' className='main-logo'></img>
                 </Link>

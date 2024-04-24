@@ -1,0 +1,429 @@
+$base: rgb(47, 59, 89);
+$highlight: rgb(64, 83, 133);
+$even: rgb(194, 208, 243);
+$odd: rgb(142, 163, 207);
+$link: rgb(19, 131, 206);
+
+.invalid-creds-text {
+    color: firebrick;
+}
+
+.invalid-creds-btn {
+    background-color: firebrick;
+}
+
+.valid-creds-text {
+    color: green;
+}
+
+.register-area {
+    margin-top: 70px;
+    margin-left: 300px;
+}
+.login-band {
+    padding-left: 10px;
+    padding-right: 40px;
+}
+
+/* ################################ DASHBOARD MENU ################################ */
+
+.dashboard-menu-area {
+    position: absolute;
+    z-index: 10000;
+}
+
+.menu-toggle {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 99px;
+    background-color: $base;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+.hamburger {
+    position: relative;
+    top: calc(50% - 2px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+}
+
+.hamburger>span,
+.hamburger>span::before,
+.hamburger>span::after {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    border-radius: 99px;
+    background-color: #FFF;
+    transition-duration: .25s;
+}
+
+.hamburger>span::before {
+    content: '';
+    top: -8px;
+}
+
+.hamburger>span::after {
+    content: '';
+    top: 8px;
+}
+
+.menu-toggle.is-active .hamburger>span {
+    transform: rotate(45deg);
+}
+
+.menu-toggle.is-active .hamburger>span::before {
+    top: 0;
+    transform: rotate(0deg);
+}
+
+.menu-toggle.is-active .hamburger>span::after {
+    top: 0;
+    transform: rotate(90deg);
+}
+
+.dashboard-sidebar {
+    z-index: 1;
+    flex: 1 1 0;
+    width: 300px;
+    padding: 1.5rem 1rem;
+    background-color: $base;
+    min-height: calc(100dvh - $nav-height);
+}
+
+.user-data-container {
+    position: relative;
+}
+
+.account-icon {
+    color: #707793;
+    font-size: 2.5rem;
+}
+
+.user-name {
+    color: #707793;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: inline;
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.user-role {
+    display: inline;
+    color: #707793;
+    font-size: 0.9rem;
+}
+
+.dashboard-sidebar .menu {
+    margin: 0 -1rem;
+}
+
+.dashboard-sidebar .menu .menu-item {
+    display: block;
+    padding: 1em;
+    color: #FFF;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.dashboard-sidebar .menu .menu-item:hover,
+.dashboard-sidebar .menu .menu-item.is-active {
+    color: skyblue;
+    font-weight: bold;
+    border-right: 5px solid skyblue;
+    background-color: $highlight;
+}
+
+.logout-btn {
+    color: white;
+}
+
+.logout-btn:hover {
+    color: skyblue;
+}
+
+.logout-btn span {
+    margin-right: 10px;
+    vertical-align: middle;
+    display: inline;
+}
+
+.logout-text {
+    display: inline;
+    font-size: 1.3rem;
+    vertical-align: middle;
+}
+
+.logout-area {
+    position: absolute;
+    bottom: 10px;
+    font-weight: bold;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.backgound-logo {
+    position: absolute;
+    z-index: -1;
+    opacity: .3;
+    top: 50%;
+    left: calc(50% + 150px);
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+/* ################################ USER EDITOR ################################ */
+
+.user-table {
+    width: calc(100% - 300px);
+    margin-left: 300px;
+    margin-bottom: 0;
+}
+
+.user-table-container {
+    height: calc(100dvh - 70px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ################################ LOCATION FORM ################################ */
+
+.location-form-area {
+    margin-left: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100dvh - 70px);
+}
+
+#map.location-selector-map,
+.location-selector-container {
+    height: 300px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.extra-social-media-fields {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 3px;
+}
+
+.input-delete-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin: 3px;
+}
+
+#new-social-media-btn {
+    margin-top: 5px;
+}
+
+.help-icon {
+    color: $link;
+    cursor: pointer;
+}
+
+/* ################################ DESCRIPTIONS ################################ */
+
+.location-description-type {
+    font-weight: bold;
+    font-size: large;
+    margin-top: 1rem;
+    margin-left: 1rem;
+}
+
+.location-description {
+    margin-left: 1rem;
+}
+
+/* ################################ APPROVALS ################################ */
+
+#approvals-container {
+    margin-left: 300px;
+    max-height: calc(100dvh - 100px);
+    overflow-y: auto;
+}
+
+#approval-modal-body {
+    min-height: 150px;
+    max-height: calc(100dvh - 250px);
+    overflow-y: auto;
+}
+
+.modal-backdrop.show {
+    opacity: 0.4;
+}
+
+.deny-btn {
+    margin-right: 20px;
+}
+
+.approval-body {
+    width: 100%;
+    padding: 20px;
+}
+
+.approval-nav-container {
+    background-color: $base;
+    border-bottom: 3px solid white;
+}
+
+.approval-menu-item {
+    background: none;
+    border: none;
+    padding: 15px;
+    margin: 0;
+    height: 100%;
+    font-family: inherit;
+    color: white;
+    cursor: pointer;
+}
+
+.approval-menu-item:hover, .approval-menu-item:focus {
+    color: skyblue;
+    background-color: $highlight;
+    border-bottom: 4px solid skyblue;
+}
+
+.approval-menu-item.approval-is-active {
+    border-bottom: 4px solid skyblue;
+    background-color: $highlight;
+    color: skyblue;
+    font-weight: bold;
+}
+
+.validation-info {
+    margin: 200px;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-sidebar {
+        max-width: 220px;
+    }
+
+    .backgound-logo {
+        left: calc(50% + 100px);
+    }
+
+    .user-table {
+        margin-left: 220px;
+        width: calc(100% - 200px);
+    }
+
+    .register-area {
+        margin-left: 200px;
+    }
+
+    #approvals-container {
+        margin-left: 220px;
+    }
+
+    .location-form-area {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .user-table {
+        margin-left: 0px;
+        margin-bottom: 80px;
+        width: 100%;
+    }
+
+    #approvals-container {
+        margin-left: 0px;
+        margin-bottom: 80px;
+        width: 100%;
+    }
+
+    .backgound-logo {
+        left: 50%;
+    }
+
+    .register-area,
+    .location-form-area {
+        margin: 0px;
+    }
+
+    .location-form-area {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .dashboard-sidebar {
+        position: fixed;
+        left: -300px;
+        height: calc(100dvh - 70px);
+        width: 100%;
+        transition: 0.2s linear;
+    }
+
+    .dashboard-sidebar.is-active {
+        left: 0;
+    }
+}
+
+.user-table-head th {
+    background-color: $base;
+    color: white;
+    border: none;
+}
+
+.user-table-row:nth-child(even) td {
+    background-color: $even;
+    border: none;
+}
+
+.user-table-row:nth-child(odd) td {
+    background-color: $odd;
+    border: none;
+}
+
+.dropdown-toggle {
+    background-color: $base;
+    color: white;
+    border: none;
+}
+
+.btn.dropdown-toggle:hover,
+.btn.dropdown-toggle:active,
+.btn.dropdown-toggle:focus,
+.btn.dropdown-toggle:focus-visible {
+    background-color: $highlight;
+    color: skyblue;
+    border: none;
+}
+
+.dropdown-menu.show {
+    background-color: $base;
+    padding: 0px;
+    border-radius: 0px;
+    z-index: 10000;
+}
+
+.dropdown-item {
+    color: white;
+    padding: 8px 10px 8px 10px
+}
+
+.dropdown-item:hover {
+    background-color: $highlight;
+    color: skyblue;
+}

@@ -1,6 +1,6 @@
 /** ############### NAV BAR ############### **/
 
-nav {
+#nav-bar {
     background-color: $base;
     display: flex;
     align-items: center;
@@ -20,6 +20,7 @@ nav ul {
 
 nav ul li {
     display: flex;
+    color: white;
     text-align: center;
     align-content: center;
     flex-direction: column;
@@ -33,6 +34,7 @@ nav ul li {
 nav ul li:last-child {
     margin-right: 0;
     margin-left: auto;
+    padding-bottom: 5px;
 }
 
 nav ul li a {
@@ -92,13 +94,17 @@ nav ul li a:hover {
 }
 
 .language-selector {
-    margin-left: auto;
     display: flex;
+    margin-left: auto;
     align-items: center;
 }
 
 .language-dropdown-menu{
     min-width: fit-content;
+}
+
+.dropdown-item{
+    background-color: $secondary-base;
 }
 
 .flag-container {
@@ -135,6 +141,7 @@ nav ul li a:hover {
     .expanded-nav {
         display: flex;
         max-height: 200px;
+        z-index: 1;
     }
 
     .expanded-nav li {

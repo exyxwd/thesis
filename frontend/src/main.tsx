@@ -4,7 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import App from './App.tsx';
-import { ActiveFiltersProvider } from 'components/Main/FilterContext.tsx';
+import { LoginStateProvider } from 'components/Dashboard/AuthContext';
+import { ActiveFiltersProvider } from 'components/Main/FilterContext';
 
 
 const queryClient = new QueryClient();
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <ActiveFiltersProvider>
-                    <App />
+                    <LoginStateProvider>
+                        <App />
+                    </LoginStateProvider>
                 </ActiveFiltersProvider>
             </BrowserRouter>
         </QueryClientProvider>

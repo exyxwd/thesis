@@ -4,10 +4,15 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import 'styles/app.scss';
 import 'material-symbols';
 
-import NavBar from 'components/Navigation/NavBar.tsx';
-import MainPage from 'pages/MainPage.tsx';
+import MainPage from 'pages/MainPage';
+import Dashboard from 'pages/Dashboard';
+import Login from 'components/Dashboard/Login';
+import NavBar from 'components/Navigation/NavBar';
+import Register from 'components/Dashboard/Register';
+import ProtectedRoute from 'components/Dashboard/ProtectedRoute';
+import UserEditor from 'components/Dashboard/UserEditor';
 
-
+// TODO About page and contact page
 /**
  * Main App component
  *
@@ -18,11 +23,17 @@ function App() {
 
     return (
         <>
-            <NavBar i18n={i18n}/>
+            <NavBar i18n={i18n} />
             <Routes>
-                <Route path={`/waste/:selectedMarkerId`} element={<MainPage />}/>
-                <Route path={'/'} element={<MainPage />}/>
-                <Route path={`/*`} element={<Navigate to={'/'} />} />
+                <Route path={'/'} element={<MainPage />} />
+                <Route path={'/waste/:selectedMarkerId'} element={<MainPage />} />
+                <Route path={'/dashboard/login'} element={<Login />} />
+                <Route element={<ProtectedRoute />}>
+                    <Route path={'/dashboard'} element={<Dashboard />} />
+                    <Route path={'/dashboard/users'} element={<UserEditor />} />
+                    <Route path={'/dashboard/register'} element={<Register />} />
+                </Route>
+                <Route path={'/*'} element={<Navigate to={'/'} />} />
             </Routes>
         </>
     )

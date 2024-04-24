@@ -62,6 +62,15 @@ export interface ExpandedTrashData {
     imageUrl: string;
 }
 
+export interface RegisterData {
+    username: string;
+    password: string;
+};
+
+export type UserDataType = {
+    username: string;
+};
+
 export interface River {
     name: string;
     tributaries: string[];
