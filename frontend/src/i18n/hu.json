@@ -139,6 +139,32 @@
         "Editor": "Szerkesztő",
         "Admin": "Adminisztrátor"
     },
+    "user-editor": {
+        "username": "Felhasználónév",
+        "change_password": "Jelszó módosítása",
+        "change_username": "Felhasználónév módosítása",
+        "delete_user": "Felhasználó törlése",
+        "change_password_of": "A felhasználó jelszavának módosítása",
+        "change_username_of": "A felhasználó felhasználó nevének módosítása",
+        "confirm_delete": "Biztosan törölni akarja a felhasználót?",
+        "exit": "Kilépés",
+        "save": "Mentés",
+        "delete": "Törlés"
+    },
+    "menu": {
+        "main_page": "Főoldal",
+        "add_user": "Felhasználó hozzáadása",
+        "manage_user": "Felhasználók kezelése",
+        "logs": "Napló",
+        "logout": "Kijelentkezés"
+    },
+    "logs": {
+        "update-time": "Frissítés ideje",
+        "update-count": "Frissítettek száma",
+        "delete-count": "Töröltek száma",
+        "total-count": "Összesen",
+        "update-num": "Frissítések száma"
+    },
     "location_types": {
         "Anchor": "Folyómentő horgonyhely",
         "Center": "Folyómentő központ",

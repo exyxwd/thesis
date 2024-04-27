@@ -5,7 +5,7 @@ import 'styles/app.scss';
 import 'material-symbols';
 
 import MainPage from 'pages/MainPage';
-import Dashboard from 'pages/Dashboard';
+import DashboardMain from 'components/Dashboard/DashboardMain';
 import Login from 'components/Dashboard/Login';
 import NavBar from 'components/Navigation/NavBar';
 import Register from 'components/Dashboard/Register';
@@ -30,7 +30,7 @@ function App() {
                 <Route path={'/waste/:selectedMarkerId'} element={<MainPage />} />
                 <Route path={'/dashboard/login'} element={<Login />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path={'/dashboard'} element={<Dashboard />} />
+                    <Route path={'/dashboard'} element={<DashboardMain />} />
                     <Route path={'/dashboard/users'} element={<UserEditor />} />
                     <Route path={'/dashboard/register'} element={<Register />} />
                     <Route path={'/dashboard/logs'} element={<UpdateLogs />} />

@@ -105,7 +105,7 @@ const UserEditor = (): React.ReactElement => {
                 <thead>
                     <tr className='user-table-head'>
                         <th onClick={() => setUserData([...userData].sort((a, b) => { return a.username.localeCompare(b.username) }))}>
-                            <Trans i18nKey="username">Felhasználónév</Trans>
+                            <Trans i18nKey="user-editor.username">Felhasználónév</Trans>
                         </th>
                         <th></th>
                     </tr>
@@ -121,9 +121,15 @@ const UserEditor = (): React.ReactElement => {
                                             <span className="material-symbols-outlined">edit</span>
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.ChangePassword)}><Trans i18nKey="change_password">Jelszó megváltoztatása</Trans></Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.Rename)}><Trans i18nKey="change_username">Felhasználónév megváltoztatása</Trans></Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.Delete)}><Trans i18nKey="delete_user">Felhasználó törlése</Trans></Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.ChangePassword)}>
+                                                <Trans i18nKey="user-editor.change_password">Jelszó megváltoztatása</Trans>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.Rename)}>
+                                                <Trans i18nKey="user-editor.change_username">Felhasználónév megváltoztatása</Trans>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleShow(user.username, Operation.Delete)}>
+                                                <Trans i18nKey="user-editor.delete_user">Felhasználó törlése</Trans>
+                                            </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </td>
@@ -136,7 +142,10 @@ const UserEditor = (): React.ReactElement => {
                 {selectedOperation == Operation.ChangePassword &&
                     <>
                         <Modal.Header closeButton>
-                            <Modal.Title><Trans i18nKey="change_password_of">A felhasználó jelszavának megváltoztatása</Trans>&nbsp;({selectedUser})</Modal.Title>
+                            <Modal.Title>
+                                <Trans i18nKey="user-editor.change_password_of">A felhasználó jelszavának megváltoztatása</Trans>
+                                &nbsp;({selectedUser})
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Control type="text" placeholder={`Új jelszó...`} value={inputValue} onChange={handleInputChange} />
@@ -146,7 +155,10 @@ const UserEditor = (): React.ReactElement => {
                 {selectedOperation == Operation.Rename &&
                     <>
                         <Modal.Header closeButton>
-                            <Modal.Title><Trans i18nKey="change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>&nbsp;({selectedUser})</Modal.Title>
+                            <Modal.Title>
+                                <Trans i18nKey="user-editor.change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>
+                                &nbsp;({selectedUser})
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form.Control type="text" placeholder={`Új felhasználónév...`} value={inputValue} onChange={handleInputChange} />
@@ -155,20 +167,23 @@ const UserEditor = (): React.ReactElement => {
                 }
                 {selectedOperation == Operation.Delete &&
                     <Modal.Header closeButton>
-                        <Modal.Title><Trans i18nKey="confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>&nbsp;({selectedUser})</Modal.Title>
+                        <Modal.Title>
+                            <Trans i18nKey="user-editor.confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>
+                            &nbsp;({selectedUser})
+                        </Modal.Title>
                     </Modal.Header>
                 }
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        <Trans i18nKey="exit">Kilépés</Trans>
+                        <Trans i18nKey="user-editor.exit">Kilépés</Trans>
                     </Button>
                     {selectedOperation == Operation.ChangePassword || selectedOperation == Operation.Rename ?
                         <Button variant="primary" onClick={handleSaveChanges}>
-                            <Trans i18nKey="save">Mentés</Trans>
+                            <Trans i18nKey="user-editor.save">Mentés</Trans>
                         </Button>
                         :
                         <Button variant="danger" onClick={handleSaveChanges}>
-                            <Trans i18nKey="delete">Törlés</Trans>
+                            <Trans i18nKey="user-editor.delete">Törlés</Trans>
                         </Button>
                     }
                 </Modal.Footer>

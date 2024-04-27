@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'react-query';
 
 import { UpdateLog } from 'models/models';
 import { deleteLogs, fetchUpdateLogs } from 'API/queryUtils';
+import { Trans } from 'react-i18next';
 
 const UpdateLogs: React.FC = () => {
     const { data: logs, isLoading, error, refetch } = useQuery<UpdateLog[]>('updateLogs', fetchUpdateLogs);
@@ -40,10 +41,10 @@ const UpdateLogs: React.FC = () => {
                         <th>
                             <Form.Check className='delete-checkbox' type='checkbox' onChange={handleSelectAll} checked={logs?.length === selectedLogs.length} />
                         </th>
-                        <th>Update Time</th>
-                        <th>Update Count</th>
-                        <th>Delete Count</th>
-                        <th>Total Count</th>
+                        <th><Trans i18nKey='logs.update-time'>Frissítés ideje</Trans></th>
+                        <th><Trans i18nKey='logs.update-count'>Frissítettek száma</Trans></th>
+                        <th><Trans i18nKey='logs.delete-count'>Töröltek száma</Trans></th>
+                        <th><Trans i18nKey='logs.total-count'>Összesen</Trans></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,7 +69,7 @@ const UpdateLogs: React.FC = () => {
                             <span className={`material-symbols-outlined delete-icon ${selectedLogs.length === 0 && 'no-log-selected'}`}
                                 onClick={handleDeleteSelected}>delete</span>
                         </td>
-                        <td className='fw-bold' colSpan={3}>Frissítések száma: {logs?.length}</td>
+                        <td className='fw-bold' colSpan={3}><Trans i18nKey='logs.update-num'>Frissítések száma</Trans>: {logs?.length}</td>
                         <td></td>
                     </tr>
                 </tbody>

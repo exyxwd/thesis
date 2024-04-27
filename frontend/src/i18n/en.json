@@ -137,6 +137,32 @@
         "Editor": "Editor",
         "Admin": "Admin"
     },
+    "user-editor": {
+        "username": "Username",
+        "change_password": "Change password",
+        "change_username": "Change username",
+        "delete_user": "Delete user",
+        "change_password_of": "Change password of user",
+        "change_username_of": "Change username of user",
+        "confirm_delete": "Are you sure you want to delete the user?",
+        "exit": "Exit",
+        "save": "Save",
+        "delete": "Delete"
+    },
+    "menu": {
+        "main_page": "Main Page",
+        "add_user": "Add User",
+        "manage_user": "Manage Users",
+        "logs": "Logs",
+        "logout": "Logout"
+    },
+    "logs": {
+        "update-time": "Update Time",
+        "update-count": "Update Count",
+        "delete-count": "Delete Count",
+        "total-count": "Total Count",
+        "update-num": "Number of updates"
+    },
     "location_types": {
         "Anchor": "Anchor",
         "Center": "Center",

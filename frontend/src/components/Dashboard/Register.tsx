@@ -46,7 +46,7 @@ const Register: React.FC = (): React.ReactElement => {
         });
     };
 
-    const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
+    const handleRegister = (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         setShouldPost(true);
     };
@@ -55,12 +55,12 @@ const Register: React.FC = (): React.ReactElement => {
         <div className="container mt-4">
             <div className="row justify-content-center register-area">
                 <div className="col-md-7">
-                    <h1 className="text-center"><Trans i18nKey="register_user">Új felhasználó regisztrálása</Trans></h1>
+                    <h1 className="text-center"><Trans i18nKey="user.register_user">Új felhasználó regisztrálása</Trans></h1>
                     <br />
                     <br />
-                    <form autoComplete="off" onSubmit={handleLogin}>
+                    <form autoComplete="off" onSubmit={handleRegister}>
                         <div className="mb-3">
-                            <label htmlFor="username" className="form-label"><Trans i18nKey="username">Felhasználónév</Trans></label>
+                            <label htmlFor="username" className="form-label"><Trans i18nKey="user.username">Felhasználónév</Trans></label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -71,7 +71,7 @@ const Register: React.FC = (): React.ReactElement => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label"><Trans i18nKey="password">Jelszó</Trans></label>
+                            <label htmlFor="password" className="form-label"><Trans i18nKey="user.password">Jelszó</Trans></label>
                             <input
                                 type="password"
                                 className="form-control"
@@ -81,12 +81,12 @@ const Register: React.FC = (): React.ReactElement => {
                                 required
                             />
                         </div>
-                        {failedRegistry && <p className='invalid-creds-text'><Trans i18nKey="registry_fail">Sikertelen regisztráció.</Trans></p>}
-                        {successfulRegistry && <p className='valid-creds-text'><Trans i18nKey="registry_success">Sikeres regisztráció.</Trans></p>}
+                        {failedRegistry && <p className='invalid-creds-text'><Trans i18nKey="user.registry_fail">Sikertelen regisztráció.</Trans></p>}
+                        {successfulRegistry && <p className='valid-creds-text'><Trans i18nKey="user.registry_success">Sikeres regisztráció.</Trans></p>}
                         <br />
                         <div className="d-grid gap-2">
                             <button type="submit" className={failedRegistry ? "btn btn-primary invalid-creds-btn" : "btn btn-primary"}>
-                                <Trans i18nKey="register">Regisztrálás</Trans>
+                                <Trans i18nKey="user.register">Regisztrálás</Trans>
                             </button>
                         </div>
                     </form>

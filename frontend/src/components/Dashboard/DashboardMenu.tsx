@@ -58,22 +58,22 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
                     </div>
                     <nav className="menu">
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard'} className={`menu-item ${location.pathname === `/dashboard` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="main_page">Főoldal</Trans>
+                            <Trans i18nKey="menu.main_page">Főoldal</Trans>
                         </Link>
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/register'} className={`menu-item ${location.pathname === `/dashboard/register` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="add_user">Felhasználó hozzáadása</Trans>
+                            <Trans i18nKey="menu.add_user">Felhasználó hozzáadása</Trans>
                         </Link>
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="manage_user">Felhasználók kezelése</Trans>
+                            <Trans i18nKey="menu.manage_user">Felhasználók kezelése</Trans>
                         </Link>
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="logs">Napló</Trans>
+                            <Trans i18nKey="menu.logs">Napló</Trans>
                         </Link>
                     </nav>
                     <div className='logout-area'>
                         <button className="logout-btn btn" onClick={handleLogout}>
                             <span className="material-symbols-outlined">logout</span>
-                            <p className='logout-text'><Trans i18nKey="logout">Kijelentkezés</Trans></p>
+                            <p className='logout-text'><Trans i18nKey="menu.logout">Kijelentkezés</Trans></p>
                         </button>
                     </div>
                 </aside>

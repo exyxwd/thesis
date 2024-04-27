@@ -70,10 +70,10 @@ const Login: React.FC = (): React.ReactElement => {
         <div className="container mt-4">
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <h1 className="text-center"><Trans i18nKey="login">Bejelentkezés</Trans></h1>
+                    <h1 className="text-center"><Trans i18nKey="user.login">Bejelentkezés</Trans></h1>
                     <form autoComplete="off" onSubmit={handleLogin}>
                         <div className="mb-3">
-                            <label htmlFor="username" className="form-label"><Trans i18nKey="username">Felhasználónév</Trans></label>
+                            <label htmlFor="username" className="form-label"><Trans i18nKey="user.username">Felhasználónév</Trans></label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -84,7 +84,7 @@ const Login: React.FC = (): React.ReactElement => {
                             />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="password" className="form-label"><Trans i18nKey="password">Jelszó</Trans></label>
+                            <label htmlFor="password" className="form-label"><Trans i18nKey="user.password">Jelszó</Trans></label>
                             <input
                                 type="password"
                                 className="form-control"
@@ -93,12 +93,12 @@ const Login: React.FC = (): React.ReactElement => {
                                 onChange={handlePasswordChange}
                                 required
                             />
-                            <p className='invalid-creds-text'>{invalidCreds ? <Trans i18nKey="wrong_creds">Hibás jelszó vagy felhasználónév.</Trans> : <></>}</p>
+                            <p className='invalid-creds-text'>{invalidCreds ? <Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans> : <></>}</p>
                         </div>
                         <br/>
                         <div className="d-grid gap-2">
                             <button type="submit" className={invalidCreds ? "btn btn-primary invalid-creds-btn" : "btn btn-primary"}>
-                                <Trans i18nKey="login">Bejelentkezés</Trans>
+                                <Trans i18nKey="user.login">Bejelentkezés</Trans>
                             </button>
                         </div>
                     </form>

@@ -79,7 +79,7 @@ nav ul li a:hover {
     transition: 500ms;
 }
 
-/* ################################ LANGUAGE DROPDOWN ################################ */
+/* ############### LANGUAGE DROPDOWN ############### */
 
 .language-dropdown {
     color: white;
@@ -101,10 +101,6 @@ nav ul li a:hover {
 
 .language-dropdown-menu{
     min-width: fit-content;
-}
-
-.dropdown-item{
-    background-color: $secondary-base;
 }
 
 .flag-container {
