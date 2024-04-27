@@ -2,6 +2,8 @@ $even: rgb(194, 208, 243, 0.5);
 $odd: rgb(142, 163, 207, 0.5);
 $link: rgb(19, 131, 206);
 
+/* ################################ ERROR MSG COLORS ################################ */
+
 .invalid-creds-text {
     color: firebrick;
 }
@@ -12,15 +14,6 @@ $link: rgb(19, 131, 206);
 
 .valid-creds-text {
     color: green;
-}
-
-.register-area {
-    margin-top: 70px;
-    margin-left: 300px;
-}
-.login-band {
-    padding-left: 10px;
-    padding-right: 40px;
 }
 
 /* ################################ DASHBOARD MENU ################################ */
@@ -117,12 +110,6 @@ $link: rgb(19, 131, 206);
     transform: translateY(-50%);
 }
 
-.user-role {
-    display: inline;
-    color: #707793;
-    font-size: 0.9rem;
-}
-
 .dashboard-sidebar .menu {
     margin: 0 -1rem;
 }
@@ -183,6 +170,13 @@ $link: rgb(19, 131, 206);
     object-fit: contain;
 }
 
+/* ################################ REGISTER INTERFACE ################################ */
+
+.register-area {
+    margin-top: 70px;
+    margin-left: 300px;
+}
+
 /* ################################ USER EDITOR ################################ */
 
 .user-table {
@@ -197,190 +191,19 @@ $link: rgb(19, 131, 206);
     overflow-x: hidden;
 }
 
-/* ################################ LOCATION FORM ################################ */
-
-.location-form-area {
-    margin-left: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: calc(100dvh - 70px);
-}
-
-#map.location-selector-map,
-.location-selector-container {
-    height: 300px;
-    width: 100%;
-    cursor: pointer;
-}
-
-.extra-social-media-fields {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    margin: 3px;
-}
-
-.input-delete-button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    margin: 3px;
-}
-
-#new-social-media-btn {
-    margin-top: 5px;
-}
-
-.help-icon {
-    color: $link;
-    cursor: pointer;
-}
-
-/* ################################ DESCRIPTIONS ################################ */
-
-.location-description-type {
-    font-weight: bold;
-    font-size: large;
-    margin-top: 1rem;
-    margin-left: 1rem;
-}
-
-.location-description {
-    margin-left: 1rem;
-}
-
-/* ################################ APPROVALS ################################ */
-
-#approvals-container {
-    margin-left: 300px;
-    max-height: calc(100dvh - 100px);
-    overflow-y: auto;
-}
-
-#approval-modal-body {
-    min-height: 150px;
-    max-height: calc(100dvh - 250px);
-    overflow-y: auto;
-}
-
-.modal-backdrop.show {
-    opacity: 0.4;
-}
-
-.deny-btn {
-    margin-right: 20px;
-}
-
-.approval-body {
-    width: 100%;
-    padding: 20px;
-}
-
-.approval-nav-container {
-    background-color: $secondary-base;
-    border-bottom: 3px solid white;
-}
-
-.approval-menu-item {
-    background: none;
-    border: none;
-    padding: 15px;
-    margin: 0;
-    height: 100%;
-    font-family: inherit;
-    color: white;
-    cursor: pointer;
-}
-
-.approval-menu-item:hover, .approval-menu-item:focus {
-    color: skyblue;
-    background-color: $highlight;
-    border-bottom: 4px solid skyblue;
-}
-
-.approval-menu-item.approval-is-active {
-    border-bottom: 4px solid skyblue;
-    background-color: $highlight;
-    color: skyblue;
-    font-weight: bold;
-}
-
-.validation-info {
-    margin: 200px;
-}
-
-@media (max-width: 1024px) {
-    .dashboard-sidebar {
-        max-width: 220px;
-    }
-
-    .backgound-logo {
-        left: calc(50% + 100px);
-    }
-
-    .user-table {
-        margin-left: 220px;
-        width: calc(100% - 200px);
-    }
-
-    .register-area {
-        margin-left: 200px;
-    }
-
-    #approvals-container {
-        margin-left: 220px;
-    }
-
-    .location-form-area {
-        margin-left: 200px;
-    }
-}
-
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .user-table {
-        margin-left: 0px;
-        margin-bottom: 80px;
-        width: 100%;
-    }
-
-    #approvals-container {
-        margin-left: 0px;
-        margin-bottom: 80px;
-        width: 100%;
-    }
-
-    .backgound-logo {
-        left: 50%;
-    }
-
-    .register-area,
-    .location-form-area {
-        margin: 0px;
-    }
-
-    .location-form-area {
-        width: 100%;
-        padding: 20px;
-    }
-
-    .dashboard-sidebar {
-        position: fixed;
-        left: -300px;
-        height: calc(100dvh - 70px);
-        width: 100%;
-        transition: 0.2s linear;
-    }
-
-    .dashboard-sidebar.is-active {
-        left: 0;
-    }
-}
-
 .user-table-head th {
     background-color: $secondary-base;
     color: white;
+    border: none;
+}
+
+.user-table-row:nth-child(even) td {
+    background-color: $even;
+    border: none;
+}
+
+.user-table-row:nth-child(odd) td {
+    background-color: $odd;
     border: none;
 }
 
@@ -420,18 +243,14 @@ $link: rgb(19, 131, 206);
     background: white;
 }
 
-.delete-icon {
-    padding-top: 0.3rem;
-    user-select: none;
-    cursor: pointer;
-}
-
-.no-log-selected{
+.no-log-selected {
     opacity: 0.4;
     cursor: default;
 }
 
-.form-check {
+.delete-icon {
+    padding-top: 0.3rem;
+    user-select: none;
     cursor: pointer;
 }
 
@@ -439,44 +258,55 @@ $link: rgb(19, 131, 206);
     cursor: pointer;
 }
 
-.user-table-row:nth-child(even) td {
-    background-color: $even;
-    border: none;
+/* ################################ RESPONSIBILITY ################################ */
+
+@media (max-width: 1024px) {
+    .dashboard-sidebar {
+        max-width: 220px;
+    }
+
+    .backgound-logo {
+        left: calc(50% + 100px);
+    }
+
+    .user-table {
+        margin-left: 220px;
+        width: calc(100% - 200px);
+    }
+
+    .register-area {
+        margin-left: 200px;
+    }
 }
 
-.user-table-row:nth-child(odd) td {
-    background-color: $odd;
-    border: none;
-}
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
 
-.dropdown-toggle {
-    background-color: $base;
-    color: white;
-    border: none;
-}
+    .user-table {
+        margin-left: 0px;
+        margin-bottom: 80px;
+        width: 100%;
+    }
 
-.btn.dropdown-toggle:hover,
-.btn.dropdown-toggle:active,
-.btn.dropdown-toggle:focus,
-.btn.dropdown-toggle:focus-visible {
-    background-color: $highlight;
-    color: skyblue;
-    border: none;
-}
+    .backgound-logo {
+        left: 50%;
+    }
 
-.dropdown-menu.show {
-    background-color: $base;
-    padding: 0px;
-    border-radius: 0px;
-    z-index: 10000;
-}
+    .register-area {
+        margin: 0px;
+    }
 
-.dropdown-item {
-    color: white;
-    padding: 8px 10px 8px 10px
-}
+    .dashboard-sidebar {
+        position: fixed;
+        left: -300px;
+        height: calc(100dvh - 70px);
+        width: 100%;
+        transition: 0.2s linear;
+    }
 
-.dropdown-item:hover {
-    background-color: $highlight;
-    color: skyblue;
+    .dashboard-sidebar.is-active {
+        left: 0;
+    }
 }
