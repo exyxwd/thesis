@@ -1,7 +1,5 @@
 package hu.exyxwd.tisztatisza.controller;
 
-import io.jsonwebtoken.Claims;
-
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
+import java.security.Principal;
 import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,7 +16,7 @@ import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.User;
 import hu.exyxwd.tisztatisza.security.JwtUtil;
 import hu.exyxwd.tisztatisza.repository.UserRepository;
-import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
@@ -39,7 +38,7 @@ public class UserController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginReq, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -48,7 +47,7 @@ public class UserController {
             User user = new User(username, "");
             String token = jwtUtil.createToken(user);
 
-            response.setHeader(HttpHeaders.SET_COOKIE, "token=" + token + "; HttpOnly; SameSite=strict");
+            response.setHeader(HttpHeaders.SET_COOKIE, "token=" + token + "; Path=/api; HttpOnly; SameSite=Strict");
 
             return ResponseEntity.ok().build();
             
@@ -74,7 +73,7 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // Clear the JWT token by setting the cookie to an empty string and setting its Max-Age attribute to 0
-        response.setHeader(HttpHeaders.SET_COOKIE, "token=; HttpOnly; SameSite=strict; Max-Age=0");
+        response.setHeader(HttpHeaders.SET_COOKIE, "token=; Path=/api; HttpOnly; Max-Age=0; SameSite=Strict");
         return ResponseEntity.ok().build();
     }
 

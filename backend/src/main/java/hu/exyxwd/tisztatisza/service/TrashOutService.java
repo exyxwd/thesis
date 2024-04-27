@@ -16,8 +16,8 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import hu.exyxwd.tisztatisza.model.Waste;
-import hu.exyxwd.tisztatisza.repository.WasteRepository;
+import hu.exyxwd.tisztatisza.model.*;
+import hu.exyxwd.tisztatisza.repository.*;
 
 @Service
 public class TrashOutService {
@@ -27,11 +27,17 @@ public class TrashOutService {
 
     @Autowired
     private final WasteRepository wasteRepository;
+
+    @Autowired
+    private final UpdateLogRepository updateLogRepository;
+
     private RestTemplate restTemplate;
     private JSONObject config;
 
-    public TrashOutService(WasteRepository wasteRepository) {
+    public TrashOutService(WasteRepository wasteRepository, UpdateLogRepository updateLogRepository) {
         this.wasteRepository = wasteRepository;
+        this.updateLogRepository = updateLogRepository;
+
         this.restTemplate = new RestTemplate();
         JSONParser parser = new JSONParser();
         try {
@@ -145,7 +151,7 @@ public class TrashOutService {
     }
 
     @Transactional
-    @CacheEvict(value = {"filteredMapData", "inverseFilteredMapData"}, allEntries = true)
+    @CacheEvict(value = { "filteredMapData", "inverseFilteredMapData" }, allEntries = true)
     public void updateDatabase() {
         // String token = getToken();
 
@@ -168,7 +174,7 @@ public class TrashOutService {
                 waste.getTypes().clear();
                 wasteRepository.save(waste);
             }
-            
+
             wasteRepository.deleteAll(oldWastes);
 
             // Parse the JSON array from TrashOut
@@ -191,7 +197,7 @@ public class TrashOutService {
                     // Check if the waste's ID is already in the database
                     Waste existingWaste = existingWastesMap.get(newWaste.getId());
 
-                    // Only save the waste if it had an update in the past 6 years and it is not in
+                    // Only save the waste if it had an update in the past X years and it is not in
                     // the database or it has been updated
                     if (newWaste.getUpdateTime().isAfter(XYearsAgo)
                             && (existingWaste == null || !newWaste.equals(existingWaste))) {
@@ -202,6 +208,19 @@ public class TrashOutService {
                 }
             }
             wasteRepository.saveAll(wastesToSave);
+
+            // Save the update log
+            Integer deleteCount = oldWastes.size();
+            Integer updateCount = wastesToSave.size();
+            Long totalCount = wasteRepository.count();
+
+            UpdateLog updateLog = new UpdateLog();
+            updateLog.setUpdateTime(LocalDateTime.now());
+            updateLog.setDeleteCount(deleteCount);
+            updateLog.setUpdateCount(updateCount);
+            updateLog.setTotalCount(totalCount);
+
+            updateLogRepository.save(updateLog);
         } catch (ParseException e) {
             e.printStackTrace();
         }

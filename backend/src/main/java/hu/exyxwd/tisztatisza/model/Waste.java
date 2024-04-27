@@ -89,8 +89,14 @@ public class Waste {
     @Column(columnDefinition = "text")
     private String note;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> rivers;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, country, locality, sublocality, size,
+                status, types, createTime, updateTime, imageUrl, note);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -102,9 +108,7 @@ public class Waste {
 
         Waste waste = (Waste) o;
 
-        return Objects.equals(latitude, waste.latitude) &&
-                Objects.equals(longitude, waste.longitude) &&
-                Objects.equals(id, waste.id) &&
+        return Objects.equals(id, waste.id) &&
                 country == waste.country &&
                 Objects.equals(locality, waste.locality) &&
                 Objects.equals(sublocality, waste.sublocality) &&
@@ -114,7 +118,6 @@ public class Waste {
                 Objects.equals(createTime, waste.createTime) &&
                 Objects.equals(updateTime, waste.updateTime) &&
                 Objects.equals(imageUrl, waste.imageUrl) &&
-                Objects.equals(note, waste.note) &&
-                Objects.equals(rivers, waste.rivers);
+                Objects.equals(note, waste.note);
     }
 }
