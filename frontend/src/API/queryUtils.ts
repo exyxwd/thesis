@@ -1,4 +1,4 @@
-import { ExpandedTrashData, MinimalTrashData, RegisterData, UserDataType } from 'models/models';
+import { ExpandedTrashData, MinimalTrashData, RegisterData, UpdateLog, UserDataType } from 'models/models';
 // const baseURL = window.location.origin;
 // const baseURL = 'http://localhost:8080/api';
 
@@ -74,7 +74,7 @@ export const fetchFilteredInverseWasteData = async (): Promise<MinimalTrashData[
  */
 export const fetchUserinfo = async (): Promise<UserDataType> => {
     const response = await fetch('/api/auth/userInfo', { method: 'GET' });
-    console.log(response);
+
     if (!response.ok) {
         throw new Error('Network response was not ok.');
     }
@@ -153,7 +153,7 @@ export const fetchUsers = async (): Promise<UserDataType[]> => {
     if (!response.ok) {
         throw new Error('Network response was not ok.');
     }
-    console.log()
+
     return response.json();
 };
 
@@ -215,6 +215,42 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
 export const deleteUser = async (username: string): Promise<boolean> => {
     const response = await fetch(`/api/auth/users/${username}/delete`, {
         method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        return false;
+    }
+
+    return true;
+};
+
+/**
+ * Fetches past database updates
+ *
+ * @returns {UpdateLog[]} - data of all past database updates
+ */
+export const fetchUpdateLogs = async (): Promise<UpdateLog[]> => {
+    const response = await fetch('/api/logs', { method: 'GET' });
+    if (!response.ok) {
+        throw new Error('Network response was not ok.');
+    }
+    
+    return response.json();
+};
+
+/**
+ * Sends a DELETE request to the server to delete logs
+ *
+ * @param {number[]} ids - ids of the logs to delete
+ * @returns {boolean} - true if the request was successful, false otherwise
+ */
+export const deleteLogs = async (ids: number[]): Promise<boolean> => {
+    const response = await fetch('/api/logs', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ids),
     });
 
     if (!response.ok) {

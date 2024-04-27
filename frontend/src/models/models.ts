@@ -71,6 +71,14 @@ export type UserDataType = {
     username: string;
 };
 
+export interface UpdateLog {
+    id: number;
+    updateTime: string;
+    updateCount: number;
+    deleteCount: number;
+    totalCount: number;
+}
+
 export interface River {
     name: string;
     tributaries: string[];

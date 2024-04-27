@@ -9,8 +9,9 @@ import Dashboard from 'pages/Dashboard';
 import Login from 'components/Dashboard/Login';
 import NavBar from 'components/Navigation/NavBar';
 import Register from 'components/Dashboard/Register';
-import ProtectedRoute from 'components/Dashboard/ProtectedRoute';
+import UpdateLogs from 'components/Dashboard/UpdateLogs';
 import UserEditor from 'components/Dashboard/UserEditor';
+import ProtectedRoute from 'components/Dashboard/ProtectedRoute';
 
 // TODO About page and contact page
 /**
@@ -32,6 +33,7 @@ function App() {
                     <Route path={'/dashboard'} element={<Dashboard />} />
                     <Route path={'/dashboard/users'} element={<UserEditor />} />
                     <Route path={'/dashboard/register'} element={<Register />} />
+                    <Route path={'/dashboard/logs'} element={<UpdateLogs />} />
                 </Route>
                 <Route path={'/*'} element={<Navigate to={'/'} />} />
             </Routes>

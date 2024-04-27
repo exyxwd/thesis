@@ -1,6 +1,5 @@
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
 import React, { useState, useEffect, FormEvent } from 'react';
 
 import { useLocation, useNavigate } from 'react-router';
@@ -9,7 +8,7 @@ import { useAuthenticated, useSetAuthenticated } from './AuthContext';
 
 /**
  * Login interface
- * 
+ *
  * @returns {React.ReactElement} The login interface
  */
 const Login: React.FC = (): React.ReactElement => {

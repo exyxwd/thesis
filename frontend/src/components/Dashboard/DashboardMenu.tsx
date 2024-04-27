@@ -1,8 +1,8 @@
 
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import { UserDataType } from 'models/models';
 import { useSetAuthenticated } from './AuthContext';
@@ -26,12 +26,18 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
         }
     );
 
-    useQuery('fetchUserinfo', fetchUserinfo,
+    const { error } = useQuery('fetchUserinfo', fetchUserinfo,
         {
             onSuccess: (userData: UserDataType) => { userData ? setUsername(userData.username) : setIsLoggedIn(false); },
             retry: 0
         }
     );
+
+    useEffect(() => {
+        if (error) {
+            setIsLoggedIn(false);
+        }
+    } , [error]);
 
     const handleLogout = () => {
         setShouldPost(true);
@@ -59,6 +65,9 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
                         </Link>
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
                             <Trans i18nKey="manage_user">Felhasználók kezelése</Trans>
+                        </Link>
+                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
+                            <Trans i18nKey="logs">Napló</Trans>
                         </Link>
                     </nav>
                     <div className='logout-area'>

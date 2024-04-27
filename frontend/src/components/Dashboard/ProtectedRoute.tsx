@@ -20,10 +20,6 @@ const ProtectedRoute = (): React.ReactElement => {
       {
          enabled: !authenticated, retry: 0, onSuccess: (isAuthenticated) => { if (isAuthenticated) {setAuthenticated(true)} }
       });
-   
-   // if (isLoading) {
-   //    return <div className='loader'></div>;
-   // }
 
    return authenticated ? <><DashboardMenu/> <Outlet /></> : <Navigate to={`/dashboard/login`} replace state={{ from: location }} />;
 };

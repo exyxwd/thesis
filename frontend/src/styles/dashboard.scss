@@ -1,7 +1,5 @@
-$base: rgb(47, 59, 89);
-$highlight: rgb(64, 83, 133);
-$even: rgb(194, 208, 243);
-$odd: rgb(142, 163, 207);
+$even: rgb(194, 208, 243, 0.5);
+$odd: rgb(142, 163, 207, 0.5);
 $link: rgb(19, 131, 206);
 
 .invalid-creds-text {
@@ -36,7 +34,7 @@ $link: rgb(19, 131, 206);
     display: none;
     position: fixed;
     bottom: 10px;
-    right: 10px;
+    right: 15px;
     width: 60px;
     height: 60px;
     border-radius: 99px;
@@ -194,7 +192,7 @@ $link: rgb(19, 131, 206);
 }
 
 .user-table-container {
-    height: calc(100dvh - 70px);
+    height: calc(100dvh - $nav-height);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -277,7 +275,7 @@ $link: rgb(19, 131, 206);
 }
 
 .approval-nav-container {
-    background-color: $base;
+    background-color: $secondary-base;
     border-bottom: 3px solid white;
 }
 
@@ -381,9 +379,64 @@ $link: rgb(19, 131, 206);
 }
 
 .user-table-head th {
-    background-color: $base;
+    background-color: $secondary-base;
     color: white;
     border: none;
+}
+
+/* ################################ UPDATE LOGS ################################ */
+
+.logs-table {
+    width: calc(100% - 300px);
+    margin-left: 300px;
+    margin-bottom: 0;
+}
+
+.logs-table-container {
+    height: calc(100dvh - $nav-height);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.log-table-head {
+    background-color: $secondary-base;
+    color: white;
+    border: none;
+}
+
+.log-table-row:nth-child(even) td {
+    background-color: $even;
+    border: none;
+}
+
+.log-table-row:nth-child(odd) td {
+    background-color: $odd;
+    border: none;
+}
+
+.sticky-bottom {
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+.delete-icon {
+    padding-top: 0.3rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.no-log-selected{
+    opacity: 0.4;
+    cursor: default;
+}
+
+.form-check {
+    cursor: pointer;
+}
+
+.delete-checkbox input[type="checkbox"] {
+    cursor: pointer;
 }
 
 .user-table-row:nth-child(even) td {

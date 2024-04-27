@@ -8,7 +8,7 @@ import { Trans } from 'react-i18next';
 
 /**
  * Enumeration for the different user editing operations
- * 
+ *
  * @enum {number}
  * @readonly
  * @property {number} Delete - Delete user
@@ -23,7 +23,7 @@ enum Operation {
 
 /**
  * Component for editing user's properties
- * 
+ *
  * @returns {React.ReactElement} - User editor interface
  */
 const UserEditor = (): React.ReactElement => {
@@ -107,9 +107,6 @@ const UserEditor = (): React.ReactElement => {
                         <th onClick={() => setUserData([...userData].sort((a, b) => { return a.username.localeCompare(b.username) }))}>
                             <Trans i18nKey="username">Felhasználónév</Trans>
                         </th>
-                        {/* <th onClick={() => setUserData([...userData].sort((a, b) => { return a.role.localeCompare(b.role) }))}>
-                            <Trans i18nKey="authority">Hatáskör</Trans>
-                        </th> */}
                         <th></th>
                     </tr>
                 </thead>
