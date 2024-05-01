@@ -42,6 +42,7 @@ export interface MinimalTrashData {
     types: TrashType[];
     rivers: string[];
     updateTime: string;
+    hidden: boolean;
 }
 
 export interface ExpandedTrashData {
@@ -60,6 +61,7 @@ export interface ExpandedTrashData {
     updateNeeded: boolean;
     note: string;
     imageUrl: string;
+    hidden: boolean;
 }
 
 export interface RegisterData {

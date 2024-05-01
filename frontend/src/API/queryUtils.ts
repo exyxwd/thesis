@@ -259,3 +259,48 @@ export const deleteLogs = async (ids: number[]): Promise<boolean> => {
 
     return true;
 };
+
+/**
+ * Sets the hidden status of a waste by its id
+ *
+ * @param {number} id - id of the waste
+ * @param {boolean} hiddenStatus - new hidden status of the waste
+ */
+export const hideWaste = async (id: number, hiddenStatus: boolean): Promise<boolean> => {
+    const hiddenStatusData = {
+        hidden: hiddenStatus
+    };
+    const response = await fetch(`/api/wastes/${id}/hidden`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(hiddenStatusData)
+    });
+
+    if (!response.ok) {
+        return false;
+    }
+
+    return true;
+};
+
+/**
+ * Gets all hidden wastes from the server
+ *
+ * @returns {ExpandedTrashData[]} - all hidden wastes
+ */
+export const fetchHiddenWastes = async (): Promise<ExpandedTrashData[]> => {
+    const response = await fetch(`/api/wastes/hidden`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch hidden wastes');
+    }
+
+    return response.json();
+};

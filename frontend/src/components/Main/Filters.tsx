@@ -8,6 +8,7 @@ import DownloadButton from './DownloadButton';
 import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
 import FilterItem from './FilterItem';
 import TimeSlider from './TimeSlider';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
 
 /**
  * Grouped waste filters
@@ -58,6 +59,7 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
     const [menuOpen, setMenuOpen] = useState(false);
     filtersData.locality = getSelectableRivers(activeFilters);
     const [countFitForFilters, setCountFitForFilters] = useState(0);
+    const authenticated = useAuthenticated();
     const {data: filterMap, refetch: updateCounts} = useQuery<Map<string,number>>('filtercounts', () => filterCount());
 
     useEffect(() => {
@@ -95,7 +97,7 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
 
                 let count = 0;
                 dataToIterate.forEach((waste) => {
-                    if (isFitForFilters(waste, [filter, ...activeFilters], selectedTime, riversIfSelected)) {
+                    if (isFitForFilters(authenticated, waste, [filter, ...activeFilters], selectedTime, riversIfSelected)) {
                         count++;
                     }
                 });

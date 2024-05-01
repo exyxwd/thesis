@@ -1,3 +1,4 @@
+import { useMutation } from 'react-query';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -10,7 +11,9 @@ import {
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { ExpandedTrashData } from 'models/models';
-import { useActiveFilters, useSelectedTime, useSetActiveFilters, useSetSelectedTime } from 'components/Main/FilterContext';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
+import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters, useSetSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
+import { hideWaste } from 'API/queryUtils';
 
 /**
  * The properties of the waste information panel
@@ -32,14 +35,33 @@ interface WasteInfoPanelProps {
  * @returns {React.ReactElement} The waste information panel
  */
 const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElement => {
+    const selectedWastes = useSelectedWastes();
+    const matchingWaste = selectedWastes.find(waste => waste.id === data.id);
+    const [isHidden, setIsHidden] = useState<boolean>(matchingWaste ? matchingWaste.hidden : data.hidden);
+
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const setActiveFilters = useSetActiveFilters();
     const panelRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
+    const hideWasteWrapper = ({ id, hiddenStatus }: { id: number, hiddenStatus: boolean }) => hideWaste(id, hiddenStatus);
+    const hideWasteMutation = useMutation(hideWasteWrapper);
+    const setSelectedWastes = useSetSelectedWastes();
     const setSelectedTime = useSetSelectedTime();
+    const isAuthenticated = useAuthenticated();
     const activeFilters = useActiveFilters();
     const selectedTime = useSelectedTime();
+
+    useEffect(() => {
+        setSelectedWastes(prevWastes => {
+            return prevWastes.map(waste => {
+                if (waste.id === data.id) {
+                    return { ...waste, hidden: isHidden };
+                }
+                return waste;
+            });
+        });
+    }, [isHidden]);
 
 
     useEffect(() => {
@@ -128,24 +150,24 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     useEffect(() => {
         if (data) {
             const newFilters = [...activeFilters];
-    
+
             if (!newFilters.includes(data.country)) {
                 newFilters.push(data.country);
             }
-    
+
             if (!newFilters.includes(data.size)) {
                 newFilters.push(data.size);
             }
-    
+
             if (!newFilters.includes(data.status)) {
                 newFilters.push(data.status);
             }
-    
+
             // Only call setActiveFilters if the new filters are different from the current active filters
             if (JSON.stringify(newFilters.sort()) !== JSON.stringify(activeFilters.sort())) {
                 setActiveFilters(newFilters);
             }
-    
+
             const wasteUpdateTime = new Date(data.updateTime);
             if (wasteUpdateTime < selectedTime) {
                 setSelectedTime(wasteUpdateTime);
@@ -179,6 +201,17 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                     onLoad={handleImageLoad}
                 />
             </div>
+            {isAuthenticated && <div className='hide-btn-container'>
+                <span
+                    className="material-symbols-outlined hide-btn"
+                    onClick={() => {
+                        setIsHidden(!isHidden);
+                        hideWasteMutation.mutate({ id: data.id, hiddenStatus: !isHidden });
+                    }}
+                >
+                    {isHidden ? 'visibility_off' : 'visibility'}
+                </span>
+            </div>}
             <div className='row waste-panel-base'>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
                     <FontAwesomeIcon className='header-item-icon' icon={faLocationDot} />{data.locality ? data.locality : "-"}
@@ -199,7 +232,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                 </div>
             </div>
             <div className='row'>
-                <div className='container' style={{ padding: "0px" }}>
+                <div className='container'>
                     <div className='row row-cols-4 justify-content-around waste-panel-types'>
                         {data.types?.map((type) => (
                             <div className='col-3 waste-panel-single-type' key={type}>

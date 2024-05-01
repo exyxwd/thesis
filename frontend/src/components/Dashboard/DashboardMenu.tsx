@@ -66,6 +66,9 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
                             <Trans i18nKey="menu.manage_user">Felhasználók kezelése</Trans>
                         </Link>
+                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/hiddens'} className={`menu-item ${location.pathname === `/dashboard/hiddens` ? 'is-active' : ''}`}>
+                            <Trans i18nKey="menu.hidden-locations">Rejtett pontok</Trans>
+                        </Link>
                         <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
                             <Trans i18nKey="menu.logs">Napló</Trans>
                         </Link>

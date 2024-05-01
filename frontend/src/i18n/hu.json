@@ -149,14 +149,21 @@
         "confirm_delete": "Biztosan törölni akarja a felhasználót?",
         "exit": "Kilépés",
         "save": "Mentés",
-        "delete": "Törlés"
+        "delete": "Törlés",
+        "edit": "Módosítás"
+    },
+    "hiddens": {
+        "updated": "Frissítve:",
+        "location": "Pont",
+        "unhide": "Láthatóvá tevés"
     },
     "menu": {
         "main_page": "Főoldal",
         "add_user": "Felhasználó hozzáadása",
         "manage_user": "Felhasználók kezelése",
         "logs": "Napló",
-        "logout": "Kijelentkezés"
+        "logout": "Kijelentkezés",
+        "hidden-locations": "Rejtett pontok"
     },
     "logs": {
         "update-time": "Frissítés ideje",

@@ -147,14 +147,21 @@
         "confirm_delete": "Are you sure you want to delete the user?",
         "exit": "Exit",
         "save": "Save",
-        "delete": "Delete"
+        "delete": "Delete",
+        "edit": "Operations"
+    },
+    "hiddens": {
+        "updated": "Updated on:",
+        "location": "Location",
+        "unhide": "Make location visible"
     },
     "menu": {
         "main_page": "Main Page",
         "add_user": "Add User",
         "manage_user": "Manage Users",
         "logs": "Logs",
-        "logout": "Logout"
+        "logout": "Logout",
+        "hidden-locations": "Hidden locations"
     },
     "logs": {
         "update-time": "Update Time",

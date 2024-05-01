@@ -1,3 +1,4 @@
+// TODO: docs here
 @keyframes open {
     from {
         left: -500px;
@@ -27,7 +28,7 @@
     padding: 0;
     box-sizing: border-box;
     direction: rtl;
-    z-index: 10;
+    z-index: 100;
     animation-name: open;
     animation-duration: 300ms;
     color: $filter-background;
@@ -128,9 +129,21 @@
     margin-left: -10px;
 }
 
+.hide-btn-container{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.hide-btn {
+    user-select: none;
+    cursor: pointer;
+}
+
 
 @media (max-width: 768px) {
-    .waste-panel.open {
+    #waste-panel {
         width: 100%;
     }
 }

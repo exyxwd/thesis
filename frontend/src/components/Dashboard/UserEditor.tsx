@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import React, { useState } from 'react';
 
+import Pagination from './Pagination';
 import { UserDataType } from 'models/models';
 import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
 import { fetchUsers, postPasswordChange, postUsernameChange, deleteUser } from 'API/queryUtils';
@@ -27,15 +28,20 @@ enum Operation {
  * @returns {React.ReactElement} - User editor interface
  */
 const UserEditor = (): React.ReactElement => {
-    const [userData, setUserData] = useState<UserDataType[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [userData, setUserData] = useState<UserDataType[]>([]);
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [selectedOperation, setSelectedOperation] = useState<Operation>();
+    const [shouldFetchUsers, setShouldFetchUsers] = useState<boolean>(true);
+    const [shouldPostDelete, setShouldPostDelete] = useState<boolean>(false);
     const [shouldPostPassChange, setShouldPostPassChange] = useState<boolean>(false);
     const [shouldPostNameChange, setShouldPostNameChange] = useState<boolean>(false);
-    const [shouldPostDelete, setShouldPostDelete] = useState<boolean>(false);
-    const [shouldFetchUsers, setShouldFetchUsers] = useState<boolean>(true);
+    
+    const recordsPerPage = 14;
+    const [indexOfLastRecord, setIndexOfLastRecord] = useState<number>(recordsPerPage);
+    const [indexOfFirstRecord, setIndexOfFirstRecord] = useState<number>(0);
+    const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord);
 
     const handleShow = (username: string, operation: Operation) => {
         setInputValue('');
@@ -51,6 +57,13 @@ const UserEditor = (): React.ReactElement => {
         {
             enabled: shouldFetchUsers, onSuccess: (data: UserDataType[]) => {
                 setUserData(data); setShouldFetchUsers(false);
+                if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
+                    const newIndexOfLastRecord = indexOfFirstRecord;
+                    const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
+            
+                    setIndexOfLastRecord(newIndexOfLastRecord);
+                    setIndexOfFirstRecord(newIndexOfFirstRecord);
+                }
             }
         });
 
@@ -82,6 +95,11 @@ const UserEditor = (): React.ReactElement => {
         return <div className='loader'></div>;
     }
 
+    const handlePageChange = (indexOfFirstRecord: number, indexOfLastRecord: number) => {
+        setIndexOfLastRecord(indexOfLastRecord);
+        setIndexOfFirstRecord(indexOfFirstRecord);
+    };
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
     };
@@ -103,18 +121,20 @@ const UserEditor = (): React.ReactElement => {
         <div className="user-table-container">
             <table className="table user-table table-striped">
                 <thead>
-                    <tr className='user-table-head'>
+                    <tr className='user-table-head sticky-top'>
                         <th onClick={() => setUserData([...userData].sort((a, b) => { return a.username.localeCompare(b.username) }))}>
                             <Trans i18nKey="user-editor.username">Felhasználónév</Trans>
                         </th>
-                        <th></th>
+                        <th>
+                            <Trans i18nKey="user-editor.edit">Módosítás</Trans>
+                            </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {userData.map((user) => {
+                    {currentRecords.map((user) => {
                         return (
                             <tr key={user.username} className='user-table-row'>
-                                <td>{user.username}</td>
+                                <td >{user.username}</td>
                                 <td>
                                     <Dropdown>
                                         <Dropdown.Toggle variant="secondary" id="dropdown-basic">
@@ -138,6 +158,13 @@ const UserEditor = (): React.ReactElement => {
                     })}
                 </tbody>
             </table>
+            {Math.ceil(userData.length / recordsPerPage) > 1 && (
+                <Pagination
+                    totalRecords={userData.length}
+                    recordsPerPage={recordsPerPage}
+                    handlePageChange={handlePageChange}
+                />
+            )}
             <Modal show={showModal} onHide={handleClose}>
                 {selectedOperation == Operation.ChangePassword &&
                     <>

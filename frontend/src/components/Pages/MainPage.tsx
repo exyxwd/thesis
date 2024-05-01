@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Map from 'components/Main/Map';
 import Filters from 'components/Main/Filters';
 import WasteInfoPanel from 'components/Main/WasteInfoPanel';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import { getFilteredRivers, isFitForFilters } from 'models/functions';
 import { ExpandedTrashData, MinimalTrashData, filterRivers } from 'models/models';
 import { fetchFilteredWasteData, fetchFilteredInverseWasteData, fetchWasteById } from 'API/queryUtils';
@@ -25,13 +26,14 @@ const MainPage: React.FC = (): React.ReactElement => {
     const selectedTime = useSelectedTime();
     const activeFilters = useActiveFilters();
     const setSelectedWastes = useSetSelectedWastes();
+    const authenticated = useAuthenticated();
     const [wasteData, setWasteData] = useState<MinimalTrashData[]>([]);
     const filteredRivers = useMemo(() => getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter))), [activeFilters]);
 
-    const { data: detailedWasteData } = useQuery<ExpandedTrashData>(
+    const { data: detailedWasteData, error: detailedWasteDataError } = useQuery<ExpandedTrashData>(
         ['detailedWasteData', selectedMarkerId],
         () => fetchWasteById(Number(selectedMarkerId!)),
-        { enabled: !!selectedMarkerId }
+        { enabled: !!selectedMarkerId, retry: 1 }
     );
     const { data: filteredWasteData, error: filteredWasteFetchError } = useQuery<MinimalTrashData[]>(
         'filteredWastes',
@@ -45,12 +47,26 @@ const MainPage: React.FC = (): React.ReactElement => {
     );
 
     useEffect(() => {
-        setSelectedWastes(wasteData.filter((waste) => isFitForFilters(waste, activeFilters, selectedTime, filteredRivers)));
+        setSelectedWastes(wasteData.filter((waste) => isFitForFilters(authenticated, waste, activeFilters, selectedTime, filteredRivers)));
     }, [wasteData, activeFilters, selectedTime, filteredRivers]);
 
     useEffect(() => {
         setWasteData([...(filteredWasteData || []), ...(inverseFilteredWasteData || [])]);
     }, [filteredWasteData, inverseFilteredWasteData]);
+
+    useEffect(() => {
+        if (detailedWasteData && detailedWasteData.hidden && !authenticated) {
+            navigate('/');
+        }
+    } , [detailedWasteData]);
+
+    useEffect(() => {
+        console.log("In")
+        if (detailedWasteDataError) {
+            console.log("Even inner")
+            navigate('/');
+        }
+    } , [detailedWasteDataError]);
 
     if (filteredWasteFetchError || inverseFilteredWasteFetchError) return (
         <div className='loading-error'>
@@ -62,8 +78,8 @@ const MainPage: React.FC = (): React.ReactElement => {
     return (
         <>
             {wasteData.length > 0 ? <Map selectedWaste={detailedWasteData} /> : <div className='loader'></div>}
-            {selectedMarkerId && detailedWasteData && Number(selectedMarkerId) === detailedWasteData.id && <WasteInfoPanel
-                data={detailedWasteData} onClose={() => { selectedMarkerId = undefined; navigate("/"); }} key={selectedMarkerId} />}
+            {selectedMarkerId && detailedWasteData && Number(selectedMarkerId) === detailedWasteData.id &&
+            <WasteInfoPanel data={detailedWasteData} onClose={() => { selectedMarkerId = undefined; navigate("/"); }} key={selectedMarkerId} />}
             {wasteData.length > 0 && <Filters wasteData={wasteData} isLoading={isLoading} />}
         </>
     )

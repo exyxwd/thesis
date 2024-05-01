@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import blueMarkerIcon from 'images/marker_blue.png';
 import markerShadow from 'images/marker_shadow.png';
+import greyMarkerIcon from 'images/marker_grey.png';
 import greenMarkerIcon from 'images/marker_green.png';
 import yellowMarkerIcon from 'images/marker_yellow.png';
 
@@ -62,6 +63,7 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
             let iconUrl: string;
 
             if (e.id == Number(selectedMarkerId)) iconUrl = yellowMarkerIcon
+            else if (e.hidden) iconUrl = greyMarkerIcon
             else if (e.status === 'STILLHERE' || e.status === 'MORE') iconUrl = blueMarkerIcon
             else iconUrl = greenMarkerIcon
 
@@ -74,13 +76,13 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
                 shadowSize: [50, 50],
                 shadowAnchor: [15, 50]
             });
-            
+
             if (clusterLayer.current) {
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
                 marker.on('click', () => {
                     setCameFromMarker(true);
-                    navigate(`/waste/${e.id}`, { state: { key: "markerClick" }  });
+                    navigate(`/waste/${e.id}`, { state: { key: "markerClick" } });
                 });
 
                 if (location.pathname === `/waste/${e.id}` && location.state?.key !== 'markerClick') {
@@ -96,11 +98,13 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
         if (!mapDivRef.current || map.current) {
             return;
         }
-        map.current = L.map('map', { doubleClickZoom: false }).setZoom(7).setView(L.latLng(47.1611615, 19.5057541));
+
+        map.current = L.map('map', { doubleClickZoom: false, attributionControl: false }).setZoom(7).setView(L.latLng(47.1611615, 19.5057541));
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             minZoom: 5
         }).addTo(map.current);
+        L.control.attribution({ position: 'bottomleft' }).addTo(map.current);
     });
 
     return (

@@ -27,7 +27,11 @@ export function calcRange(): { min: number, max: number, def: number } {
  * @param {string[]} activeFilters The currently active filters
  * @returns {boolean} Whether the waste dump is fit for the active filters
  */
-export const isFitForFilters = (e: MinimalTrashData | ExpandedTrashData, activeFilters: string[], selectedTime: Date, filteredRivers: (string[] | undefined)): boolean => {
+export const isFitForFilters = (authenticated: boolean, e: MinimalTrashData | ExpandedTrashData, activeFilters: string[],
+    selectedTime: Date, filteredRivers: (string[] | undefined)): boolean => {
+    // Visibility
+    if (e.hidden && !authenticated) return false;
+
     // Update Time
     if (selectedTime > new Date(e.updateTime)) return false;
 
