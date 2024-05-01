@@ -44,7 +44,7 @@ public class WasteController {
         return wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList());
     }
 
-    @Cacheable(value = "filteredMapData")
+    // @Cacheable(value = "filteredMapData")
     @GetMapping("/mapDataFiltered")
     public List<MapDataDTO> getFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
@@ -55,7 +55,7 @@ public class WasteController {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "inverseFilteredMapData")
+    // @Cacheable(value = "inverseFilteredMapData")
     @GetMapping("/mapDataFilteredInverse")
     public List<MapDataDTO> getInverseFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
@@ -63,6 +63,26 @@ public class WasteController {
                 Waste.WasteStatus.STILLHERE, oneYearAgo);
         return wastes.stream()
                 .map(wasteMapper::toMapData)
+                .collect(Collectors.toList());
+    }
+
+    // set hidden field of a waste by id rest api
+    @PutMapping("/{id}/hidden")
+    public ResponseEntity<?> setHidden(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
+        Waste waste = wasteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Waste does not exist with id: " + id));
+        waste.setHidden(body.get("hidden"));
+        wasteRepository.save(waste);
+
+        return ResponseEntity.ok().build();
+    }
+
+    // get all hidden wastes rest api
+    @GetMapping("/hidden")
+    public List<DetailedWasteDTO> getHiddenWastes() {
+        List<Waste> wastes = wasteRepository.findByHidden(true);
+        return wastes.stream()
+                .map(wasteMapper::toDetailedWasteDTO)
                 .collect(Collectors.toList());
     }
 }

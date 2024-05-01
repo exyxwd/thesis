@@ -21,4 +21,6 @@ public interface WasteRepository extends JpaRepository<Waste, Long> {
     @Query("SELECT w FROM Waste w WHERE w.country != :country OR w.size != :size OR w.status != :status OR w.updateTime < :updateTime")
     List<Waste> findByFiltersInverse(@Param("country") Waste.WasteCountry country, @Param("size") Waste.WasteSize size,
             @Param("status") Waste.WasteStatus status, @Param("updateTime") LocalDateTime updateTime);
+
+    List<Waste> findByHidden(boolean hidden);
 }

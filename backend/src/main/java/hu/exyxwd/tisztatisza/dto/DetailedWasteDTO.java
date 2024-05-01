@@ -26,4 +26,5 @@ public class DetailedWasteDTO {
     private String imageUrl;
     private String note;
     private Set<String> rivers;
+    private Boolean hidden;
 }

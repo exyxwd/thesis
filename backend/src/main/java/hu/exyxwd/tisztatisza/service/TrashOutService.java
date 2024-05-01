@@ -197,6 +197,11 @@ public class TrashOutService {
                     // Check if the waste's ID is already in the database
                     Waste existingWaste = existingWastesMap.get(newWaste.getId());
 
+                    // Make sure to keep the 'hidden' value
+                    if (existingWaste != null) {
+                        newWaste.setHidden(existingWaste.isHidden());
+                    }
+
                     // Only save the waste if it had an update in the past X years and it is not in
                     // the database or it has been updated
                     if (newWaste.getUpdateTime().isAfter(XYearsAgo)

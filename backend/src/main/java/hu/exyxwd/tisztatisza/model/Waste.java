@@ -12,6 +12,7 @@ import lombok.*;
         @Index(columnList = "country"),
         @Index(columnList = "size"),
         @Index(columnList = "status"),
+        @Index(columnList = "hidden"),
         @Index(columnList = "updateTime")
 })
 @Getter
@@ -91,6 +92,9 @@ public class Waste {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> rivers;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean hidden;
 
     @Override
     public int hashCode() {

@@ -19,4 +19,5 @@ public class MapDataDTO {
     private Set<Waste.WasteType> types;
     private Set<String> rivers;
     private LocalDateTime updateTime;
+    private Boolean hidden;
 }
