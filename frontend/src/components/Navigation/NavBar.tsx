@@ -5,6 +5,7 @@ import { i18n as i18nType } from 'i18next';
 
 import LanguageSelector from './LanguageSelector';
 import petLogo from 'images/logos/PET_logo_white.png';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
 
 interface NavigationProps {
     i18n: i18nType;
@@ -18,8 +19,9 @@ interface NavigationProps {
  */
 const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.ReactElement => {
     const [showNavigation, setShowNavigation] = useState(false)
-    const baseURL = window.location.origin;
     const navRef = useRef<HTMLElement>(null);
+    const authenticated = useAuthenticated();
+    const baseURL = window.location.origin;
 
     function handleNavigationButton() {
         setShowNavigation(prevState => !prevState)
@@ -47,19 +49,26 @@ const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.Rea
 
             <ul className={showNavigation ? "expanded-nav" : ""}>
                 <li>
-                    <Link to={`${baseURL}`}>
+                    <Link to={`${baseURL}`} onClick={handleNavigationButton}>
                         <Trans i18nKey='menus.map'>Térkép</Trans>
                     </Link>
                 </li>
                 <li>
-                    <Link to={`${baseURL}/contact`}>
+                    <Link to={`${baseURL}/contact`} onClick={handleNavigationButton}>
                         <Trans i18nKey='menus.contact'>Kapcsolat</Trans>
                     </Link>
                 </li>
                 <li>
-                    <Link to={`${baseURL}/about`}>
+                    <Link to={`${baseURL}/about`} onClick={handleNavigationButton}>
                         <Trans i18nKey='menus.about_us'>Rólunk</Trans>
                     </Link>
+                </li>
+                <li>
+                    {authenticated &&
+                        <Link to={`/dashboard`} onClick={handleNavigationButton}>
+                            <Trans i18nKey="menus.dashboard">Kezelőfelület</Trans>
+                        </Link>
+                    }
                 </li>
                 <li>
                     <LanguageSelector i18n={i18n} />

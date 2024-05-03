@@ -3,7 +3,8 @@
         "Tiszta Tisza": "Clean Tisza",
         "map": "Map",
         "contact": "Contact",
-        "about_us": "About us"
+        "about_us": "About us",
+        "dashboard": "Dashboard"
     },
     "status": {
         "stillhere": "Still contaminated",

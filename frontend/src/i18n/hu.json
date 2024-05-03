@@ -3,7 +3,8 @@
         "Tiszta Tisza": "Tiszta Tisza",
         "map": "Térkép",
         "contact": "Kapcsolat",
-        "about_us": "Rólunk"
+        "about_us": "Rólunk",
+        "dashboard": "Kezelőfelület"
     },
     "status": {
         "stillhere": "Még szennyezett",

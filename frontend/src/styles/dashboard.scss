@@ -191,6 +191,10 @@ $link: rgb(19, 131, 206);
     overflow-x: hidden;
 }
 
+.user-table-head{
+    z-index: 0;
+}
+
 .user-table-head th {
     background-color: $secondary-base;
     color: white;
@@ -225,6 +229,7 @@ $link: rgb(19, 131, 206);
     background-color: $secondary-base;
     color: white;
     border: none;
+    z-index: 0;
 }
 
 .log-table-row:nth-child(even) td {
