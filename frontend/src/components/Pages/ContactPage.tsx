@@ -1,14 +1,15 @@
 import React from 'react'
+import { Trans } from 'react-i18next';
+
+import iibLogo from 'images/logos/IIB_logo.png'
 import petLogo from 'images/logos/PET_logo_blue.png'
 import termFilmLogo from 'images/logos/THU_logo.png'
-import iibLogo from 'images/logos/IIB_logo.png'
 import konaLogo from 'images/logos/KonaSoft_logo.png'
-import kszgyszLogo from 'images/logos/KSZGYSZ_logo.png'
-import facebookLogo from 'images/logos/facebook_icon.svg' // Import the Facebook logo
-import instagramLogo from 'images/logos/instagram_icon.svg' // Import the Instagram logo
-import youTubeLogo from 'images/logos/youtube_icon.svg' // Import the Youtube logo
 import tidyUpLogo from 'images/logos/TidyUP_logo.jpg'
-import { Trans } from 'react-i18next';
+import kszgyszLogo from 'images/logos/KSZGYSZ_logo.png'
+import youTubeLogo from 'images/logos/youtube_icon.svg'
+import facebookLogo from 'images/logos/facebook_icon.svg'
+import instagramLogo from 'images/logos/instagram_icon.svg'
 
 /**
  * Content of the contact page

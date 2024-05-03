@@ -1,6 +1,6 @@
 import React from 'react';
 
-import petLogo from 'images/PET_logo_white.png';
+import petLogo from 'images/logos/PET_logo_white.png';
 
 /**
  * Content of the dashboard's main page
@@ -10,7 +10,7 @@ import petLogo from 'images/PET_logo_white.png';
 const DashboardMain = (): React.ReactElement => {
     return (
         <>
-            <img src={petLogo} alt='PETkupa logo' className='backgound-logo'></img>
+            <img src={petLogo} alt='PETkupa logo' className='background-logo'></img>
         </>
     )
 }
