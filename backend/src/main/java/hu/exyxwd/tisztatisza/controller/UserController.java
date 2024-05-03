@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
@@ -50,7 +51,7 @@ public class UserController {
             response.setHeader(HttpHeaders.SET_COOKIE, "token=" + token + "; Path=/api; HttpOnly; SameSite=Strict");
 
             return ResponseEntity.ok().build();
-            
+
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username or password");
         } catch (Exception e) {
@@ -63,16 +64,17 @@ public class UserController {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No authenticated user found");
         }
-    
+
         String username = principal.getName();
         UserInfoDTO userInfoDto = new UserInfoDTO(username);
-    
+
         return ResponseEntity.ok(userInfoDto);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        // Clear the JWT token by setting the cookie to an empty string and setting its Max-Age attribute to 0
+        // Clear the JWT token by setting the cookie to an empty string and setting its
+        // Max-Age attribute to 0
         response.setHeader(HttpHeaders.SET_COOKIE, "token=; Path=/api; HttpOnly; Max-Age=0; SameSite=Strict");
         return ResponseEntity.ok().build();
     }
@@ -112,7 +114,7 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        
+
         String newUsername = request.get("newUsername");
         if (userRepository.existsByUsername(newUsername)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
@@ -140,6 +142,12 @@ public class UserController {
 
     @DeleteMapping("/users/{username}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (username.equals(currentUsername)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Users cannot delete themselves");
+        }
+
         User user = userRepository.findByUsername(username);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
