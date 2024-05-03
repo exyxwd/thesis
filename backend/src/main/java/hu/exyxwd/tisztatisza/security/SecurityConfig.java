@@ -1,6 +1,8 @@
 package hu.exyxwd.tisztatisza.security;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.boot.web.server.Cookie;
 import org.springframework.context.annotation.*;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 import hu.exyxwd.tisztatisza.service.CustomUserDetailsService;
@@ -33,8 +37,10 @@ public class SecurityConfig {
     // TODO: csrf.disable()?
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        requestHandler.setCsrfRequestAttributeName(null);
+
+        return http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).csrfTokenRequestHandler(requestHandler))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/**", "/api/logs", "/api/wastes/{id}/hidden", "/api/wastes/hidden").authenticated()

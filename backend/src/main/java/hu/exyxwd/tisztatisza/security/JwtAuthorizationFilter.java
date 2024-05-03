@@ -1,6 +1,8 @@
 package hu.exyxwd.tisztatisza.security;
 
+import java.util.*;
 import jakarta.servlet.*;
+import java.io.IOException;
 import jakarta.servlet.http.*;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
@@ -15,8 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.*;
-import java.io.IOException;
+import hu.exyxwd.tisztatisza.model.User;
 
 @Component
 @AllArgsConstructor
@@ -47,6 +48,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            User user = new User(username, "");
+            String newToken = jwtUtil.createToken(user);
+    
+            response.setHeader(HttpHeaders.SET_COOKIE, "token=" + newToken + "; Path=/api; HttpOnly; SameSite=Strict");
         } catch (Exception e) {
             errorDetails.put("message", "Authentication Error");
             errorDetails.put("details", e.getMessage());

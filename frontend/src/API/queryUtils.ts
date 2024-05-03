@@ -1,6 +1,7 @@
 import { ExpandedTrashData, MinimalTrashData, RegisterData, UpdateLog, UserDataType } from 'models/models';
-// const baseURL = window.location.origin;
-// const baseURL = 'http://localhost:8080/api';
+
+const getCsrfToken = () => document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+
 
 /**
  * Fetches detailed data of a waste dump
@@ -26,10 +27,12 @@ export const fetchMultipleWasteById = async (ids: number[]): Promise<ExpandedTra
     const requestData = {
         ids: ids
     };
+    const csrfToken= getCsrfToken();
     const response = await fetch('/api/wastes/filteredWastes', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(requestData)
     });
@@ -93,10 +96,13 @@ export const postLoginData = async (username: string, password: string): Promise
         username: username,
         password: password
     };
+
+    const csrfToken= getCsrfToken();
     const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(loginData)
     });
@@ -112,8 +118,12 @@ export const postLoginData = async (username: string, password: string): Promise
  * Posts logout request to the server
  */
 export const postLogout = async (): Promise<boolean> => {
+    const csrfToken = getCsrfToken();
     const response = await fetch('/api/auth/logout', {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            'X-XSRF-TOKEN': csrfToken
+        }
     });
 
     if (!response.ok) {
@@ -128,10 +138,12 @@ export const postLogout = async (): Promise<boolean> => {
  * @param {RegisterData} data - the data of the new user needed for registration
  */
 export const postRegisterData = async (data: RegisterData): Promise<boolean> => {
+    const csrfToken = getCsrfToken();
     const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(data)
     });
@@ -166,10 +178,13 @@ export const postPasswordChange = async (username: string, newPassword: string):
     const passwordChangeData = {
         newPassword: newPassword
     };
+
+    const csrfToken = getCsrfToken();
     const response = await fetch(`/api/auth/users/${username}/password`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(passwordChangeData)
     });
@@ -191,10 +206,13 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
     const usernameChangeData = {
         newUsername: newUsername
     };
+
+    const csrfToken = getCsrfToken();
     const response = await fetch(`/api/auth/users/${oldUsername}/username`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(usernameChangeData)
     });
@@ -213,8 +231,12 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
  * @returns {boolean} - true if the delete was successful, false otherwise
  */
 export const deleteUser = async (username: string): Promise<boolean> => {
+    const csrfToken = getCsrfToken();
     const response = await fetch(`/api/auth/users/${username}/delete`, {
         method: 'DELETE',
+        headers: {
+            'X-XSRF-TOKEN': csrfToken
+        }
     });
 
     if (!response.ok) {
@@ -245,10 +267,12 @@ export const fetchUpdateLogs = async (): Promise<UpdateLog[]> => {
  * @returns {boolean} - true if the request was successful, false otherwise
  */
 export const deleteLogs = async (ids: number[]): Promise<boolean> => {
+    const csrfToken = getCsrfToken();
     const response = await fetch('/api/logs', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(ids),
     });
@@ -270,10 +294,13 @@ export const hideWaste = async (id: number, hiddenStatus: boolean): Promise<bool
     const hiddenStatusData = {
         hidden: hiddenStatus
     };
+
+    const csrfToken = getCsrfToken();
     const response = await fetch(`/api/wastes/${id}/hidden`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': csrfToken
         },
         body: JSON.stringify(hiddenStatusData)
     });

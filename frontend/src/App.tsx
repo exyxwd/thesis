@@ -28,11 +28,12 @@ function App() {
     const { i18n } = useTranslation();
     const setAuthenticated = useSetAuthenticated();
 
-    useQuery('getUserinfo', fetchUserinfo,
-        {
-            onSuccess: (isAuthenticated) => { if (isAuthenticated) { setAuthenticated(true) } },
-            retry: 0
-        });
+    useQuery('getUserinfo', fetchUserinfo, {
+        onSuccess: (isAuthenticated) => { if (isAuthenticated) { setAuthenticated(true) } },
+        retry: 0,
+        staleTime: 1000 * 60 * 19,
+        refetchInterval: 1000 * 60 * 19,
+    });
 
     return (
         <>
