@@ -63,13 +63,13 @@ const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.Rea
                         <Trans i18nKey='menus.about_us'>Rólunk</Trans>
                     </Link>
                 </li>
-                <li>
-                    {authenticated &&
+                {authenticated &&
+                    <li>
                         <Link to={`/dashboard`} onClick={handleNavigationButton}>
                             <Trans i18nKey="menus.dashboard">Kezelőfelület</Trans>
                         </Link>
-                    }
-                </li>
+                    </li>
+                }
                 <li>
                     <LanguageSelector i18n={i18n} />
                 </li>
