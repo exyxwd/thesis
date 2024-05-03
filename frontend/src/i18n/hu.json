@@ -217,8 +217,8 @@
         "more_years": "éve"
     },
     "contact": {
-        "contact_follow": "Kövess minket",
-        "contact_ideas": "A kezdeményezés ötletgazdái",
-        "contact_sponsor": "Támogatóink"
+        "follow": "Kövess minket",
+        "ideas": "A kezdeményezés ötletgazdái",
+        "sponsor": "Támogatóink"
     }
 }

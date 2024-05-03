@@ -215,8 +215,8 @@
         "more_years": "years ago"
     },
     "contact": {
-        "contact_follow": "Follow us",
-        "contact_ideas": "Creators",
-        "contact_sponsor": "Sponsors"
+        "follow": "Follow us",
+        "ideas": "Project initiators",
+        "sponsor": "Sponsors"
     }
 }

@@ -1,0 +1,56 @@
+.contact-row
+{
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    background-color: white;
+}
+
+.contact-title
+{
+    color: $base;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.contact-hr
+{
+    opacity: 1;
+    border: $highlight 2px solid;
+}
+
+.hr-centered
+{
+    margin: 5px auto;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.hr-follow {
+    width: 8rem;
+}
+
+.hr-ideas {
+    width: 15rem;
+}
+
+.hr-support {
+    width: 7rem;
+}
+
+.contact-img {
+    margin-bottom: 1.5rem;
+}
+
+#contact-container {
+    height: calc(100dvh - $nav-height);
+    padding: 0 5% 0 5%;
+    overflow-y: auto;
+}
+
+@media (min-width: 1440px) {
+    #contact-container {
+        padding: 0 15% 0 15%;
+    }
+}

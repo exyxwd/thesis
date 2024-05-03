@@ -3,11 +3,11 @@ import 'leaflet.markercluster';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import blueMarkerIcon from 'images/marker_blue.png';
-import markerShadow from 'images/marker_shadow.png';
-import greyMarkerIcon from 'images/marker_grey.png';
-import greenMarkerIcon from 'images/marker_green.png';
-import yellowMarkerIcon from 'images/marker_yellow.png';
+import blueMarkerIcon from 'images/markers/marker_blue.png';
+import markerShadow from 'images/markers/marker_shadow.png';
+import greyMarkerIcon from 'images/markers/marker_grey.png';
+import greenMarkerIcon from 'images/markers/marker_green.png';
+import yellowMarkerIcon from 'images/markers/marker_yellow.png';
 
 import { ExpandedTrashData } from 'models/models';
 import { useSelectedWastes } from './FilterContext';

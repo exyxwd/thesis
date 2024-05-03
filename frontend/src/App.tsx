@@ -10,6 +10,7 @@ import Login from 'components/Dashboard/Login';
 import MainPage from 'components/Pages/MainPage';
 import NavBar from 'components/Navigation/NavBar';
 import Register from 'components/Dashboard/Register';
+import ContactPage from 'components/Pages/ContactPage';
 import UpdateLogs from 'components/Dashboard/UpdateLogs';
 import UserEditor from 'components/Dashboard/UserEditor';
 import HiddenWastes from 'components/Dashboard/HiddenWastes';
@@ -39,6 +40,7 @@ function App() {
             <Routes>
                 <Route path={'/'} element={<MainPage />} />
                 <Route path={'/waste/:selectedMarkerId'} element={<MainPage />} />
+                <Route path={'/contact'} element={<ContactPage />} />
                 <Route path={'/dashboard/login'} element={<Login />} />
                 <Route element={<ProtectedRoute />}>
                     <Route path={'/dashboard'} element={<DashboardMain />} />
