@@ -1,3 +1,4 @@
+// TODO: docs
 export enum TrashStatus {
     StillHere = 'STILLHERE',
     Cleaned = 'CLEANED',
@@ -79,6 +80,12 @@ export interface UpdateLog {
     updateCount: number;
     deleteCount: number;
     totalCount: number;
+}
+
+export enum NotificationType {
+    Error = 'ERROR',
+    Success = 'SUCCESS',
+    Info = 'INFO'
 }
 
 export interface River {

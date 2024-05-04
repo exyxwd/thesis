@@ -9,8 +9,9 @@ import Filters from 'components/Main/Filters';
 import WasteInfoPanel from 'components/Main/WasteInfoPanel';
 import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import { getFilteredRivers, isFitForFilters } from 'models/functions';
-import { ExpandedTrashData, MinimalTrashData, filterRivers } from 'models/models';
-import { fetchFilteredWasteData, fetchFilteredInverseWasteData, fetchWasteById } from 'API/queryUtils';
+import { useShowNotification } from 'components/Main/NotificationContext';
+import { ExpandedTrashData, MinimalTrashData, NotificationType, filterRivers } from 'models/models';
+import { fetchFilteredInverseWasteData, fetchFilteredWasteData, fetchWasteById } from 'API/queryUtils';
 import { useActiveFilters, useSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
 
 /**
@@ -25,8 +26,9 @@ const MainPage: React.FC = (): React.ReactElement => {
 
     const selectedTime = useSelectedTime();
     const activeFilters = useActiveFilters();
-    const setSelectedWastes = useSetSelectedWastes();
     const authenticated = useAuthenticated();
+    const showNotification = useShowNotification();
+    const setSelectedWastes = useSetSelectedWastes();
     const [wasteData, setWasteData] = useState<MinimalTrashData[]>([]);
     const filteredRivers = useMemo(() => getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter))), [activeFilters]);
 
@@ -61,14 +63,13 @@ const MainPage: React.FC = (): React.ReactElement => {
     } , [detailedWasteData]);
 
     useEffect(() => {
-        console.log("In")
         if (detailedWasteDataError) {
-            console.log("Even inner")
+            showNotification(NotificationType.Error, 'fetch_detailed_waste_error');
             navigate('/');
         }
     } , [detailedWasteDataError]);
 
-    if (filteredWasteFetchError || inverseFilteredWasteFetchError) return (
+    if (filteredWasteFetchError) return (
         <div className='loading-error'>
             <span className="material-symbols-outlined loading-error-icon">sentiment_dissatisfied</span>
             <div><Trans i18nKey='loading_error'>Hiba az adatok betöltésekor. Próbálja újra később.</Trans></div>
@@ -80,7 +81,7 @@ const MainPage: React.FC = (): React.ReactElement => {
             {wasteData.length > 0 ? <Map selectedWaste={detailedWasteData} /> : <div className='loader'></div>}
             {selectedMarkerId && detailedWasteData && Number(selectedMarkerId) === detailedWasteData.id &&
             <WasteInfoPanel data={detailedWasteData} onClose={() => { selectedMarkerId = undefined; navigate("/"); }} key={selectedMarkerId} />}
-            {wasteData.length > 0 && <Filters wasteData={wasteData} isLoading={isLoading} />}
+            {wasteData.length > 0 && <Filters wasteData={wasteData} isError={inverseFilteredWasteFetchError} isLoading={isLoading} />}
         </>
     )
 }

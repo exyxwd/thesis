@@ -1,7 +1,7 @@
 $base: rgb(47, 59, 89);
 $highlight: rgb(64, 83, 133);
 $link-hover: skyblue;
-$secondary-base: rgb(95,107,139);
+$secondary-base: rgb(95, 107, 139);
 $dwnbtn: rgb(70, 191, 66);
 $dwnbtn-hover: rgb(20, 141, 26);
 $filter-background: rgb(250, 249, 246);
@@ -21,35 +21,34 @@ $nav-height: 63px;
 body {
     margin: 0;
     padding: 0;
-    // color: white;
     background: rgba($highlight, 0.2);
 }
 
-#map{
+#map {
     position: absolute;
     width: 100%;
     height: calc(100dvh - $nav-height);
     z-index: 0;
 }
 
+/* ################################ SCROLL BAR ################################ */
+
 ::-webkit-scrollbar {
     width: 13px;
 }
 
-/* Set the scrollbar track color */
 ::-webkit-scrollbar-track {
-    background: #2f2f2f; /* Dark background color */
+    background: #2f2f2f;
 }
 
-/* Set the scrollbar handle color */
 ::-webkit-scrollbar-thumb {
-    background: #888; /* Lighter handle color */
+    background: #888;
 }
 
-/* Set the scrollbar handle hover color */
 ::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Even lighter handle color on hover */
+    background: #555;
 }
+
 /* ################################ LOADING BAR ################################ */
 
 @keyframes spinner {
@@ -64,7 +63,7 @@ body {
 
 .loader {
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -91,6 +90,23 @@ body {
     border-top: 6px solid $filter-background;
 }
 
+.admin-loader {
+    @extend .loader;
+    left: 300px;
+}
+
+@media (max-width: 1024px) {
+    .admin-loader {
+        left: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-loader {
+        left: 0;
+    }
+}
+
 /* ################################ DATA LOADING ERROR MSG ################################ */
 
 .loading-error {
@@ -103,7 +119,66 @@ body {
     font-weight: bold;
 }
 
-.loading-error-icon{
+.loading-error-icon {
     transform: scale(3);
     margin-bottom: 30px;
+}
+
+.filter-loading-error {
+    @extend .loading-error;
+
+    position:absolute;
+}
+
+/* ################################ NOTIFICATIONS ################################ */
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.notification-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    margin-left: 10px;
+    padding: 10px;
+    color: white;
+    background-color: $secondary-base;
+    animation: slideInFromRight 0.3s ease-out;
+    z-index: 10000;
+    font-weight: bold;
+}
+
+.error-notification {
+    background-color: rgb(220, 53, 69, 0.9);
+}
+
+.success-notification {
+    background-color: rgb(25, 135, 84, 0.9);
+}
+
+.info-notification {
+    border-right: $base 5px solid;
+}
+
+.notification-panel-close-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.notification-msg {
+    margin-left: 30px;
+
 }

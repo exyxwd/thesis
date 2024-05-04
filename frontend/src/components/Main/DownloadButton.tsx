@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useQuery } from 'react-query';
 import * as XLSX from 'xlsx';
-
-import { fetchMultipleWasteById } from 'API/queryUtils';
+import { useQuery } from 'react-query';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+
 import { useSelectedWastes } from './FilterContext';
-import { ExpandedTrashData } from 'models/models';
+import { fetchMultipleWasteById } from 'API/queryUtils';
+import { useShowNotification } from './NotificationContext';
+import { ExpandedTrashData, NotificationType } from 'models/models';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)
@@ -85,12 +86,16 @@ function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => stri
  */
 const DownloadButton: React.FC = (): React.ReactElement => {
     const [shouldFetch, setShouldFetch] = useState<boolean>(false);
+    const showNotification = useShowNotification();
     const selectedWastes = useSelectedWastes();
     const { t } = useTranslation();
 
     // Fetch the selected waste dumps data and trigger the download on success
     useQuery('filteredData', () => fetchMultipleWasteById(selectedWastes.map(item => item.id)),
-        { enabled: shouldFetch, onSuccess: (fetchedData) => { downloadData(fetchedData, t); setShouldFetch(false); } });
+        {
+            enabled: shouldFetch, onSuccess: (fetchedData) => { downloadData(fetchedData, t); setShouldFetch(false); },
+            onError: () => showNotification(NotificationType.Error, "download_fail")
+        });
 
     const downloadHandler = () => {
         setShouldFetch(true);

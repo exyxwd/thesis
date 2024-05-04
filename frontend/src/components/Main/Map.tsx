@@ -85,8 +85,8 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
                     navigate(`/waste/${e.id}`, { state: { key: "markerClick" } });
                 });
 
-                if (location.pathname === `/waste/${e.id}` && location.state?.key !== 'markerClick') {
-                    map.current?.flyTo([selectedWaste!.latitude, selectedWaste!.longitude], 17, { duration: 2.5 });
+                if (location.pathname === `/waste/${e.id}` && location.state?.key !== 'markerClick' && map.current) {
+                    map.current.flyTo([selectedWaste!.latitude, selectedWaste!.longitude], 17, { duration: 2.5 });
                 }
             }
         });

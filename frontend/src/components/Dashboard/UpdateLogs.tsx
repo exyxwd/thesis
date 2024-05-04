@@ -1,11 +1,12 @@
+import { Trans } from 'react-i18next';
 import { Form } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
-import { UpdateLog } from 'models/models';
-import { deleteLogs, fetchUpdateLogs } from 'API/queryUtils';
-import { Trans } from 'react-i18next';
 import Pagination from './Pagination';
+import { NotificationType, UpdateLog } from 'models/models';
+import { deleteLogs, fetchUpdateLogs } from 'API/queryUtils';
+import { useShowNotification } from 'components/Main/NotificationContext';
 
 const UpdateLogs: React.FC = () => {
     const recordsPerPage = 50;
@@ -15,6 +16,7 @@ const UpdateLogs: React.FC = () => {
     const [indexOfFirstRecord, setIndexOfFirstRecord] = React.useState<number>(0);
     const [indexOfLastRecord, setIndexOfLastRecord] = React.useState<number>(recordsPerPage);
     const currentRecords = logs.slice(indexOfFirstRecord, indexOfLastRecord);
+    const showNotification = useShowNotification();
 
     const { isLoading, error, refetch } = useQuery<UpdateLog[]>('updateLogs', fetchUpdateLogs,
         {
@@ -27,6 +29,9 @@ const UpdateLogs: React.FC = () => {
                     setIndexOfLastRecord(newIndexOfLastRecord);
                     setIndexOfFirstRecord(newIndexOfFirstRecord);
                 }
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'update_logs_error');
             }
         });
 
@@ -43,7 +48,11 @@ const UpdateLogs: React.FC = () => {
         deleteMutation.mutate(selectedLogs, {
             onSuccess: () => {
                 setSelectedLogs([]);
+                showNotification(NotificationType.Success, 'delete_log_success');
                 refetch();
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'delete_log_error');
             }
         });
     };
@@ -53,9 +62,9 @@ const UpdateLogs: React.FC = () => {
         setIndexOfFirstRecord(indexOfFirstRecord);
     };
 
-    if (isLoading) return <div className='loader'></div>;
+    if (isLoading) return <div className='admin-loader'></div>;
 
-    if (error) return <div>Error loading data</div>;
+    if (error) return <div></div>;
 
     return (
         <div className='logs-table-container'>
@@ -93,7 +102,7 @@ const UpdateLogs: React.FC = () => {
                             <span className={`material-symbols-outlined delete-icon ${selectedLogs.length === 0 && 'no-log-selected'}`}
                                 onClick={handleDeleteSelected}>delete</span>
                         </td>
-                        <td className='fw-bold' colSpan={3}><Trans i18nKey='logs.update-num'>Frissítések száma</Trans>: {logs?.length}</td>
+                        <td className='fw-bold' colSpan={3}><Trans i18nKey='logs.update-num'>Frissítések száma</Trans>: {logs.length}</td>
                         <td></td>
                     </tr>
                 </tbody>

@@ -108,7 +108,7 @@ export const postLoginData = async (username: string, password: string): Promise
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -127,7 +127,7 @@ export const postLogout = async (): Promise<boolean> => {
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -149,7 +149,7 @@ export const postRegisterData = async (data: RegisterData): Promise<boolean> => 
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -190,7 +190,7 @@ export const postPasswordChange = async (username: string, newPassword: string):
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -218,7 +218,7 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -240,7 +240,7 @@ export const deleteUser = async (username: string): Promise<boolean> => {
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -278,7 +278,7 @@ export const deleteLogs = async (ids: number[]): Promise<boolean> => {
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;
@@ -306,7 +306,7 @@ export const hideWaste = async (id: number, hiddenStatus: boolean): Promise<bool
     });
 
     if (!response.ok) {
-        return false;
+        throw new Error('Network response was not ok.');
     }
 
     return true;

@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
-import { MinimalTrashData, filterRivers } from 'models/models';
-import DownloadButton from './DownloadButton';
-import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
 import FilterItem from './FilterItem';
 import TimeSlider from './TimeSlider';
+import DownloadButton from './DownloadButton';
+import { MinimalTrashData, filterRivers } from 'models/models';
 import { useAuthenticated } from 'components/Dashboard/AuthContext';
+import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
+import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
 
 /**
  * Grouped waste filters
@@ -38,11 +38,13 @@ const filterNames: FilterName = {
  * Props for the filter menu
  *
  * @param {boolean} isLoading Whether the data is still loading (has not fetched yet)
+ * @param {boolean} isError Whether an error occurred while fetching the data
  * @param {MinimalTrashData[]} wasteData The data to filter
  */
 interface filterProps {
     isLoading: boolean;
     wasteData: MinimalTrashData[];
+    isError: boolean | unknown;
 }
 
 /**
@@ -50,7 +52,7 @@ interface filterProps {
  *
  * @returns {React.ReactElement} The filter menu
  */
-const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
+const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactElement => {
     const selectedTime = useSelectedTime();
     const activeFilters = useActiveFilters();
     const selectedWastes = useSelectedWastes();
@@ -145,6 +147,8 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
         }
     }, [activeFilters, setActiveFilters]);
 
+
+
     return (
         <div className={menuOpen ? 'active' : ''} id='filter-menu' ref={filterRef}>
             <button className='btn filter-button' onClick={() => setMenuOpen(!menuOpen)}>
@@ -160,7 +164,10 @@ const Filters = ({ wasteData, isLoading }: filterProps): React.ReactElement => {
             <div className='filter-container'>
                 <div className='col filter-col'>
                     {isLoading ? <div id='filter-loader' className='loader'></div>
-                        : <>
+                        : isError ? <div className='filter-loading-error'>
+                        <span className="material-symbols-outlined loading-error-icon">sentiment_dissatisfied</span>
+                        <div><Trans i18nKey='loading_error'>Hiba az adatok betöltésekor. Próbálja újra később.</Trans></div>
+                    </div> :<>
                             <div className='container'>
                                 <div className='row filter-counter'>
                                     <div className='col-4 filter-counter-count'>

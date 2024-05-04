@@ -156,7 +156,8 @@
     "hiddens": {
         "updated": "Frissítve:",
         "location": "Pont",
-        "unhide": "Láthatóvá tevés"
+        "unhide": "Láthatóvá tevés",
+        "no_data": "Nincsenek rejtett pontok."
     },
     "menu": {
         "main_page": "Főoldal",
@@ -221,5 +222,25 @@
         "follow": "Kövess minket",
         "ideas": "A kezdeményezés ötletgazdái",
         "sponsor": "Támogatóink"
+    },
+    "notifications": {
+        "logout_fail": "Sikertelen kijelentkezés. Próbálja újra később.",
+        "fetch_hidden_wastes_error": "Hiba a rejtett pontok betöltése során. Próbálja újra később.",
+        "unhide_waste_error": "Hiba a pont láthatóvá tétele során. Próbálja újra később.",
+        "hide_waste_error": "Hiba a pont elrejtése során. Próbálja újra később.",
+        "unhide_waste_success": "A kiválasztott pont sikeresen láthatóvá lett téve.",
+        "hide_waste_success": "A kiválasztott pont sikeresen el lett rejtve.",
+        "update_logs_error": "Hiba a napló betöltése során.",
+        "delete_log_success": "A kiválasztott rekord(ok) sikeresen törölve.",
+        "delete_log_error": "Hiba a rekord(ok) törlése közben. Próbálja újra később.",
+        "fetch_users_error": "Hiba a felhasználók betöltése során. Próbálja újra később.",
+        "delete_user_success": "A kiválasztott felhasználó sikeresen törölve.",
+        "delete_user_error": "Hiba a felhasználó törlése közben. Próbálja újra később.",
+        "change_username_error": "Hiba a felhasználónév módosítása közben. Próbálja újra később.",
+        "change_username_success": "A felhasználónév sikeresen módosítva.",
+        "change_password_error": "Hiba a jelszó módosítása közben. Próbálja újra később.",
+        "change_password_success": "A jelszó sikeresen módosítva.",
+        "fetch_detailed_waste_error": "Ezzel az azonosítóval nincs nyilvántartva pont.",
+        "download_fail": "Hiba a pontok adatainak letöltése során. Próbálja újra később."
     }
 }

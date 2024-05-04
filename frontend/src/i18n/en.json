@@ -154,7 +154,8 @@
     "hiddens": {
         "updated": "Updated on:",
         "location": "Location",
-        "unhide": "Make location visible"
+        "unhide": "Make location visible",
+        "no_data": "No hidden locations"
     },
     "menu": {
         "main_page": "Main Page",
@@ -219,5 +220,25 @@
         "follow": "Follow us",
         "ideas": "Project initiators",
         "sponsor": "Sponsors"
+    },
+    "notifications": {
+        "logout_fail": "Logout failed. Try again later",
+        "fetch_hidden_wastes_error": "Error while loading hidden wastes. Try again later.",
+        "unhide_waste_error": "Error while unhiding waste. Try again later.",
+        "hide_waste_error": "Error while hiding waste. Try again later.",
+        "unhide_waste_success": "The selected waste is now visible.",
+        "hide_waste_success": "The selected waste is now hidden.",
+        "update_logs_error": "Error while loading update logs. Try again later.",
+        "delete_log_success": "Selected log(s) has been deleted successfuly.",
+        "delete_log_error": "Error while deleting log(s). Try again later.",
+        "fetch_users_error": "Error while loading users. Try again later.",
+        "delete_user_error": "Error while deleting user. Try again later.",
+        "delete_user_success": "User has been deleted successfuly.",
+        "change_username_error": "Error while changing username. Try again later.",
+        "change_username_success": "Username has been changed successfuly.",
+        "change_password_error": "Error while changing password. Try again later.",
+        "change_password_success": "Password has been changed successfuly.",
+        "fetch_detailed_waste_error": "No point found with the given ID.",
+        "download_fail": "Error while downloading data. Try again later."
     }
 }

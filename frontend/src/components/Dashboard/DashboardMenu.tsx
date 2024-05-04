@@ -4,9 +4,10 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
-import { UserDataType } from 'models/models';
 import { useSetAuthenticated } from './AuthContext';
 import { fetchUserinfo, postLogout } from 'API/queryUtils';
+import { NotificationType, UserDataType } from 'models/models';
+import { useShowNotification } from 'components/Main/NotificationContext';
 
 // TODO: User name and icon formatting
 /**
@@ -18,15 +19,21 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
     const [shouldPost, setShouldPost] = useState<boolean>(false);
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
+    const showNotification = useShowNotification();
     const setIsLoggedIn = useSetAuthenticated();
 
     useQuery('postLogout', () => postLogout(),
         {
-            enabled: shouldPost, onSuccess: (isLogoutSuccesfull) => { isLogoutSuccesfull ? setIsLoggedIn(false) : console.log("Failed logout"); setShouldPost(false); }
+            enabled: shouldPost,
+            onSuccess: (isLogoutSuccesfull) => {
+                if (isLogoutSuccesfull) setIsLoggedIn(false);
+                else showNotification(NotificationType.Error, 'logout_fail');
+                setShouldPost(false);
+            }
         }
     );
 
-    const { error } = useQuery('fetchUserinfo', fetchUserinfo,
+    const { error: userInfoError } = useQuery('fetchUserinfo', fetchUserinfo,
         {
             onSuccess: (userData: UserDataType) => { userData ? setUsername(userData.username) : setIsLoggedIn(false); },
             retry: 0
@@ -34,10 +41,10 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
     );
 
     useEffect(() => {
-        if (error) {
+        if (userInfoError) {
             setIsLoggedIn(false);
         }
-    } , [error]);
+    }, [userInfoError]);
 
     const handleLogout = () => {
         setShouldPost(true);

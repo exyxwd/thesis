@@ -1,11 +1,12 @@
+import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import React, { useState } from 'react';
+import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
 
 import Pagination from './Pagination';
-import { UserDataType } from 'models/models';
-import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
-import { fetchUsers, postPasswordChange, postUsernameChange, deleteUser } from 'API/queryUtils';
-import { Trans } from 'react-i18next';
+import { NotificationType, UserDataType } from 'models/models';
+import { useShowNotification } from 'components/Main/NotificationContext';
+import { deleteUser, fetchUsers, postPasswordChange, postUsernameChange } from 'API/queryUtils';
 
 /**
  * Enumeration for the different user editing operations
@@ -28,6 +29,7 @@ enum Operation {
  * @returns {React.ReactElement} - User editor interface
  */
 const UserEditor = (): React.ReactElement => {
+    const showNotification = useShowNotification();
     const [inputValue, setInputValue] = useState<string>('');
     const [showModal, setShowModal] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserDataType[]>([]);
@@ -37,7 +39,7 @@ const UserEditor = (): React.ReactElement => {
     const [shouldPostDelete, setShouldPostDelete] = useState<boolean>(false);
     const [shouldPostPassChange, setShouldPostPassChange] = useState<boolean>(false);
     const [shouldPostNameChange, setShouldPostNameChange] = useState<boolean>(false);
-    
+
     const recordsPerPage = 14;
     const [indexOfLastRecord, setIndexOfLastRecord] = useState<number>(recordsPerPage);
     const [indexOfFirstRecord, setIndexOfFirstRecord] = useState<number>(0);
@@ -53,47 +55,58 @@ const UserEditor = (): React.ReactElement => {
         setShowModal(false);
     }
 
-    const { isLoading } = useQuery('getUsers', fetchUsers,
+    const { error, isLoading } = useQuery('getUsers', fetchUsers,
         {
             enabled: shouldFetchUsers, onSuccess: (data: UserDataType[]) => {
                 setUserData(data); setShouldFetchUsers(false);
                 if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
                     const newIndexOfLastRecord = indexOfFirstRecord;
                     const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
-            
+
                     setIndexOfLastRecord(newIndexOfLastRecord);
                     setIndexOfFirstRecord(newIndexOfFirstRecord);
                 }
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'fetch_users_error');
             }
         });
 
     useQuery('postPasswordChange', () => postPasswordChange(selectedUser, inputValue),
         {
-            enabled: shouldPostPassChange, onSuccess: (isPasswordChangeSuccesful) => {
-                isPasswordChangeSuccesful ? console.log("Password change succesful") : console.log("Password change failed");
-                setShouldPostPassChange(false); setShouldFetchUsers(true);
+            enabled: shouldPostPassChange, onSuccess: () => {
+                setShouldPostPassChange(false); 
+                setShouldFetchUsers(true);
+                showNotification(NotificationType.Success, 'change_password_success');
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'change_password_error');
             }
         });
 
     useQuery('postUsernameChange', () => postUsernameChange(selectedUser, inputValue),
         {
-            enabled: shouldPostNameChange, onSuccess: (isUserNameChangeSuccesful) => {
-                isUserNameChangeSuccesful ? console.log("Username change succesful") : console.log("Username change failed");
-                setShouldPostNameChange(false); setShouldFetchUsers(true);
+            enabled: shouldPostNameChange, onSuccess: () => {
+                setShouldPostNameChange(false);
+                setShouldFetchUsers(true);
+                showNotification(NotificationType.Success, 'change_username_success');
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'change_username_error');
             }
         });
 
     useQuery('deleteUser', () => deleteUser(selectedUser),
         {
-            enabled: shouldPostDelete, onSuccess: (isDeleteSuccesful) => {
-                isDeleteSuccesful ? console.log("Delete succesful") : console.log("Delete failed");
-                setShouldPostDelete(false); setShouldFetchUsers(true);
+            enabled: shouldPostDelete, onSuccess: () => {
+                setShouldPostDelete(false);
+                setShouldFetchUsers(true);
+                showNotification(NotificationType.Success, 'delete_user_success');
+            },
+            onError: () => {
+                showNotification(NotificationType.Error, 'delete_user_error');
             }
         });
-
-    if (isLoading) {
-        return <div className='loader'></div>;
-    }
 
     const handlePageChange = (indexOfFirstRecord: number, indexOfLastRecord: number) => {
         setIndexOfLastRecord(indexOfLastRecord);
@@ -117,6 +130,14 @@ const UserEditor = (): React.ReactElement => {
         handleClose();
     };
 
+    if (isLoading) {
+        return <div className='admin-loader'></div>;
+    }
+
+    if (error) {
+        return <div></div>;
+    }
+
     return (
         <div className="user-table-container">
             <table className="table user-table table-striped">
@@ -127,7 +148,7 @@ const UserEditor = (): React.ReactElement => {
                         </th>
                         <th>
                             <Trans i18nKey="user-editor.edit">Módosítás</Trans>
-                            </th>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

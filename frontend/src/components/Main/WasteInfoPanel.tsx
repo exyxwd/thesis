@@ -2,18 +2,35 @@ import { useMutation } from 'react-query';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
 
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faLocationDot, faTrashCan, faSackXmark, faBottleWater, faGears, faWineGlassEmpty,
-    faDrumstickBite, faPersonDigging, faDroplet, faBiohazard, faCar, faPlug, faSeedling,
-    faPaw, faClock, faRuler
+    faBiohazard,
+    faBottleWater,
+    faCar,
+    faClock,
+    faDroplet,
+    faDrumstickBite,
+    faGears,
+    faLocationDot,
+    faPaw,
+    faPersonDigging,
+    faPlug,
+    faRuler,
+    faSackXmark,
+    faSeedling,
+    faTrashCan,
+    faWineGlassEmpty
 } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { ExpandedTrashData } from 'models/models';
-import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters, useSetSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
 import { hideWaste } from 'API/queryUtils';
+import { useShowNotification } from './NotificationContext';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
+import { ExpandedTrashData, NotificationType } from 'models/models';
+import {
+    useActiveFilters, useSelectedTime, useSelectedWastes,
+    useSetActiveFilters, useSetSelectedTime, useSetSelectedWastes
+} from 'components/Main/FilterContext';
 
 /**
  * The properties of the waste information panel
@@ -39,6 +56,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     const matchingWaste = selectedWastes.find(waste => waste.id === data.id);
     const [isHidden, setIsHidden] = useState<boolean>(matchingWaste ? matchingWaste.hidden : data.hidden);
 
+    const showNotification = useShowNotification();
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
     const setActiveFilters = useSetActiveFilters();
     const panelRef = useRef<HTMLDivElement>(null);
@@ -177,7 +195,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
 
     useEffect(() => {
         setImageLoaded(false);
-    }, [data?.imageUrl]);
+    }, [data.imageUrl]);
 
     if (!data) return (<></>)
 
@@ -186,7 +204,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     return (
         <div id='waste-panel' ref={panelRef}>
             <div className='close-button-container'>
-                <button className='waste-panel-close-btn' onClick={() => { onClose(); }}>
+                <button className='waste-panel-close-btn' onClick={onClose}>
                     <span className='waste-panel-close-symbol material-symbols-outlined'>close</span>
                 </button>
             </div>
@@ -205,8 +223,17 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                 <span
                     className="material-symbols-outlined hide-btn"
                     onClick={() => {
-                        setIsHidden(!isHidden);
-                        hideWasteMutation.mutate({ id: data.id, hiddenStatus: !isHidden });
+                        hideWasteMutation.mutate({ id: data.id, hiddenStatus: !isHidden },
+                            {
+                                onSuccess: () => {
+                                    setIsHidden(prevState => !prevState);
+                                    showNotification(NotificationType.Success, isHidden ? 'hide_waste_success' : 'unhide_waste_success');
+                                },
+                                onError: () => {
+                                    showNotification(NotificationType.Error, 'hide_waste_error');
+                                }
+                            }
+                        );
                     }}
                 >
                     {isHidden ? 'visibility_off' : 'visibility'}
@@ -234,7 +261,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
             <div className='row'>
                 <div className='container'>
                     <div className='row row-cols-4 justify-content-around waste-panel-types'>
-                        {data.types?.map((type) => (
+                        {data.types.map((type) => (
                             <div className='col-3 waste-panel-single-type' key={type}>
                                 <div className='type-icon'>
                                     <FontAwesomeIcon icon={GetTypeIcon(type)} />
