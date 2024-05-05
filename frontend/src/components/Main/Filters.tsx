@@ -90,7 +90,7 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
                     map.set(filter, countFitForFilters);
                     return;
                 }
-                const riversIfSelected = getFilteredRivers(filterRivers.filter((river) => [filter,...activeFilters].some((filter) => river.name == filter)));
+                const riversIfSelected = getFilteredRivers(filterRivers.filter(river => [filter, ...activeFilters].includes(river.name)));
 
                 // If the filter is type or locality filter, only count through the selected wastes since the filter will only narrow them down
                 // Otherwise count through the not selected wastes, since the filter will expand the selection, keeping all currently selected

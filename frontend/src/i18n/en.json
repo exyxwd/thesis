@@ -26,7 +26,7 @@
         "status": "Status",
         "types": "Types",
         "imageUrl": "Image URL",
-        "rivers": "Rivers",
+        "river": "River",
         "file_name": "Waste report"
     },
     "filters": {

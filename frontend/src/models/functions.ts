@@ -1,4 +1,4 @@
-import { ExpandedTrashData, MinimalTrashData, River, TrashCountry, TrashSize, TrashStatus, TrashType, filterRivers } from "./models";
+import { ExpandedTrashData, MinimalTrashData, River, TrashType, filterRivers } from "./models";
 
 /**
  * Calculates the range of the slider (minimum and maximum) and the default value
@@ -38,8 +38,8 @@ export const isFitForFilters = (authenticated: boolean, e: MinimalTrashData | Ex
     // Country
     if (!activeFilters.includes(e.country)) return false;
 
-    // Rivers
-    if (filteredRivers && !e.rivers.some((river) => filteredRivers.includes(river))) return false;
+    // River
+    if (filteredRivers && !filteredRivers.includes(e.river)) return false;
 
     // Size
     if (!activeFilters.includes(e.size)) return false;
@@ -58,52 +58,36 @@ export const isFitForFilters = (authenticated: boolean, e: MinimalTrashData | Ex
 }
 
 export const getSelectableRivers = (activeFilters: string[]): string[] => {
-    //find rivers in filters
-    const selectedRivers = filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter))
-    //if there are no rivers selected display the rank 1 rivers as options.
-    if (selectedRivers.length < 1) {
-        return ["DUNA", "ZALA"]
+    const selectedRivers = filterRivers.filter((river) => activeFilters.includes(river.name));
+
+    if (selectedRivers.length === 0) {
+        return ["DUNA", "ZALA"];
     }
-    //find the highest rank river
-    const highestRankRiver = selectedRivers.reduce((accumulator, currentValue) => {
-        if (currentValue.rank > accumulator.rank) {
-            return currentValue
-        }
-        else {
-            return accumulator
-        }
-    })
-    //return the selected rivers with the highest rank's tributaries
 
-    const returnStrings = selectedRivers.map((river) => { return river.name }).concat(highestRankRiver.tributaries)
-
-    return returnStrings
+    const highestRankRiver = selectedRivers.reduce((acc, cur) => cur.rank > acc.rank ? cur : acc);
+    return [...selectedRivers.map(river => river.name), ...highestRankRiver.tributaries];
 }
 
 export const getRiversByString = (stringRivers: string[]): River[] => {
-    return filterRivers.filter((river) => stringRivers.some((str) => str == river.name))
+    return filterRivers.filter((river) => stringRivers.includes(river.name))
 }
 
 
 export const getFilteredRivers = (selectedRivers: River[]): (string[] | undefined) => {
-    if (selectedRivers.length < 1) {
-        return undefined
+    if (selectedRivers.length === 0) {
+        return undefined;
     }
-    const highestRankRiver = selectedRivers.reduce((accumulator, currentValue) => {
-        if (currentValue.rank > accumulator.rank) {
-            return currentValue
-        }
-        else {
-            return accumulator
-        }
-    })
 
-    let riversToCheck: River[] = [highestRankRiver]
-    let returnStrings: string[] = []
+    const highestRankRiver = selectedRivers.reduce((acc, cur) => cur.rank > acc.rank ? cur : acc);
+
+    let riversToCheck: River[] = [highestRankRiver];
+    let returnStrings: string[] = [];
+
     while (riversToCheck.length > 0) {
-        const currentlyChecking = riversToCheck.shift()
-        riversToCheck = riversToCheck.concat(getRiversByString(currentlyChecking!.tributaries))
-        returnStrings = returnStrings.concat(currentlyChecking!.name)
+        const currentlyChecking = riversToCheck.shift();
+        riversToCheck = [...riversToCheck, ...getRiversByString(currentlyChecking!.tributaries)];
+        returnStrings = [...returnStrings, currentlyChecking!.name];
     }
-    return returnStrings
+
+    return returnStrings;
 }

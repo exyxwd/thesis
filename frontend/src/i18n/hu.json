@@ -26,7 +26,7 @@
         "status": "Státusz",
         "types": "Típusok",
         "imageUrl": "Kép URL",
-        "rivers": "Folyók",
+        "river": "Folyó",
         "file_name": "Szennyezettségi bejelentések"
     },
     "filters":{

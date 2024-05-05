@@ -22,9 +22,9 @@ import { useSetAuthenticated } from 'components/Dashboard/AuthContext';
 /**
  * Main App component
  *
- * @returns {JSX.Element} The main app component
+ * @returns {React.ReactElement} The main app component
  */
-function App() {
+function App(): React.ReactElement {
     const { i18n } = useTranslation();
     const setAuthenticated = useSetAuthenticated();
 

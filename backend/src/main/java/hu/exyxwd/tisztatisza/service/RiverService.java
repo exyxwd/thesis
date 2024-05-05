@@ -8,6 +8,10 @@ import org.locationtech.jts.geom.*;
 import org.springframework.stereotype.Service;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.geotools.referencing.CRS;
+import org.geotools.geometry.jts.JTS;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.*;
 import java.util.*;
@@ -16,10 +20,12 @@ import java.nio.file.Files;
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
 
+// TODO: review this
 @Service
 public class RiverService {
     private ObjectMapper mapper;
     private Map<Geometry, String> rivers;
+    private GeometryFactory geometryFactory;
     @Autowired
     private WasteRepository wasteRepository;
 
@@ -27,6 +33,7 @@ public class RiverService {
         this.rivers = new HashMap<>();
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JtsModule());
+        this.geometryFactory = new GeometryFactory();
     }
 
     public void loadRivers() {
@@ -64,27 +71,37 @@ public class RiverService {
         List<Waste> wastes = wasteRepository.findAll();
         for (Waste waste : wastes) {
             // Calculate the nearby rivers for every waste where the rivers field is null
-            if (waste.getRivers() == null) {
-                Set<String> nearbyRivers = getNearbyRivers(waste, 0.1);
-                waste.setRivers(nearbyRivers);
+            if (waste.getRiver() == null) {
+                String closestRiver = getClosestRiver(waste, 400);
+                waste.setRiver(closestRiver);
                 wasteRepository.save(waste);
             }
         }
     }
 
-    public Set<String> getNearbyRivers(Waste waste, double threshold) {
-        GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
-        // Create a point from the waste's coordinates
-        Coordinate wasteCoordinates = new Coordinate(waste.getLongitude().doubleValue(), waste.getLatitude().doubleValue());
-        Point wasteLocation = factory.createPoint(wasteCoordinates);
-
-        Set<String> nearbyRivers = new HashSet<>();
-        // Iterate through all rivers and check if the waste is within the threshold distance
-        for (Map.Entry<Geometry, String> entry : this.rivers.entrySet()) {
-            if (wasteLocation.distance(entry.getKey()) <= threshold) {
-                nearbyRivers.add(entry.getValue());
+    public String getClosestRiver(Waste waste, double thresholdInMeters) {
+        try {
+            CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
+            CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:32632");
+            MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+    
+            Coordinate wasteCoordinates = new Coordinate(waste.getLongitude().doubleValue(), waste.getLatitude().doubleValue());
+            Point wasteLocation = (Point) JTS.transform(geometryFactory.createPoint(wasteCoordinates), transform);
+    
+            String closestRiver = null;
+            double closestDistance = Double.MAX_VALUE;
+            for (Map.Entry<Geometry, String> entry : this.rivers.entrySet()) {
+                Geometry riverGeometry = JTS.transform(entry.getKey(), transform);
+                double distance = wasteLocation.distance(riverGeometry);
+                if (distance <= thresholdInMeters && distance < closestDistance) {
+                    closestDistance = distance;
+                    closestRiver = entry.getValue();
+                }
             }
+            return closestRiver;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return nearbyRivers;
     }
 }

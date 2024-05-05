@@ -33,14 +33,14 @@ function formatDateTime(inputDateTime: string): string {
  * @returns {void}
  */
 function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => string): void {
-    // Translate the data and format the date
-    const translatedData = fetchedData.map(item => ({
+    // Translate the data and format the date, exclude the hidden field
+    const translatedData = fetchedData.map(({ hidden, ...item }) => ({
         ...item,
         country: t(`country.${item.country.toLowerCase()}`),
         status: t(`status.${item.status.toLowerCase()}`),
         size: t(`sizes.${item.size.toLowerCase()}`),
         types: item.types.map(type => t(`types.${type.toLowerCase()}`)).join(', '),
-        rivers: item.rivers.map(river => river.toLowerCase().charAt(0).toUpperCase() + river.toLowerCase().slice(1)).join(', '),
+        river: item.river.toLowerCase().charAt(0).toUpperCase() + item.river.toLowerCase().slice(1),
         createTime: formatDateTime(item.createTime),
         updateTime: formatDateTime(item.updateTime)
     }));

@@ -25,6 +25,6 @@ public class DetailedWasteDTO {
     private LocalDateTime updateTime;
     private String imageUrl;
     private String note;
-    private Set<String> rivers;
+    private String river;
     private Boolean hidden;
 }

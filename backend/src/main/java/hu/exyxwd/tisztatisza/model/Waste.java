@@ -90,8 +90,8 @@ public class Waste {
     @Column(columnDefinition = "text")
     private String note;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> rivers;
+    @Column(columnDefinition = "text")
+    private String river;
 
     @Column(columnDefinition = "boolean default false")
     private boolean hidden;

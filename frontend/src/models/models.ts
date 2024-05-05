@@ -41,7 +41,7 @@ export interface MinimalTrashData {
     size: TrashSize;
     status: TrashStatus;
     types: TrashType[];
-    rivers: string[];
+    river: string;
     updateTime: string;
     hidden: boolean;
 }
@@ -53,7 +53,7 @@ export interface ExpandedTrashData {
     country: TrashCountry;
     locality: string;
     sublocality: string;
-    rivers: string[];
+    river: string;
     size: TrashSize;
     status: TrashStatus;
     types: TrashType[];
