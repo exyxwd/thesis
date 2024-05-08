@@ -1,17 +1,20 @@
 package hu.exyxwd.tisztatisza.service;
 
-import org.json.simple.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.json.simple.parser.*;
+import org.json.simple.JSONObject;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
 import org.springframework.stereotype.Service;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.util.*;
 import java.time.*;
+import java.util.*;
 import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,22 +53,28 @@ public class TrashOutService {
     // Get authentication token from Google Identity Toolkit for later TrashOut API
     // requests
     public String getToken() {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("email", config.get("Login:Email"));
-        requestBody.put("password", config.get("Login:Password"));
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode requestBody = mapper.createObjectNode();
+        requestBody.put("email", (String) config.get("Login:Email"));
+        requestBody.put("password", (String) config.get("Login:Password"));
         requestBody.put("returnSecureToken", true);
-
+    
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+    
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
-
+    
         ResponseEntity<String> response = restTemplate
                 .postForEntity(GOOGLE_PASSWORD_URL + config.get("Login:GoogleAPIKey"), entity, String.class);
-
+    
         if (response.getStatusCode() == HttpStatus.OK) {
-            JSONObject responseBody = (JSONObject) JSONValue.parse(response.getBody());
-            return (String) responseBody.get("idToken");
+            try {
+                ObjectNode responseBody = (ObjectNode) mapper.readTree(response.getBody());
+                return responseBody.get("idToken").asText();
+            } catch (IOException e) {
+                System.out.println("Error occurred while trying to parse response body: " + e.getMessage());
+                return null;
+            }
         } else {
             System.out.println("Error occurred while trying to get token: " + response.getStatusCode());
             return null;
@@ -99,19 +108,19 @@ public class TrashOutService {
         return null;
     }
 
-    public Waste parseWaste(JSONObject wasteJSON) {
+    public Waste parseWaste(ObjectNode wasteJSON) {
         Waste waste = new Waste();
 
         // Set GPS coordinates and country
-        JSONObject gps = (JSONObject) wasteJSON.get("gps");
+        ObjectNode gps = (ObjectNode) wasteJSON.get("gps");
         if (gps != null) {
-            waste.setLatitude(BigDecimal.valueOf((Double) gps.get("lat")));
-            waste.setLongitude(BigDecimal.valueOf((Double) gps.get("long")));
+            waste.setLatitude(BigDecimal.valueOf(gps.get("lat").asDouble()));
+            waste.setLongitude(BigDecimal.valueOf(gps.get("long").asDouble()));
 
-            JSONObject area = (JSONObject) gps.get("area");
+            ObjectNode area = (ObjectNode) gps.get("area");
 
             if (area != null) {
-                String country = (String) area.get("country");
+                String country = area.get("country").asText();
 
                 if (country != null) {
                     waste.setCountry(Waste.WasteCountry.valueOf(country.toUpperCase()));
@@ -120,114 +129,109 @@ public class TrashOutService {
         }
 
         // Set types
-        JSONArray typesArray = (JSONArray) wasteJSON.get("types");
+        ArrayNode typesArray = (ArrayNode) wasteJSON.get("types");
         Set<Waste.WasteType> types = new HashSet<>();
-        for (Object type : typesArray) {
-            types.add(Waste.WasteType.valueOf(type.toString().toUpperCase()));
+        for (JsonNode type : typesArray) {
+            types.add(Waste.WasteType.valueOf(type.asText().toUpperCase()));
         }
         waste.setTypes(types);
 
         // Set images
-        JSONArray imagesArray = (JSONArray) wasteJSON.get("images");
+        ArrayNode imagesArray = (ArrayNode) wasteJSON.get("images");
         if (imagesArray.size() > 0) {
-            JSONObject firstImageObject = (JSONObject) imagesArray.get(0);
-            String image = (String) firstImageObject.get("fullDownloadUrl");
+            ObjectNode firstImageObject = (ObjectNode) imagesArray.get(0);
+            String image = firstImageObject.get("fullDownloadUrl").asText();
             waste.setImageUrl(image);
         }
 
         // Set other fields
-        waste.setId((Long) wasteJSON.get("id"));
-        waste.setLocality(
-                (String) ((JSONObject) ((JSONObject) wasteJSON.get("gps")).get("area")).get("locality"));
-        waste.setSublocality(
-                (String) ((JSONObject) ((JSONObject) wasteJSON.get("gps")).get("area")).get("subLocality"));
-        waste.setSize(Waste.WasteSize.valueOf(wasteJSON.get("size").toString().toUpperCase()));
-        waste.setStatus(Waste.WasteStatus.valueOf(wasteJSON.get("status").toString().toUpperCase()));
-        waste.setCreateTime(OffsetDateTime.parse(wasteJSON.get("created").toString()).toLocalDateTime());
-        waste.setUpdateTime(OffsetDateTime.parse(wasteJSON.get("updateTime").toString()).toLocalDateTime());
-        waste.setNote((String) wasteJSON.get("note"));
+        waste.setId(wasteJSON.get("id").asLong());
+        waste.setLocality(((wasteJSON.get("gps")).get("area")).get("locality").asText());
+        waste.setSublocality(((wasteJSON.get("gps")).get("area")).get("subLocality").asText());
+        waste.setSize(Waste.WasteSize.valueOf(wasteJSON.get("size").asText().toUpperCase()));
+        waste.setStatus(Waste.WasteStatus.valueOf(wasteJSON.get("status").asText().toUpperCase()));
+        waste.setCreateTime(OffsetDateTime.parse(wasteJSON.get("created").asText()).toLocalDateTime());
+        waste.setUpdateTime(OffsetDateTime.parse(wasteJSON.get("updateTime").asText()).toLocalDateTime());
+        waste.setNote(wasteJSON.get("note").asText());
 
         return waste;
     }
 
     @Transactional
-    @CacheEvict(value = { "filteredMapData", "inverseFilteredMapData" }, allEntries = true)
     public void updateDatabase() {
-        // String token = getToken();
-
-        // Token for dev purposes from the Trashout serverside code
-        String AuthToken = config.get("Login:AuthToken").toString();
-        String wasteList = getWasteListFromTrashOut(AuthToken);
+        String authToken = config.get("Login:AuthToken").toString();
+        String wasteList = getWasteListFromTrashOut(authToken);
 
         if (wasteList == null) {
-            System.out.println("Error: wasteList is null");
+            System.err.println("Error: wasteList is null");
             return;
         }
 
-        JSONParser parser = new JSONParser();
-        try {
-            LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(1).toLocalDateTime();
+        LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(6).toLocalDateTime();
 
-            // Delete all wastes that are older than 6 years
-            List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);
-            for (Waste waste : oldWastes) {
-                waste.getTypes().clear();
-                wasteRepository.save(waste);
-            }
+        Integer deleteCount = deleteOldWastes(XYearsAgo);
 
-            wasteRepository.deleteAll(oldWastes);
+        List<Waste> wastesToSave = processWasteList(wasteList, XYearsAgo);
 
-            // Parse the JSON array from TrashOut
-            JSONArray wasteArray = (JSONArray) parser.parse(wasteList);
+        wasteRepository.saveAll(wastesToSave);
 
-            // Fetch all existing wastes from the database
-            List<Waste> existingWastes = wasteRepository.findAll();
+        saveUpdateLog(wastesToSave, deleteCount);
+    }
 
-            // Convert the list to a map for faster lookup
-            Map<Long, Waste> existingWastesMap = existingWastes.stream()
-                    .collect(Collectors.toMap(Waste::getId, Function.identity()));
-
-            List<Waste> wastesToSave = new ArrayList<>();
-
-            for (Object o : wasteArray) {
-                try {
-                    JSONObject wasteJSON = (JSONObject) o;
-                    Waste newWaste = parseWaste(wasteJSON);
-
-                    // Check if the waste's ID is already in the database
-                    Waste existingWaste = existingWastesMap.get(newWaste.getId());
-
-                    // Make sure to keep the 'hidden' value
-                    if (existingWaste != null) {
-                        newWaste.setHidden(existingWaste.isHidden());
-                    }
-
-                    // Only save the waste if it had an update in the past X years and it is not in
-                    // the database or it has been updated
-                    if (newWaste.getUpdateTime().isAfter(XYearsAgo)
-                            && (existingWaste == null || !newWaste.equals(existingWaste))) {
-                        wastesToSave.add(newWaste);
-                    }
-                } catch (IllegalArgumentException e) {
-                    continue;
-                }
-            }
-            wasteRepository.saveAll(wastesToSave);
-
-            // Save the update log
-            Integer deleteCount = oldWastes.size();
-            Integer updateCount = wastesToSave.size();
-            Long totalCount = wasteRepository.count();
-
-            UpdateLog updateLog = new UpdateLog();
-            updateLog.setUpdateTime(LocalDateTime.now());
-            updateLog.setDeleteCount(deleteCount);
-            updateLog.setUpdateCount(updateCount);
-            updateLog.setTotalCount(totalCount);
-
-            updateLogRepository.save(updateLog);
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public Integer deleteOldWastes(LocalDateTime XYearsAgo) {
+        List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);
+        for (Waste waste : oldWastes) {
+            waste.getTypes().clear();
+            wasteRepository.save(waste);
         }
+        wasteRepository.deleteAll(oldWastes);
+
+        return oldWastes.size();
+    }
+
+    public List<Waste> processWasteList(String wasteList, LocalDateTime XYearsAgo) {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode wasteArray = null;
+        try {
+            wasteArray = (ArrayNode) mapper.readTree(wasteList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+        List<Waste> existingWastes = wasteRepository.findAll();
+        Map<Long, Waste> existingWastesMap = existingWastes.stream()
+                .collect(Collectors.toMap(Waste::getId, Function.identity()));
+        List<Waste> wastesToSave = new ArrayList<>();
+
+        for (JsonNode o : wasteArray) {
+            try {
+                ObjectNode wasteJSON = (ObjectNode) o;
+                Waste newWaste = parseWaste(wasteJSON);
+                Waste existingWaste = existingWastesMap.get(newWaste.getId());
+                if (existingWaste != null) {
+                    newWaste.setHidden(existingWaste.isHidden());
+                }
+                if (newWaste.getUpdateTime().isAfter(XYearsAgo)
+                        && (existingWaste == null || !newWaste.equals(existingWaste))) {
+                    wastesToSave.add(newWaste);
+                }
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+        }
+        return wastesToSave;
+    }
+
+    public void saveUpdateLog(List<Waste> wastesToSave, Integer deleteCount) {
+        Integer updateCount = wastesToSave.size();
+        Long totalCount = wasteRepository.count();
+
+        UpdateLog updateLog = new UpdateLog();
+        updateLog.setUpdateTime(LocalDateTime.now());
+        updateLog.setDeleteCount(deleteCount);
+        updateLog.setUpdateCount(updateCount);
+        updateLog.setTotalCount(totalCount);
+
+        updateLogRepository.save(updateLog);
     }
 }
