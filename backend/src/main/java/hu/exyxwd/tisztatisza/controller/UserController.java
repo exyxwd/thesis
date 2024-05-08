@@ -2,11 +2,11 @@ package hu.exyxwd.tisztatisza.controller;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 import java.security.Principal;
@@ -38,6 +38,14 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
+    @Autowired
+    public UserController(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserRepository userRepository, JwtUtil jwtUtil) {
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+    }
+
     @ResponseBody
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginReq, HttpServletResponse response) {
@@ -53,7 +61,7 @@ public class UserController {
             return ResponseEntity.ok().build();
 
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
