@@ -57,12 +57,14 @@ public class WasteControllerTest {
         when(mockWasteRepository.findAllById(requestData.get("ids"))).thenReturn(Arrays.asList(waste));
         when(mockWasteMapper.toDetailedWasteDTO(waste)).thenReturn(dto);
 
-        List<DetailedWasteDTO> response = controller.getWastesByIds(requestData);
+        ResponseEntity<List<DetailedWasteDTO>> response = controller.getWastesByIds(requestData);
+        List<DetailedWasteDTO> detailedWastes = response.getBody();
 
-        assertNotNull(response, "Response should not be null");
-        assertEquals(1, response.size(),
+        assertNotNull(response, "Getting wastes by given IDs response should not be null");
+        assertNotNull(detailedWastes, "Getting wastes by given IDs body should not be null");
+        assertEquals(1, detailedWastes.size(),
                 "Getting wastes by given IDs response does not contain the expected number of elements");
-        assertEquals(dto, response.get(0), "Getting wastes by given IDs response body is incorrect");
+        assertEquals(dto, detailedWastes.get(0), "Getting wastes by given IDs response body is incorrect");
     }
 
     @Test
@@ -154,12 +156,14 @@ public class WasteControllerTest {
         when(mockWasteRepository.findByHidden(true)).thenReturn(Arrays.asList(waste));
         when(mockWasteMapper.toDetailedWasteDTO(waste)).thenReturn(dto);
 
-        List<DetailedWasteDTO> response = controller.getHiddenWastes();
+        ResponseEntity<List<DetailedWasteDTO>> response = controller.getHiddenWastes();
+        List<DetailedWasteDTO> detailedWastes = response.getBody();
 
         assertNotNull(response, "Getting all wastes where the hidden field is true response should not be null");
-        assertEquals(1, response.size(),
+        assertNotNull(detailedWastes, "Getting all wastes where the hidden field is true body should not be null");
+        assertEquals(1, detailedWastes.size(),
                 "Getting all wastes where the hidden field is true response does not contain the expected number of elements");
-        assertEquals(dto, response.get(0),
+        assertEquals(dto, detailedWastes.get(0),
                 "Getting all wastes where the hidden field is true response body is incorrect");
     }
 }

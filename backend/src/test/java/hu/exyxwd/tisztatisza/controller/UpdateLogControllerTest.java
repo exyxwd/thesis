@@ -2,6 +2,8 @@ package hu.exyxwd.tisztatisza.controller;
 
 import org.mockito.Mockito;
 import org.junit.jupiter.api.*;
+import org.springframework.http.ResponseEntity;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +30,10 @@ public class UpdateLogControllerTest {
         UpdateLog log2 = new UpdateLog();
         when(updateLogRepository.findAll()).thenReturn(Arrays.asList(log1, log2));
 
-        List<UpdateLog> logs = updateLogController.getAllLogs();
+        ResponseEntity<List<UpdateLog>> response = updateLogController.getAllLogs();
+        List<UpdateLog> logs = response.getBody();
+
+        assertNotNull(logs, "After getting all update logs, the logs are null");
 
         assertEquals(2, logs.size(),
                 "After getting all update logs the number of logs does not match the expected value");

@@ -1,22 +1,21 @@
 package hu.exyxwd.tisztatisza.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import java.util.stream.Collectors;
 
 import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.dto.mapper.WasteMapper;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
-import lombok.AllArgsConstructor;
 import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
-// TODO: years ago to config, response entities
+// TODO: years ago to config
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/wastes")
@@ -38,13 +37,13 @@ public class WasteController {
 
     // get wastes by ids rest api
     @PostMapping("/filteredWastes")
-    public List<DetailedWasteDTO> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
+    public ResponseEntity<List<DetailedWasteDTO>> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
         List<Long> ids = requestData.get("ids");
         List<Waste> wastes = wasteRepository.findAllById(ids);
         if (wastes.size() != ids.size()) {
             throw new ResourceNotFoundException("Some wastes do not exist with the given ids");
         }
-        return wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/mapDataFiltered")
@@ -52,11 +51,8 @@ public class WasteController {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
         List<Waste> wastes = wasteRepository.findByFilters(Waste.WasteCountry.HUNGARY, Waste.WasteSize.BAG,
                 Waste.WasteStatus.STILLHERE, oneYearAgo);
-        List<MapDataDTO> mapData = wastes.stream()
-                .map(wasteMapper::toMapData)
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(mapData, HttpStatus.OK);
+        return ResponseEntity.ok(wastes.stream().map(wasteMapper::toMapData).collect(Collectors.toList()));
     }
 
     @GetMapping("/mapDataFilteredInverse")
@@ -64,11 +60,8 @@ public class WasteController {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
         List<Waste> wastes = wasteRepository.findByFiltersInverse(Waste.WasteCountry.HUNGARY, Waste.WasteSize.BAG,
                 Waste.WasteStatus.STILLHERE, oneYearAgo);
-        List<MapDataDTO> mapData = wastes.stream()
-                .map(wasteMapper::toMapData)
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(mapData, HttpStatus.OK);
+        return ResponseEntity.ok(wastes.stream().map(wasteMapper::toMapData).collect(Collectors.toList()));
     }
 
     // set hidden field of a waste by id rest api
@@ -84,10 +77,9 @@ public class WasteController {
 
     // get all hidden wastes rest api
     @GetMapping("/hidden")
-    public List<DetailedWasteDTO> getHiddenWastes() {
+    public ResponseEntity<List<DetailedWasteDTO>> getHiddenWastes() {
         List<Waste> wastes = wasteRepository.findByHidden(true);
-        return wastes.stream()
-                .map(wasteMapper::toDetailedWasteDTO)
-                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList()));
     }
 }
