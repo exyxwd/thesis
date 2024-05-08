@@ -19,11 +19,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private String generateRandomPassword(int length) {
+    public String generateRandomPassword(int charLength) {
         SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[length];
+        byte[] bytes = new byte[charLength];
         random.nextBytes(bytes);
-        return Base64.getEncoder().encodeToString(bytes);
+        return Base64.getEncoder().encodeToString(bytes).substring(0, charLength);
     }
 
     @PostConstruct
