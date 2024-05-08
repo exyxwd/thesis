@@ -11,21 +11,20 @@ import lombok.AllArgsConstructor;
 public class TimedHostWasteService {
     private final TrashOutService trashOutService;
     private final RiverService riverService;
-    private final CacheService cacheService;
 
     @Scheduled(fixedRate = 4 * 60 * 60 * 1000) // Run every 4 hours
     // @Scheduled(fixedRate = 60 * 1000)
     @Transactional
     public void processWastesAndRivers() {
-        System.out.println("Processing wastes and rivers...");
+        System.out.println("Processing wastes...");
         trashOutService.updateDatabase();
 
+        System.out.println("Loading rivers...");
         riverService.loadRivers();
 
+        System.out.println("Updating rivers...");
         riverService.updateNullRivers();
 
-        System.out.println("Caching");
-        cacheService.cacheInverseFilteredMapData();
-        cacheService.cacheFilteredMapData();
+        System.out.println("Done");
     }
 }
