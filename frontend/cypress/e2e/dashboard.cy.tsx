@@ -67,6 +67,11 @@ describe('Dashboard', () => {
         cy.url().should('include', '/dashboard/logs');
     });
 
+    it('dashboard navigation link appears when user is logged in', () => {
+        cy.get(':nth-child(4) > a').click();
+        cy.url().should('include', '/dashboard');
+    });
+
     it('logs out user on logout button click', () => {
         cy.intercept({
             method: 'POST',
