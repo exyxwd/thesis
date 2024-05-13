@@ -13,7 +13,7 @@ import { useShowNotification } from 'components/Main/NotificationContext';
 /**
  * Menu for the dashboard
  *
- * @returns {JSX.Element} THe dashboard menu
+ * @returns {React.ReactElement} THe dashboard menu
  */
 const DashboardMenu: React.FC = (): React.ReactElement => {
     const [shouldPost, setShouldPost] = useState<boolean>(false);

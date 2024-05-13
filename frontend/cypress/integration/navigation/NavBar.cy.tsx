@@ -56,6 +56,10 @@ describe('NavBar', () => {
             cy.get('#nav-expand-btn').click();
             cy.get(':nth-child(2) > a').click();
             cy.url().should('include', '/contact');
+
+            cy.get('#nav-expand-btn').click();
+            cy.get(':nth-child(3) > a').click();
+            cy.url().should('include', '/about');
         });
     });
 });

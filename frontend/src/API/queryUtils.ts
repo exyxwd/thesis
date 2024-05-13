@@ -1,6 +1,6 @@
 import { ExpandedTrashData, MinimalTrashData, RegisterData, UpdateLog, UserDataType } from 'models/models';
 
-const getCsrfToken = () => document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+const getCsrfToken = () => document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
 
 /**

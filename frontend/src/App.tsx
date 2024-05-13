@@ -9,6 +9,7 @@ import { fetchUserinfo } from 'API/queryUtils';
 import Login from 'components/Dashboard/Login';
 import MainPage from 'components/Pages/MainPage';
 import NavBar from 'components/Navigation/NavBar';
+import AboutPage from 'components/Pages/AboutPage';
 import Register from 'components/Dashboard/Register';
 import ContactPage from 'components/Pages/ContactPage';
 import UpdateLogs from 'components/Dashboard/UpdateLogs';
@@ -42,6 +43,7 @@ function App(): React.ReactElement {
                 <Route path={'/'} element={<MainPage />} />
                 <Route path={'/waste/:selectedMarkerId'} element={<MainPage />} />
                 <Route path={'/contact'} element={<ContactPage />} />
+                <Route path={'/about'} element={<AboutPage />} />
                 <Route path={'/dashboard/login'} element={<Login />} />
                 <Route element={<ProtectedRoute />}>
                     <Route path={'/dashboard'} element={<DashboardMain />} />

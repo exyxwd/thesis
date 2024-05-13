@@ -83,6 +83,7 @@ const Login: React.FC = (): React.ReactElement => {
                                 id="username"
                                 value={username}
                                 onChange={handleUsernameChange}
+                                autoComplete="username"
                                 required
                             />
                         </div>
@@ -94,6 +95,7 @@ const Login: React.FC = (): React.ReactElement => {
                                 id="password"
                                 value={password}
                                 onChange={handlePasswordChange}
+                                autoComplete="current-password"
                                 required
                             />
                             {invalidCreds ? <p className='invalid-creds-text'><Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans></p> : <></>}
