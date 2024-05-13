@@ -50,7 +50,7 @@ const MainPage: React.FC = (): React.ReactElement => {
 
     useEffect(() => {
         setSelectedWastes(wasteData.filter((waste) => isFitForFilters(authenticated, waste, activeFilters, selectedTime, filteredRivers)));
-    }, [wasteData, activeFilters, selectedTime, filteredRivers]);
+    }, [wasteData, activeFilters, selectedTime, filteredRivers, authenticated, setSelectedWastes]);
 
     useEffect(() => {
         setWasteData([...(filteredWasteData || []), ...(inverseFilteredWasteData || [])]);
@@ -60,14 +60,14 @@ const MainPage: React.FC = (): React.ReactElement => {
         if (detailedWasteData && detailedWasteData.hidden && !authenticated) {
             navigate('/');
         }
-    } , [detailedWasteData]);
+    } , [detailedWasteData, authenticated, navigate]);
 
     useEffect(() => {
         if (detailedWasteDataError) {
             showNotification(NotificationType.Error, 'fetch_detailed_waste_error');
             navigate('/');
         }
-    } , [detailedWasteDataError]);
+    } , [detailedWasteDataError, showNotification, navigate]);
 
     if (filteredWasteFetchError) return (
         <div className='loading-error'>

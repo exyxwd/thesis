@@ -68,11 +68,11 @@ export interface ExpandedTrashData {
 export interface RegisterData {
     username: string;
     password: string;
-};
+}
 
 export type UserDataType = {
     username: string;
-};
+}
 
 export interface UpdateLog {
     id: number;

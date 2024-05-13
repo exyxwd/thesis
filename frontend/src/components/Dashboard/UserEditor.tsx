@@ -75,7 +75,7 @@ const UserEditor = (): React.ReactElement => {
     useQuery('postPasswordChange', () => postPasswordChange(selectedUser, inputValue),
         {
             enabled: shouldPostPassChange, onSuccess: () => {
-                setShouldPostPassChange(false); 
+                setShouldPostPassChange(false);
                 setShouldFetchUsers(true);
                 showNotification(NotificationType.Success, 'change_password_success');
             },

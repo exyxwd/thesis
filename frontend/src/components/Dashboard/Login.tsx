@@ -29,7 +29,10 @@ const Login: React.FC = (): React.ReactElement => {
 
     useQuery('postLoginData', () => postLoginData(username, password),
         {
-            enabled: shouldPost, onSuccess: (isLoginSuccesfull) => { isLoginSuccesfull ? onSuccessfulLogin() : setInvalidCreds(true); setShouldPost(false); }
+            enabled: shouldPost,
+            onSuccess: (isLoginSuccesfull) => { isLoginSuccesfull ? onSuccessfulLogin() : setInvalidCreds(true); setShouldPost(false); },
+            onError: () => { setInvalidCreds(true); setShouldPost(false); },
+            retry: 0
         });
 
     useEffect(() => {
@@ -39,7 +42,7 @@ const Login: React.FC = (): React.ReactElement => {
         else if (authenticated) {
             navigate('/dashboard');
         }
-    }, [authenticated])
+    }, [authenticated, location.state?.from, navigate])
 
     const onSuccessfulLogin = () => {
         setAuthenticated(true);
@@ -93,9 +96,9 @@ const Login: React.FC = (): React.ReactElement => {
                                 onChange={handlePasswordChange}
                                 required
                             />
-                            <p className='invalid-creds-text'>{invalidCreds ? <Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans> : <></>}</p>
+                            {invalidCreds ? <p className='invalid-creds-text'><Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans></p> : <></>}
                         </div>
-                        <br/>
+                        <br />
                         <div className="d-grid gap-2">
                             <button type="submit" className={invalidCreds ? "btn btn-primary invalid-creds-btn" : "btn btn-primary"}>
                                 <Trans i18nKey="user.login">Bejelentkezés</Trans>

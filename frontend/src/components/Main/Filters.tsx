@@ -73,7 +73,7 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
 
     useEffect(() => {
         updateCounts();
-    }, [wasteData, countFitForFilters, selectedTime]);
+    }, [wasteData, countFitForFilters, selectedTime, updateCounts]);
 
     useEffect(() => {
         setCountFitForFilters(selectedWastes.length);

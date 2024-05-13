@@ -33,7 +33,8 @@ function formatDateTime(inputDateTime: string): string {
  * @returns {void}
  */
 function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => string): void {
-    // Translate the data and format the date, exclude the hidden field
+    // Translate the data and format the date, exclude the hidden field (the warning is disabled because the hidden field is not used to be excluded)
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const translatedData = fetchedData.map(({ hidden, ...item }) => ({
         ...item,
         country: t(`country.${item.country.toLowerCase()}`),

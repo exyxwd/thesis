@@ -44,7 +44,6 @@ const ContactPage = (): React.ReactElement => {
                         </div>
                     </div>
                 </div>
-
                 <div className='contact-row'>
                     <div className='row'>
                         <div className='col contact-title'><Trans i18nKey='contact.ideas'>A kezdeményezés ötletgazdái</Trans></div>
@@ -63,7 +62,6 @@ const ContactPage = (): React.ReactElement => {
                         </div>
                     </div>
                 </div>
-
                 <div className='contact-row'>
                     <div className='row'>
                         <div className='col contact-title'><Trans i18nKey='contact.sponsor'>Támogatóink</Trans></div>
@@ -84,7 +82,6 @@ const ContactPage = (): React.ReactElement => {
                         </div>
                     </div>
                 </div>
-
             </div>
     )
 }

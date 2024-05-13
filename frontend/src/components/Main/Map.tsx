@@ -33,7 +33,7 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
     const mapDivRef = useRef<HTMLDivElement>(null);
     const selectedWastes = useSelectedWastes();
 
-    let { selectedMarkerId } = useParams();
+    const { selectedMarkerId } = useParams();
     const [cameFromMarker, setCameFromMarker] = useState<boolean>(true);
 
     const map = useRef<L.Map>();
@@ -92,7 +92,7 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
         });
 
         map.current.addLayer(clusterLayer.current);
-    }, [selectedWastes, cameFromMarker, selectedMarkerId]);
+    }, [selectedWastes, cameFromMarker, selectedMarkerId, selectedWaste, navigate, location.pathname, location.state?.key]);
 
     useEffect(() => {
         if (!mapDivRef.current || map.current) {

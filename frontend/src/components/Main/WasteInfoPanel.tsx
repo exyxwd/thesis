@@ -79,25 +79,25 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                 return waste;
             });
         });
-    }, [isHidden]);
-
+    }, [isHidden, data.id, setSelectedWastes]);
 
     useEffect(() => {
         document.addEventListener("click", handleClickElsewhere, true);
         return () => {
             document.removeEventListener("click", handleClickElsewhere);
         }
-    }, [])
+    })
 
+    
     /**
      * Close info panel on click elsewhere
-     *
-     * @param {MouseEvent} e The click event
-     */
-    const handleClickElsewhere = (e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        if (panelRef.current && !panelRef.current.contains(target)) {
-            onClose();
+    *
+    * @param {MouseEvent} e The click event
+    */
+   const handleClickElsewhere = (e: MouseEvent) => {
+       const target = e.target as HTMLElement;
+       if (panelRef.current && !panelRef.current.contains(target)) {
+           onClose();
         }
     }
     /**
@@ -191,7 +191,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                 setSelectedTime(wasteUpdateTime);
             }
         }
-    }, [data]);
+    }, [data, activeFilters, setActiveFilters, selectedTime, setSelectedTime]);
 
     useEffect(() => {
         setImageLoaded(false);

@@ -44,7 +44,7 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
         if (userInfoError) {
             setIsLoggedIn(false);
         }
-    }, [userInfoError]);
+    }, [userInfoError, setIsLoggedIn]);
 
     const handleLogout = () => {
         setShouldPost(true);

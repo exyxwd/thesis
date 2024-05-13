@@ -35,7 +35,9 @@ const Register: React.FC = (): React.ReactElement => {
                         password: '',
                     })) :
                     (setFailedRegistry(true), setSuccessfulRegistry(false)); setShouldPost(false)
-            }
+            },
+            onError: () => { setFailedRegistry(true); setShouldPost(false); setSuccessfulRegistry(false); },
+            retry: 0
         }
     );
 
