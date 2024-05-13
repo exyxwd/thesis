@@ -34,20 +34,22 @@ body {
 
 /* ################################ SCROLL BAR ################################ */
 
-::-webkit-scrollbar {
-    width: 13px;
-}
+@media (min-width: 769px) {
+    ::-webkit-scrollbar {
+        width: 13px;
+    }
 
-::-webkit-scrollbar-track {
-    background: #2f2f2f;
-}
+    ::-webkit-scrollbar-track {
+        background: #2f2f2f;
+    }
 
-::-webkit-scrollbar-thumb {
-    background: #888;
-}
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }
 
 /* ################################ LOADING BAR ################################ */

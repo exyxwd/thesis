@@ -2,7 +2,7 @@
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useSetAuthenticated } from './AuthContext';
 import { fetchUserinfo, postLogout } from 'API/queryUtils';
@@ -20,6 +20,7 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
     const showNotification = useShowNotification();
+    const sidebarRef = useRef<HTMLDivElement>(null);
     const setIsLoggedIn = useSetAuthenticated();
 
     useQuery('postLogout', () => postLogout(),
@@ -50,45 +51,62 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
         setShouldPost(true);
     };
 
+    useEffect(() => {
+        document.addEventListener("click", handleClickElsewhere, true);
+        return () => {
+            document.removeEventListener("click", handleClickElsewhere);
+        }
+    });
+
+    /**
+     * Close dsahboard sidebar on click elsewhere
+    *
+    * @param {MouseEvent} e The click event
+    */
+    const handleClickElsewhere = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (sidebarRef.current && !sidebarRef.current.contains(target)) {
+            setMenuOpen(false);
+        }
+    }
+
     return (
-        <>
-            <div className="dashboard-menu-area">
-                <div className={menuOpen ? "menu-toggle is-active" : "menu-toggle"} onClick={() => setMenuOpen((prevMenuOpen) => !prevMenuOpen)}>
-                    <div className="hamburger">
-                        <span></span>
-                    </div>
+        <div className="dashboard-menu-area" ref={sidebarRef}>
+            <div className={menuOpen ? "menu-toggle is-active" : "menu-toggle"} onClick={() => setMenuOpen((prevMenuOpen) => !prevMenuOpen)}>
+                <div className="hamburger">
+                    <span></span>
                 </div>
-                <aside className={menuOpen ? "dashboard-sidebar is-active" : "dashboard-sidebar"}>
-                    <div className='user-data-container'>
-                        <span className="material-symbols-outlined account-icon">account_circle</span>
-                        <div className='user-name'>&emsp;{username}</div>
-                    </div>
-                    <nav className="menu">
-                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard'} className={`menu-item ${location.pathname === `/dashboard` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="menu.main_page">Főoldal</Trans>
-                        </Link>
-                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/register'} className={`menu-item ${location.pathname === `/dashboard/register` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="menu.add_user">Felhasználó hozzáadása</Trans>
-                        </Link>
-                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="menu.manage_user">Felhasználók kezelése</Trans>
-                        </Link>
-                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/hiddens'} className={`menu-item ${location.pathname === `/dashboard/hiddens` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="menu.hidden-locations">Rejtett pontok</Trans>
-                        </Link>
-                        <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
-                            <Trans i18nKey="menu.logs">Napló</Trans>
-                        </Link>
-                    </nav>
-                    <div className='logout-area'>
-                        <button className="logout-btn btn" onClick={handleLogout}>
-                            <span className="material-symbols-outlined">logout</span>
-                            <p className='logout-text'><Trans i18nKey="menu.logout">Kijelentkezés</Trans></p>
-                        </button>
-                    </div>
-                </aside>
             </div>
-        </>
+            <aside className={menuOpen ? "dashboard-sidebar is-active" : "dashboard-sidebar"}>
+                <div className='user-data-container'>
+                    <span className="material-symbols-outlined account-icon">account_circle</span>
+                    <div className='user-name'>&emsp;{username}</div>
+                </div>
+                <nav className="menu">
+                    <Link onClick={() => setMenuOpen(false)} to={'/dashboard'} className={`menu-item ${location.pathname === `/dashboard` ? 'is-active' : ''}`}>
+                        <Trans i18nKey="menu.main_page">Főoldal</Trans>
+                    </Link>
+                    <Link onClick={() => setMenuOpen(false)} to={'/dashboard/register'} className={`menu-item ${location.pathname === `/dashboard/register` ? 'is-active' : ''}`}>
+                        <Trans i18nKey="menu.add_user">Felhasználó hozzáadása</Trans>
+                    </Link>
+                    <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
+                        <Trans i18nKey="menu.manage_user">Felhasználók kezelése</Trans>
+                    </Link>
+                    <Link onClick={() => setMenuOpen(false)} to={'/dashboard/hiddens'} className={`menu-item ${location.pathname === `/dashboard/hiddens` ? 'is-active' : ''}`}>
+                        <Trans i18nKey="menu.hidden-locations">Rejtett pontok</Trans>
+                    </Link>
+                    <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
+                        <Trans i18nKey="menu.logs">Napló</Trans>
+                    </Link>
+                </nav>
+                <div className='logout-area'>
+                    <button className="logout-btn btn" onClick={handleLogout}>
+                        <span className="material-symbols-outlined">logout</span>
+                        <p className='logout-text'><Trans i18nKey="menu.logout">Kijelentkezés</Trans></p>
+                    </button>
+                </div>
+            </aside>
+        </div>
     );
 };
 

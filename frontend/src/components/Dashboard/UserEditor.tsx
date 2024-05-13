@@ -1,6 +1,6 @@
-import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
 
 import Pagination from './Pagination';
@@ -39,6 +39,7 @@ const UserEditor = (): React.ReactElement => {
     const [shouldPostDelete, setShouldPostDelete] = useState<boolean>(false);
     const [shouldPostPassChange, setShouldPostPassChange] = useState<boolean>(false);
     const [shouldPostNameChange, setShouldPostNameChange] = useState<boolean>(false);
+    const { t } = useTranslation();
 
     const recordsPerPage = 14;
     const [indexOfLastRecord, setIndexOfLastRecord] = useState<number>(recordsPerPage);
@@ -105,7 +106,8 @@ const UserEditor = (): React.ReactElement => {
             },
             onError: () => {
                 showNotification(NotificationType.Error, 'delete_user_error');
-            }
+            },
+            retry: 0
         });
 
     const handlePageChange = (indexOfFirstRecord: number, indexOfLastRecord: number) => {
@@ -192,24 +194,24 @@ const UserEditor = (): React.ReactElement => {
                         <Modal.Header closeButton>
                             <Modal.Title>
                                 <Trans i18nKey="user-editor.change_password_of">A felhasználó jelszavának megváltoztatása</Trans>
-                                &nbsp;({selectedUser})
+                                <br/>({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control type="text" placeholder={`Új jelszó...`} value={inputValue} onChange={handleInputChange} />
+                            <Form.Control type="text" maxLength={25} placeholder={t('user-editor.new_password')} value={inputValue} onChange={handleInputChange} />
                         </Modal.Body>
                     </>
                 }
                 {selectedOperation == Operation.Rename &&
                     <>
                         <Modal.Header closeButton>
-                            <Modal.Title>
+                            <Modal.Title >
                                 <Trans i18nKey="user-editor.change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>
-                                &nbsp;({selectedUser})
+                                <br/>({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control type="text" placeholder={`Új felhasználónév...`} value={inputValue} onChange={handleInputChange} />
+                            <Form.Control type="text" maxLength={25} placeholder={t('user-editor.new_username')} value={inputValue} onChange={handleInputChange} />
                         </Modal.Body>
                     </>
                 }
@@ -217,7 +219,7 @@ const UserEditor = (): React.ReactElement => {
                     <Modal.Header closeButton>
                         <Modal.Title>
                             <Trans i18nKey="user-editor.confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>
-                            &nbsp;({selectedUser})
+                            <br/>({selectedUser})
                         </Modal.Title>
                     </Modal.Header>
                 }

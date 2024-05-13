@@ -62,9 +62,9 @@
         "country": "Ország",
         "num_fit_for_filters": "Kiválasztott szemét",
         "download_btn_text": "Kiválasztott pontok adatainak letöltése",
-        "country_warning": "Válassz országot",
-        "size_warning": "Válassz méretet",
-        "state_warning": "Válassz állapotot"
+        "country_warning": "Válassz országot!",
+        "size_warning": "Válassz méretet!",
+        "state_warning": "Válassz állapotot!"
     },
     "sizes": {
         "bag": "Belefér egy zsákba",
@@ -148,6 +148,8 @@
         "change_password_of": "A felhasználó jelszavának módosítása",
         "change_username_of": "A felhasználó felhasználó nevének módosítása",
         "confirm_delete": "Biztosan törölni akarja a felhasználót?",
+        "new_username": "Új felhasználónév megadása...",
+        "new_password": "Új jelszó megadása...",
         "exit": "Kilépés",
         "save": "Mentés",
         "delete": "Törlés",

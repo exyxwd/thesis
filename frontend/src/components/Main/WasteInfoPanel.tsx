@@ -227,7 +227,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                             {
                                 onSuccess: () => {
                                     setIsHidden(prevState => !prevState);
-                                    showNotification(NotificationType.Success, isHidden ? 'hide_waste_success' : 'unhide_waste_success');
+                                    showNotification(NotificationType.Success, isHidden ? 'unhide_waste_success' : 'hide_waste_success');
                                 },
                                 onError: () => {
                                     showNotification(NotificationType.Error, 'hide_waste_error');
@@ -236,7 +236,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                         );
                     }}
                 >
-                    {isHidden ? 'visibility_off' : 'visibility'}
+                    {isHidden ? 'visibility' : 'visibility_off'}
                 </span>
             </div>}
             <div className='row waste-panel-base'>
@@ -276,7 +276,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                         <Trans i18nKey='details.note'>Megjegyzés</Trans>
                     </div>
                     <div className='row waste-panel-note'>
-                        <div className='col'>{data.note ? data.note : <p className='no-note'>-</p>}</div>
+                        <div className='col'>{data.note && data.note != 'null' ? data.note : <p className='no-note'>-</p>}</div>
                     </div>
                 </div>
             </div>

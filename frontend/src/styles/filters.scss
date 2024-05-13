@@ -123,21 +123,29 @@
     cursor: not-allowed;
 }
 
-.filter-item:hover {
-    color: $filter-background;
-    transition: all 100ms ease-in;
-    background-color: $secondary-base;
-}
-
 .filter-item.selected {
     color: $filter-background;
     background-color: $secondary-base;
 }
 
-.filter-item.selected:hover {
+.filter-item:not(.selected):active {
     color: red;
     border-color: red;
     background-color: $filter-background;
+}
+
+@media (hover: hover) {
+    .filter-item:hover {
+        color: $filter-background;
+        transition: all 100ms ease-in;
+        background-color: $secondary-base;
+    }
+
+    .filter-item.selected:hover {
+        color: red;
+        border-color: red;
+        background-color: $filter-background;
+    }
 }
 
 .filter-item-count {
