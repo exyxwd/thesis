@@ -90,18 +90,29 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User registerRequest) {
+        String username = registerRequest.getUsername();
+        String password = registerRequest.getPassword();
+         // Check if the username is alphanumeric and does not entirely made up from spaces
+        if (!username.matches("[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+") || username.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username must be alphanumeric, can contain spaces, and cannot be all spaces");
+        }
         // Check if the username or password is too long
-        if (registerRequest.getUsername().length() > 255 || registerRequest.getPassword().length() > 255) {
+        if (username.length() > 255 || password.length() > 255) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password is too long");
         }
 
+        // Check if the username or password is too short
+        if (username.length() < 4 || password.length() < 4) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password is too short");
+        }
+
         // Check if the username is already taken
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
+        if (userRepository.existsByUsername(username)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
 
         // Save the new user in the database
-        User newUser = new User(registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword()));
+        User newUser = new User(username, passwordEncoder.encode(password));
         userRepository.save(newUser);
 
         return ResponseEntity.ok().build();
@@ -124,20 +135,28 @@ public class UserController {
 
     @PutMapping("/users/{username}/username")
     public ResponseEntity<?> changeUsername(@PathVariable String username, @RequestBody Map<String, String> request) {
-        
+
         User user = userRepository.findByUsername(username);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        
-        String newUsername = request.get("newUsername");
+
+        String newUsername = request.get("newUsername").trim();
+        // Check if the new username is alphanumeric and does not entirely made up from spaces
+        if (!newUsername.matches("[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+") || newUsername.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username must be alphanumeric, can contain spaces, and cannot be all spaces");
+        }
         // Check if the new username is too long
         if (newUsername.length() > 255) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New username is too long");
         }
-
-        if (userRepository.existsByUsername(newUsername)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
+        // Check if the new username is too short
+        if (newUsername.length() < 4) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New username is too short");
+        }
+        // Check if the new username is already taken
+        if (userRepository.existsByUsername(newUsername) && !newUsername.equals(username)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
 
         user.setUsername(newUsername);
@@ -152,13 +171,17 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        
+
         String newPassword = request.get("newPassword");
         // Check if the new password is too long
         if (newPassword.length() > 255) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password is too long");
         }
-        
+        // Check if the new password is too short
+        if (newPassword.length() < 4) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password is too short");
+        }
+
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
 
@@ -170,7 +193,7 @@ public class UserController {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (username.equals(currentUsername)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Users cannot delete themselves");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Users cannot delete themselves");
         }
 
         User user = userRepository.findByUsername(username);

@@ -1,5 +1,6 @@
 package hu.exyxwd.tisztatisza.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.dto.mapper.WasteMapper;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
-import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
 // TODO: years ago to config
 @RestController
@@ -29,19 +29,23 @@ public class WasteController {
 
     // get waste by id rest api
     @GetMapping("/{id}")
-    public ResponseEntity<DetailedWasteDTO> getWasteById(@PathVariable Long id) {
-        Waste waste = wasteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Waste does not exist with id: " + id));
-        return ResponseEntity.ok(wasteMapper.toDetailedWasteDTO(waste));
+    public ResponseEntity<?> getWasteById(@PathVariable Long id) {
+        Optional<Waste> waste = wasteRepository.findById(id);
+
+        if (!waste.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Waste does not exist with id: " + id);
+        }
+
+        return ResponseEntity.ok(wasteMapper.toDetailedWasteDTO(waste.get()));
     }
 
     // get wastes by ids rest api
     @PostMapping("/filteredWastes")
-    public ResponseEntity<List<DetailedWasteDTO>> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
+    public ResponseEntity<?> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
         List<Long> ids = requestData.get("ids");
         List<Waste> wastes = wasteRepository.findAllById(ids);
         if (wastes.size() != ids.size()) {
-            throw new ResourceNotFoundException("Some wastes do not exist with the given ids");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Some wastes do not exist with the given ids");
         }
         return ResponseEntity.ok(wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList()));
     }
@@ -67,10 +71,13 @@ public class WasteController {
     // set hidden field of a waste by id rest api
     @PutMapping("/{id}/hidden")
     public ResponseEntity<?> setHidden(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
-        Waste waste = wasteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Waste does not exist with id: " + id));
-        waste.setHidden(body.get("hidden"));
-        wasteRepository.save(waste);
+        Optional<Waste> waste = wasteRepository.findById(id);
+        if (!waste.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Waste does not exist with id: " + id);
+        }
+
+        waste.get().setHidden(body.get("hidden"));
+        wasteRepository.save(waste.get());
 
         return ResponseEntity.ok().build();
     }

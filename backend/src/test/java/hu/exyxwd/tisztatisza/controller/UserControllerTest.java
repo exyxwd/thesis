@@ -133,8 +133,8 @@ public class UserControllerTest {
 
         ResponseEntity<?> result = userController.register(registerRequest);
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode(),
-                "Registration status code should be BAD_REQUEST after unsuccessful registration because of already taken username");
+        assertEquals(HttpStatus.CONFLICT, result.getStatusCode(),
+                "Registration status code should be CONFLICT after unsuccessful registration because of already taken username");
         assertEquals("Username is already taken", result.getBody(),
                 "Response body should be 'Username is already taken' after unsuccessful registration because of already taken username");
     }
@@ -198,8 +198,8 @@ public class UserControllerTest {
         ResponseEntity<?> result = userController.changeUsername("oldUsername",
                 Collections.singletonMap("newUsername", "newUsername"));
 
-        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode(),
-                "Username change status code should be BAD_REQUEST after unsuccessful username change because of already existing user with the new name");
+        assertEquals(HttpStatus.CONFLICT, result.getStatusCode(),
+                "Username change status code should be CONFLICT after unsuccessful username change because of already existing user with the new name");
         assertEquals("Username is already taken", result.getBody(),
                 "Username change response body should be 'Username is already taken' after unsuccessful username change because of already existing user with the new name");
     }

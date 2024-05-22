@@ -1,5 +1,6 @@
 package hu.exyxwd.tisztatisza.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +9,6 @@ import lombok.AllArgsConstructor;
 
 import hu.exyxwd.tisztatisza.model.UpdateLog;
 import hu.exyxwd.tisztatisza.repository.UpdateLogRepository;
-import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
 @RestController
 @AllArgsConstructor
@@ -16,7 +16,7 @@ import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 public class UpdateLogController {
     private final UpdateLogRepository updateLogRepository;
 
-   @GetMapping
+    @GetMapping
     public ResponseEntity<List<UpdateLog>> getAllLogs() {
         List<UpdateLog> logs = updateLogRepository.findAll();
         return ResponseEntity.ok(logs);
@@ -26,7 +26,7 @@ public class UpdateLogController {
     public ResponseEntity<?> deleteLogs(@RequestBody List<Long> ids) {
         List<UpdateLog> logs = updateLogRepository.findAllById(ids);
         if (logs.size() != ids.size()) {
-            throw new ResourceNotFoundException("Some logs do not exist with the given ids");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Some logs do not exist with the given ids");
         }
 
         updateLogRepository.deleteAllById(ids);

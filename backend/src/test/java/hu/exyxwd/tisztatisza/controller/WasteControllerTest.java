@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.dto.mapper.WasteMapper;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
-import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
 public class WasteControllerTest {
     private WasteController controller;
@@ -39,7 +39,7 @@ public class WasteControllerTest {
         when(mockWasteRepository.findById(id)).thenReturn(Optional.of(waste));
         when(mockWasteMapper.toDetailedWasteDTO(waste)).thenReturn(dto);
 
-        ResponseEntity<DetailedWasteDTO> response = controller.getWasteById(id);
+        ResponseEntity<?> response = controller.getWasteById(id);
 
         assertEquals(HttpStatus.OK, response.getStatusCode(), "Getting wastes by ID status code should be OK");
         assertEquals(dto, response.getBody(), "Getting wastes by ID response body is incorrect");
@@ -57,8 +57,18 @@ public class WasteControllerTest {
         when(mockWasteRepository.findAllById(requestData.get("ids"))).thenReturn(Arrays.asList(waste));
         when(mockWasteMapper.toDetailedWasteDTO(waste)).thenReturn(dto);
 
-        ResponseEntity<List<DetailedWasteDTO>> response = controller.getWastesByIds(requestData);
-        List<DetailedWasteDTO> detailedWastes = response.getBody();
+        ResponseEntity<?> response = controller.getWastesByIds(requestData);
+        assertTrue(response.getBody() instanceof List<?>, "Getting wastes by given IDs response body should be a list");
+
+        List<?> list = (List<?>) response.getBody();
+        for (Object o : list) {
+            assertTrue(o instanceof DetailedWasteDTO,
+                    "In getting wastes by given IDs each element in the list should be a DetailedWasteDTO");
+        }
+
+        List<DetailedWasteDTO> detailedWastes = list.stream()
+                .map(o -> (DetailedWasteDTO) o)
+                .collect(Collectors.toList());
 
         assertNotNull(response, "Getting wastes by given IDs response should not be null");
         assertNotNull(detailedWastes, "Getting wastes by given IDs body should not be null");
@@ -139,12 +149,12 @@ public class WasteControllerTest {
 
         when(mockWasteRepository.findById(id)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            controller.setHidden(id, body);
-        });
+        ResponseEntity<?> response = controller.setHidden(id, body);
 
-        assertEquals("Waste does not exist with id: " + id, exception.getMessage(),
-                "After unsuccessful setting of a waste's hidden field, the exception message does not match the expected message");
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+                "After unsuccessful setting of a waste's hidden field, the response status does not match the expected status");
+        assertEquals("Waste does not exist with id: " + id, response.getBody(),
+                "After unsuccessful setting of a waste's hidden field, the response body does not match the expected message");
     }
 
     @Test

@@ -2,6 +2,7 @@ package hu.exyxwd.tisztatisza.controller;
 
 import org.mockito.Mockito;
 import org.junit.jupiter.api.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.mockito.Mockito.*;
@@ -11,7 +12,6 @@ import java.util.*;
 
 import hu.exyxwd.tisztatisza.model.UpdateLog;
 import hu.exyxwd.tisztatisza.repository.UpdateLogRepository;
-import hu.exyxwd.tisztatisza.exception.ResourceNotFoundException;
 
 public class UpdateLogControllerTest {
     private UpdateLogRepository updateLogRepository;
@@ -64,11 +64,9 @@ public class UpdateLogControllerTest {
 
         when(updateLogRepository.findAllById(ids)).thenReturn(logs);
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            updateLogController.deleteLogs(ids);
-        });
+        ResponseEntity<?> response = updateLogController.deleteLogs(ids);
 
-        assertEquals("Some logs do not exist with the given ids", exception.getMessage(),
-                "Unsuccessful deletion of logs by IDs exception message does not match the expected value");
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
+                "Response status does not match the expected value");
     }
 }
