@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import React, { FormEvent, useEffect, useState } from 'react';
 
 import { RegisterData } from 'models/models';
-import { postRegisterData } from 'API/queryUtils';
+import { FetchError, postRegisterData } from 'API/queryUtils';
 
 /**
  * Register interface for admins
@@ -11,8 +11,9 @@ import { postRegisterData } from 'API/queryUtils';
  * @returns {React.ReactElement} The register interface for admins
  */
 const Register: React.FC = (): React.ReactElement => {
-    const [failedRegistry, setFailedRegistry] = useState<boolean>(false);
+    const [registryError, setRegistryError] = useState<string>('');
     const [successfulRegistry, setSuccessfulRegistry] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const [shouldPost, setShouldPost] = useState<boolean>(false);
     const [registerData, setRegisterData] = useState<RegisterData>({
         username: '',
@@ -23,34 +24,55 @@ const Register: React.FC = (): React.ReactElement => {
         if (registerData.username || registerData.password) {
             setSuccessfulRegistry(false);
         }
-        setFailedRegistry(false);
+        setRegistryError('');
     }, [registerData.username, registerData.password]);
 
     useQuery('postRegisterData', () => postRegisterData(registerData),
         {
             enabled: shouldPost, onSuccess: (isRegistrySuccessful) => {
-                isRegistrySuccessful ? (setFailedRegistry(false), setSuccessfulRegistry(true),
-                    setRegisterData({
-                        username: '',
-                        password: '',
-                    })) :
-                    (setFailedRegistry(true), setSuccessfulRegistry(false)); setShouldPost(false)
+                if (isRegistrySuccessful) {
+                    setRegistryError('registry_fail');
+                    setSuccessfulRegistry(true);
+                    setRegisterData({ username: '', password: '' });
+                }
+                else {
+                    setRegistryError('true');
+                    setSuccessfulRegistry(false);
+                }
+                setShouldPost(false)
             },
-            onError: () => { setFailedRegistry(true); setShouldPost(false); setSuccessfulRegistry(false); },
+            onError: (error: FetchError) => {
+                if (error.status === 409) setRegistryError('taken_username');
+                else setRegistryError('registry_fail');
+                setShouldPost(false);
+                setSuccessfulRegistry(false);
+            },
             retry: 0
         }
     );
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRegisterData({
-            ...registerData,
+        setRegisterData(prevRegisterData => ({
+            ...prevRegisterData,
             [event.target.id]: event.target.value,
-        });
+        }));
     };
 
     const handleRegister = (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
-        setShouldPost(true);
+        const alphanumericRegex = /^[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+$/i;
+        if (!alphanumericRegex.test(registerData.username) || registerData.username.trim() === '') {
+            setRegistryError('non_alphanumeric_username');
+        } else if (registerData.username.trim().length < 4 || registerData.password.trim().length < 4) {
+            setRegistryError('too_short_creds');
+        } else {
+            setRegistryError('');
+            setShouldPost(true);
+        }
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
     };
 
     return (
@@ -75,21 +97,26 @@ const Register: React.FC = (): React.ReactElement => {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="password" className="form-label"><Trans i18nKey="user.password">Jelszó</Trans></label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="password"
-                                value={registerData.password}
-                                onChange={handleInputChange}
-                                maxLength={25}
-                                required
-                            />
+                            <div className="position-relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="form-control"
+                                    id="password"
+                                    value={registerData.password}
+                                    onChange={handleInputChange}
+                                    maxLength={25}
+                                    required
+                                />
+                                <span className='material-symbols-outlined show-password-icon' onClick={togglePasswordVisibility}>
+                                    {showPassword ? 'visibility_off' : 'visibility'}
+                                </span>
+                            </div>
                         </div>
-                        {failedRegistry && <p className='invalid-creds-text'><Trans i18nKey="user.registry_fail">Sikertelen regisztráció.</Trans></p>}
+                        {registryError && <p className='invalid-creds-text'><Trans i18nKey={`user.${registryError}`}>Hiba történt a felhasználó regisztrálása során.</Trans></p>}
                         {successfulRegistry && <p className='valid-creds-text'><Trans i18nKey="user.registry_success">Sikeres regisztráció.</Trans></p>}
                         <br />
                         <div className="d-grid gap-2">
-                            <button type="submit" className={failedRegistry ? "btn btn-primary invalid-creds-btn" : "btn btn-primary"}>
+                            <button type="submit" className={registryError ? "btn btn-primary invalid-creds-btn" : "btn btn-primary"}>
                                 <Trans i18nKey="user.register">Regisztrálás</Trans>
                             </button>
                         </div>

@@ -1,7 +1,23 @@
 import { ExpandedTrashData, MinimalTrashData, RegisterData, UpdateLog, UserDataType } from 'models/models';
 
+// Get the XSRF-TOKEN cookie with regex
 const getCsrfToken = () => document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1');
 
+/**
+ * Error class for fetch errors
+ *
+ * @param {string} message - error message
+ * @param {number} status - status code of the error
+ * @returns {FetchError} - error object
+ */
+export class FetchError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+        super(message);
+        this.status = status;
+    }
+}
 
 /**
  * Fetches detailed data of a waste dump
@@ -79,7 +95,7 @@ export const fetchUserinfo = async (): Promise<UserDataType> => {
     const response = await fetch('/api/auth/userInfo', { method: 'GET' });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return response.json();
@@ -108,7 +124,7 @@ export const postLoginData = async (username: string, password: string): Promise
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return true;
@@ -149,7 +165,7 @@ export const postRegisterData = async (data: RegisterData): Promise<boolean> => 
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return true;
@@ -190,7 +206,7 @@ export const postPasswordChange = async (username: string, newPassword: string):
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return true;
@@ -218,7 +234,7 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return true;
@@ -240,7 +256,7 @@ export const deleteUser = async (username: string): Promise<boolean> => {
     });
 
     if (!response.ok) {
-        throw new Error('Network response was not ok.');
+        throw new FetchError('Network response was not ok.', response.status);
     }
 
     return true;

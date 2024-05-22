@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next';
 import { Form } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import Pagination from './Pagination';
@@ -9,7 +9,7 @@ import { deleteLogs, fetchUpdateLogs } from 'API/queryUtils';
 import { useShowNotification } from 'components/Main/NotificationContext';
 
 const UpdateLogs: React.FC = () => {
-    const recordsPerPage = 50;
+    const recordsPerPage = 40;
     const deleteMutation = useMutation(deleteLogs);
     const [logs, setLogs] = useState<UpdateLog[]>([]);
     const [selectedLogs, setSelectedLogs] = useState<number[]>([]);
@@ -18,14 +18,15 @@ const UpdateLogs: React.FC = () => {
     const currentRecords = logs.slice(indexOfFirstRecord, indexOfLastRecord);
     const showNotification = useShowNotification();
 
-    const { isLoading, error, refetch } = useQuery<UpdateLog[]>('updateLogs', fetchUpdateLogs,
+    const { isFetching, isLoading, error, refetch } = useQuery<UpdateLog[]>('updateLogs', fetchUpdateLogs,
         {
+            enabled: false,
             onSuccess: (data) => {
-                setLogs(data);
+                setLogs(data.reverse());
                 if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
                     const newIndexOfLastRecord = indexOfFirstRecord;
                     const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
-            
+
                     setIndexOfLastRecord(newIndexOfLastRecord);
                     setIndexOfFirstRecord(newIndexOfFirstRecord);
                 }
@@ -34,6 +35,10 @@ const UpdateLogs: React.FC = () => {
                 showNotification(NotificationType.Error, 'update_logs_error');
             }
         });
+
+    useEffect(() => {
+        refetch();
+    }, [refetch]);
 
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedLogs(event.target.checked ? currentRecords.map(log => log.id) || [] : []);
@@ -60,6 +65,7 @@ const UpdateLogs: React.FC = () => {
     const handlePageChange = (indexOfFirstRecord: number, indexOfLastRecord: number) => {
         setIndexOfLastRecord(indexOfLastRecord);
         setIndexOfFirstRecord(indexOfFirstRecord);
+        setSelectedLogs([]);
     };
 
     if (isLoading) return <div className='admin-loader'></div>;
@@ -99,8 +105,12 @@ const UpdateLogs: React.FC = () => {
                     })}
                     <tr className='text-center sticky-bottom'>
                         <td>
-                            <span className={`material-symbols-outlined delete-icon ${selectedLogs.length === 0 && 'no-log-selected'}`}
-                                onClick={handleDeleteSelected}>delete</span>
+                            {(isFetching || deleteMutation.isLoading) ?
+                                <span className="material-symbols-outlined loading-icon">progress_activity</span>
+                                :
+                                <span className={`material-symbols-outlined delete-icon ${selectedLogs.length === 0 && 'disabled-delete-icon'}`}
+                                    onClick={handleDeleteSelected}>delete</span>
+                            }
                         </td>
                         <td className='fw-bold' colSpan={3}><Trans i18nKey='logs.update-num'>Frissítések száma</Trans>: {logs.length}</td>
                         <td></td>

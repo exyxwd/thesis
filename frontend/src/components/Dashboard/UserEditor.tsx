@@ -6,7 +6,7 @@ import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
 import Pagination from './Pagination';
 import { NotificationType, UserDataType } from 'models/models';
 import { useShowNotification } from 'components/Main/NotificationContext';
-import { deleteUser, fetchUsers, postPasswordChange, postUsernameChange } from 'API/queryUtils';
+import { deleteUser, FetchError, fetchUsers, postPasswordChange, postUsernameChange } from 'API/queryUtils';
 
 /**
  * Enumeration for the different user editing operations
@@ -30,6 +30,7 @@ enum Operation {
  */
 const UserEditor = (): React.ReactElement => {
     const showNotification = useShowNotification();
+    const [showPassword, setShowPassword] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [showModal, setShowModal] = useState<boolean>(false);
     const [userData, setUserData] = useState<UserDataType[]>([]);
@@ -59,7 +60,9 @@ const UserEditor = (): React.ReactElement => {
     const { error, isLoading } = useQuery('getUsers', fetchUsers,
         {
             enabled: shouldFetchUsers, onSuccess: (data: UserDataType[]) => {
-                setUserData(data); setShouldFetchUsers(false);
+                // Sort users by username
+                setUserData([...data].sort((a, b) => { return a.username.localeCompare(b.username) }));
+                setShouldFetchUsers(false);
                 if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
                     const newIndexOfLastRecord = indexOfFirstRecord;
                     const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
@@ -69,6 +72,7 @@ const UserEditor = (): React.ReactElement => {
                 }
             },
             onError: () => {
+                setShouldFetchUsers(false);
                 showNotification(NotificationType.Error, 'fetch_users_error');
             }
         });
@@ -80,9 +84,12 @@ const UserEditor = (): React.ReactElement => {
                 setShouldFetchUsers(true);
                 showNotification(NotificationType.Success, 'change_password_success');
             },
-            onError: () => {
-                showNotification(NotificationType.Error, 'change_password_error');
-            }
+            onError: (error: FetchError) => {
+                if (error.status === 400) showNotification(NotificationType.Error, 'change_password_error_too_short');
+                else showNotification(NotificationType.Error, 'change_password_error');
+                setShouldPostPassChange(false);
+            },
+            retry: 0
         });
 
     useQuery('postUsernameChange', () => postUsernameChange(selectedUser, inputValue),
@@ -92,9 +99,14 @@ const UserEditor = (): React.ReactElement => {
                 setShouldFetchUsers(true);
                 showNotification(NotificationType.Success, 'change_username_success');
             },
-            onError: () => {
-                showNotification(NotificationType.Error, 'change_username_error');
-            }
+            onError: (error: FetchError) => {
+                if (error.status === 409) showNotification(NotificationType.Error, 'change_username_error_taken');
+                else if (error.status === 422) showNotification(NotificationType.Error, 'change_username_error_non_alphanumeric');
+                else if (error.status === 400) showNotification(NotificationType.Error, 'change_username_error_too_short');
+                else showNotification(NotificationType.Error, 'change_username_error');
+                setShouldPostNameChange(false);
+            },
+            retry: 0
         });
 
     useQuery('deleteUser', () => deleteUser(selectedUser),
@@ -104,8 +116,10 @@ const UserEditor = (): React.ReactElement => {
                 setShouldFetchUsers(true);
                 showNotification(NotificationType.Success, 'delete_user_success');
             },
-            onError: () => {
-                showNotification(NotificationType.Error, 'delete_user_error');
+            onError: (error: FetchError) => {
+                if (error.status === 409) showNotification(NotificationType.Error, 'delete_user_error_self');
+                else showNotification(NotificationType.Error, 'delete_user_error');
+                setShouldPostDelete(false);
             },
             retry: 0
         });
@@ -132,6 +146,10 @@ const UserEditor = (): React.ReactElement => {
         handleClose();
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
+    };
+
     if (isLoading) {
         return <div className='admin-loader'></div>;
     }
@@ -145,8 +163,12 @@ const UserEditor = (): React.ReactElement => {
             <table className="table user-table table-striped">
                 <thead>
                     <tr className='user-table-head sticky-top'>
-                        <th onClick={() => setUserData([...userData].sort((a, b) => { return a.username.localeCompare(b.username) }))}>
+                        <th>
                             <Trans i18nKey="user-editor.username">Felhasználónév</Trans>
+                            <span onClick={() => setUserData(prevUserData => prevUserData.slice().reverse())}
+                                className="material-symbols-outlined sort-icon">
+                                swap_vert
+                            </span>
                         </th>
                         <th>
                             <Trans i18nKey="user-editor.edit">Módosítás</Trans>
@@ -194,11 +216,26 @@ const UserEditor = (): React.ReactElement => {
                         <Modal.Header closeButton>
                             <Modal.Title>
                                 <Trans i18nKey="user-editor.change_password_of">A felhasználó jelszavának megváltoztatása</Trans>
-                                <br/>({selectedUser})
+                                <br />({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control type="text" maxLength={25} placeholder={t('user-editor.new_password')} value={inputValue} onChange={handleInputChange} />
+                            <div className="mb-3">
+                                <div className="position-relative">
+                                    <Form.Control
+                                        type={showPassword ? "text" : "password"}
+                                        maxLength={25}
+                                        placeholder={t('user-editor.new_password')}
+                                        value={inputValue}
+                                        onChange={handleInputChange}
+                                        id="password"
+                                        required
+                                    />
+                                    <span className='material-symbols-outlined show-password-icon' onClick={togglePasswordVisibility}>
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </div>
+                            </div>
                         </Modal.Body>
                     </>
                 }
@@ -207,7 +244,7 @@ const UserEditor = (): React.ReactElement => {
                         <Modal.Header closeButton>
                             <Modal.Title >
                                 <Trans i18nKey="user-editor.change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>
-                                <br/>({selectedUser})
+                                <br />({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
@@ -219,7 +256,7 @@ const UserEditor = (): React.ReactElement => {
                     <Modal.Header closeButton>
                         <Modal.Title>
                             <Trans i18nKey="user-editor.confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>
-                            <br/>({selectedUser})
+                            <br />({selectedUser})
                         </Modal.Title>
                     </Modal.Header>
                 }

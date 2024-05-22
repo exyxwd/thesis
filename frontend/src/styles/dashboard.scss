@@ -177,6 +177,14 @@ $link: rgb(19, 131, 206);
     margin-left: 300px;
 }
 
+.show-password-icon {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
 /* ################################ USER EDITOR ################################ */
 
 .user-table {
@@ -191,8 +199,8 @@ $link: rgb(19, 131, 206);
     overflow-x: hidden;
 }
 
-.user-table-head{
-    z-index: 0;
+.user-table-head {
+    z-index: 1;
 }
 
 .user-table-head th {
@@ -209,6 +217,14 @@ $link: rgb(19, 131, 206);
 .user-table-row:nth-child(odd) td {
     background-color: $odd;
     border: none;
+}
+
+.sort-icon {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    padding-left: 5px;
+    top: 5px;
 }
 
 /* ################################ UPDATE LOGS ################################ */
@@ -255,7 +271,7 @@ $link: rgb(19, 131, 206);
     position: sticky;
 }
 
-.no-log-selected {
+.disabled-delete-icon {
     opacity: 0.4;
     cursor: default;
 }
@@ -289,6 +305,11 @@ $link: rgb(19, 131, 206);
     overflow-y: auto;
 }
 
+.disabled-hide-btn {
+    opacity: 0.4;
+    cursor: default;
+}
+
 /* ################################ PAGINATION ################################ */
 
 .pagination {
@@ -302,6 +323,24 @@ $link: rgb(19, 131, 206);
     position: fixed;
     user-select: none;
     justify-content: center;
+}
+
+/* ################################ LOADING ICON ################################ */
+
+@keyframes loading-icon-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-icon {
+    user-select: none;
+    transform-origin: center;
+    animation: loading-icon-spinner 2s linear infinite;
 }
 
 /* ################################ RESPONSIBILITY ################################ */
@@ -346,8 +385,8 @@ $link: rgb(19, 131, 206);
         margin-bottom: 80px;
         width: 100%;
     }
-    
-    .logs-table{
+
+    .logs-table {
         margin-left: 0px;
         width: 100%;
     }
@@ -364,7 +403,7 @@ $link: rgb(19, 131, 206);
         margin-left: 0px;
     }
 
-    .pagination{
+    .pagination {
         margin-left: 50px;
         margin-right: 50px;
     }

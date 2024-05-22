@@ -88,18 +88,18 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
         }
     })
 
-    
     /**
      * Close info panel on click elsewhere
     *
     * @param {MouseEvent} e The click event
     */
-   const handleClickElsewhere = (e: MouseEvent) => {
-       const target = e.target as HTMLElement;
-       if (panelRef.current && !panelRef.current.contains(target)) {
-           onClose();
+    const handleClickElsewhere = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (panelRef.current && !panelRef.current.contains(target)) {
+            onClose();
         }
     }
+
     /**
      * Calculates the time since the given date and returns a formatted and translated string
      *
@@ -241,13 +241,13 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
             </div>}
             <div className='row waste-panel-base'>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
-                    <FontAwesomeIcon className='header-item-icon' icon={faLocationDot} />{data.locality ? data.locality : "-"}
+                    <FontAwesomeIcon className='header-item-icon' icon={faLocationDot} />{data.locality && data.locality != 'null' ? data.locality : "-"}
                 </div>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
                     <FontAwesomeIcon className='header-item-icon' icon={faTrashCan} />
-                    {data.status == "STILLHERE" || data.status == "MORE" ?
-                        <Trans i18nKey="status.stillhere">Még szennyezett</Trans> :
-                        <Trans i18nKey="status.cleaned">Megtisztítva</Trans>}
+                    {data.status == "STILLHERE" && <Trans i18nKey="status.stillhere">Még szennyezett</Trans>}
+                    {data.status == "CLEANED" && <Trans i18nKey="status.cleaned">Megtisztítva</Trans>}
+                    {data.status == "MORE" && <Trans i18nKey="status.more">Még több</Trans>}
                 </div>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
                     <FontAwesomeIcon className='header-item-icon' icon={faRuler} />

@@ -3,8 +3,8 @@ import { useQuery } from 'react-query';
 import React, { useState, useEffect, FormEvent } from 'react';
 
 import { useLocation, useNavigate } from 'react-router';
-import { postLoginData, fetchUserinfo } from 'API/queryUtils';
 import { useAuthenticated, useSetAuthenticated } from './AuthContext';
+import { postLoginData, fetchUserinfo, FetchError } from 'API/queryUtils';
 
 /**
  * Login interface
@@ -17,6 +17,7 @@ const Login: React.FC = (): React.ReactElement => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [invalidCreds, setInvalidCreds] = useState<boolean>(false);
+    const [isOtherError, setIsOtherError] = useState<boolean>(false);
     const [shouldPost, setShouldPost] = useState<boolean>(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,14 +25,22 @@ const Login: React.FC = (): React.ReactElement => {
     useQuery('getUserinfo', fetchUserinfo,
         {
             enabled: !authenticated, onSuccess: (isAuthenticated) => { if (isAuthenticated) { setAuthenticated(true) } },
+            onError: (error: FetchError) => { if (error.status === 403) { setAuthenticated(false) } },
             retry: 0
         });
 
     useQuery('postLoginData', () => postLoginData(username, password),
         {
             enabled: shouldPost,
-            onSuccess: (isLoginSuccesfull) => { isLoginSuccesfull ? onSuccessfulLogin() : setInvalidCreds(true); setShouldPost(false); },
-            onError: () => { setInvalidCreds(true); setShouldPost(false); },
+            onSuccess: (isLoginSuccesfull) => {
+                if (isLoginSuccesfull) onSuccessfulLogin();
+                setShouldPost(false);
+            },
+            onError: (error: FetchError) => {
+                if (error.status === 401) setInvalidCreds(true);
+                else setIsOtherError(true);
+                setShouldPost(false);
+            },
             retry: 0
         });
 
@@ -66,11 +75,13 @@ const Login: React.FC = (): React.ReactElement => {
 
     const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
+        setInvalidCreds(false);
+        setIsOtherError(false);
         setShouldPost(true);
     };
 
     return (
-        <div className="container mt-4">
+        <div id='login-area' className="container mt-4">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <h1 className="text-center"><Trans i18nKey="user.login">Bejelentkezés</Trans></h1>
@@ -101,6 +112,7 @@ const Login: React.FC = (): React.ReactElement => {
                                 required
                             />
                             {invalidCreds ? <p className='invalid-creds-text'><Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans></p> : <></>}
+                            {isOtherError ? <p className='invalid-creds-text'><Trans i18nKey="user.login_error">Hiba történt, próbálja újra a bejelentkezést.</Trans></p> : <></>}
                         </div>
                         <br />
                         <div className="d-grid gap-2">

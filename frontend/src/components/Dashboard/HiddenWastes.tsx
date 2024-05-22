@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { useMutation, useQuery } from 'react-query';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,19 +14,30 @@ const HiddenWastes: React.FC = () => {
     const [indexOfFirstRecord, setIndexOfFirstRecord] = React.useState<number>(0);
     const [indexOfLastRecord, setIndexOfLastRecord] = React.useState<number>(recordsPerPage);
     const currentRecords = hiddenWastes.slice(indexOfFirstRecord, indexOfLastRecord);
+    const [loadingId, setLoadingId] = useState<number | null>(null);
     const showNotification = useShowNotification();
     const { t } = useTranslation();
 
-    const { isLoading, error, refetch } = useQuery<ExpandedTrashData[]>('fetchHiddenWastes', fetchHiddenWastes, {
+    const { isFetching, isLoading, error, refetch } = useQuery<ExpandedTrashData[]>('fetchHiddenWastes', fetchHiddenWastes, {
+        enabled: false,
         onSuccess: (data) => {
             setHiddenWastes(data);
+            setLoadingId(null);
         },
         onError: () => {
             showNotification(NotificationType.Error, 'fetch_hidden_wastes_error');
+            setLoadingId(null);
         },
     });
 
-    const hideWasteMutation = useMutation(({ id, hiddenStatus }: { id: number; hiddenStatus: boolean }) => hideWaste(id, hiddenStatus), {
+    useEffect(() => {
+        refetch();
+    }, [refetch]);
+
+    const hideWasteMutation = useMutation(({ id, hiddenStatus }: { id: number; hiddenStatus: boolean }) => {
+        setLoadingId(id);
+        return hideWaste(id, hiddenStatus);
+    }, {
         onSuccess: () => {
             showNotification(NotificationType.Success, 'unhide_waste_success');
             refetch();
@@ -75,16 +86,26 @@ const HiddenWastes: React.FC = () => {
                                     <span className="material-symbols-outlined open-in-new-icon">open_in_new</span>
                                 </Card.Link>
                                 <Card.Footer className="d-flex justify-content-center align-items-center">
-                                    <span className="material-symbols-outlined hide-btn" onClick={() => handleHideWaste(log.id)} title={`${t('hiddens.unhide')}`}>
-                                        visibility
-                                    </span>
+                                    {loadingId === log.id ?
+                                        <span className="material-symbols-outlined loading-icon">progress_activity</span>
+                                        :
+                                        <span className={`material-symbols-outlined hide-btn ${loadingId !== null && 'disabled-hide-btn'}`}
+                                            title={`${t('hiddens.unhide')}`}
+                                            onClick={() => {
+                                                if (loadingId === null) {
+                                                    handleHideWaste(log.id);
+                                                }
+                                            }}>
+                                            visibility
+                                        </span>
+                                    }
                                 </Card.Footer>
                             </Card.Body>
                         </Card>
                     </Col>
                 ))}
                 <div className='d-flex justify-content-center align-items-center mt-5'>
-                    {currentRecords.length === 0 &&
+                    {currentRecords.length === 0 && !(isFetching || isLoading) &&
                         <div className='no-data d-flex flex-column justify-content-center align-items-center'>
                             <span className="material-symbols-outlined loading-error-icon">
                                 location_off

@@ -5,6 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import 'styles/app.scss';
 import 'material-symbols';
 
+import { FetchError } from 'API/queryUtils';
 import { fetchUserinfo } from 'API/queryUtils';
 import Login from 'components/Dashboard/Login';
 import MainPage from 'components/Pages/MainPage';
@@ -30,7 +31,8 @@ function App(): React.ReactElement {
     const setAuthenticated = useSetAuthenticated();
 
     useQuery('getUserinfo', fetchUserinfo, {
-        onSuccess: (isAuthenticated) => { if (isAuthenticated) { setAuthenticated(true) } },
+        onSuccess: (isAuthenticated) => { if (isAuthenticated) setAuthenticated(true) },
+        onError: (error: FetchError) => { if (error.status === 403) setAuthenticated(false) },
         retry: 0,
         staleTime: 1000 * 60 * 19,
         refetchInterval: 1000 * 60 * 19,
