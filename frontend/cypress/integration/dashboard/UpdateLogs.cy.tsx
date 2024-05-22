@@ -54,7 +54,7 @@ describe('UpdateLogs', () => {
 
     it('displays the correct data and calculates the update count correctly', () => {
         // Check if the data is displayed correctly
-        mockData.forEach((log, index) => {
+        mockData.reverse().forEach((log, index) => {
             const updateTime = new Date(log.updateTime).toLocaleString();
             cy.get('.log-table-row').eq(index).within(() => {
                 cy.get('td').eq(1).should('contain', updateTime);

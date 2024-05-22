@@ -7,10 +7,18 @@ describe('Main Page', () => {
     sizes.forEach((size) => {
         context(`${size[0]}x${size[1]} screen`, () => {
             before(() => {
+                // Intercept the request for the user info to make sure the user is logged in before the tests
+                cy.intercept('GET', '/api/auth/userInfo', {
+                    statusCode: 200,
+                    body: {
+                        username: 'test',
+                    },
+                }).as('fetchUserInfo');
                 // Intercept the request for the map data to make sure the map is loaded before the tests
                 cy.intercept('GET', '/api/wastes/mapDataFiltered').as('fetchMapDataFiltered');
                 cy.visit('/');
                 cy.wait('@fetchMapDataFiltered');
+                cy.wait('@fetchUserInfo');
             });
 
             beforeEach(() => {
@@ -30,7 +38,7 @@ describe('Main Page', () => {
                 cy.get('.filter-button').click();
                 cy.get('#filter-menu').should('be.visible');
             });
-            
+
             it('filter menu is not visible on filter menu close', () => {
                 cy.get('.filter-button').click();
                 cy.get('#filter-menu').should('not.be.visible');
@@ -76,6 +84,10 @@ describe('Main Page', () => {
 
                 clickMarkerUntilPanelAppears();
                 cy.get('#waste-panel').should('be.visible');
+            });
+
+            it('Hide waste button appears for logged in user', () => {
+                cy.get('.hide-btn-container > .material-symbols-outlined').should('be.visible');
             });
 
             it('waste panel closes on close button click', () => {

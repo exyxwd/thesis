@@ -6,9 +6,9 @@ import { LoginStateProvider } from 'components/Dashboard/AuthContext';
 import { ActiveFiltersProvider } from 'components/Main/FilterContext';
 import { NotificationProvider } from 'components/Main/NotificationContext';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/app.scss';
 import 'material-symbols';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const queryClient = new QueryClient();
 

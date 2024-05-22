@@ -48,6 +48,13 @@ describe('Register', () => {
         cy.get('input[id="password"]:invalid').should('exist');
     });
 
+    it('shows error message on incorrect input', () => {
+        cy.get('input[id="username"]').type('-').should('have.value', '-');
+        cy.get('input[id="password"]').type('-').should('have.value', '-');
+        cy.get('button[type="submit"]').click();
+        cy.get('.invalid-creds-text').should('be.visible');
+    });
+
     it('does not show error message on valid credentials', () => {
         // Intercept the register API call and mock a successful response
         cy.intercept({

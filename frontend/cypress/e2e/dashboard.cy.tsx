@@ -22,6 +22,27 @@ describe('Dashboard', () => {
         cy.get('#nav-bar').should('be.visible');
     });
 
+    it('login panel appears for not logged in users', () => {
+        cy.visit('/dashboard');
+        cy.get('#login-area').should('be.visible');
+    });
+
+    it('does not log in user on incorrect credentials', () => {
+        // Intercept the login API call and mock a succesful login response to simulate a successful login
+        cy.intercept({
+            method: 'POST',
+            url: '/api/auth/login',
+        }, { statusCode: 401 }
+        ).as('postLogin');
+        cy.get('input[id="username"]').type('testUser').should('have.value', 'testUser');
+        cy.get('input[id="password"]').type('testPassword').should('have.value', 'testPassword');
+
+        cy.get('button[type="submit"]').click();
+
+        cy.wait('@postLogin');
+        cy.get('#login-area').should('be.visible');
+    });
+
     it('logs in user on correct credentials', () => {
         // Intercept the login API call and mock a succesful login response to simulate a successful login
         cy.intercept({
@@ -30,8 +51,8 @@ describe('Dashboard', () => {
         }, { statusCode: 200 }
         ).as('postLogin');
 
-        cy.get('input[id="username"]').type('testUser').should('have.value', 'testUser');
-        cy.get('input[id="password"]').type('testUser').should('have.value', 'testUser');
+        cy.get('input[id="username"]').clear().type('testUser').should('have.value', 'testUser');
+        cy.get('input[id="password"]').clear().type('testPassword').should('have.value', 'testPassword');
 
         // Intercept the login API call and mock a succesful user info response to simulate a logged in user
         cy.intercept({
