@@ -9,7 +9,8 @@
     "status": {
         "stillhere": "Still contaminated",
         "cleaned": "Cleaned",
-        "updateneeded": "Update needed"
+        "updateneeded": "Update needed",
+        "more": "More"
     },
     "details": {
         "createTime": "Creation time",
@@ -131,7 +132,11 @@
         "register": "Register",
         "register_user": "Register new user",
         "wrong_creds": "Wrong username or password.",
-        "registry_fail": "Registration failed.",
+        "login_error": "Login failed. Try again later.",
+        "registry_fail": "Registration failed, try again later.",
+        "taken_username": "This username is already taken, try another one.",
+        "too_short_creds": "The username and password must be at least 4 characters long excluding the spaces at the and start.",
+        "non_alphanumeric_username": "The username can only contain alphanumeric characters and spaces. It cannot contain only spaces.",
         "registry_success": "Registration successful.",
         "select_role": "Select role",
         "role": "Role",
@@ -231,10 +236,15 @@
         "delete_log_error": "Error while deleting log(s). Try again later.",
         "fetch_users_error": "Error while loading users. Try again later.",
         "delete_user_error": "Error while deleting user. Try again later.",
+        "delete_user_error_self": "You can't delete yourself.",
         "delete_user_success": "User has been deleted successfuly.",
         "change_username_error": "Error while changing username. Try again later.",
+        "change_username_error_taken": "Username is already taken. Try another one.",
+        "change_username_error_too_short": "The username must be at least 4 characters long excluding the spaces at the and start.",
+        "change_username_error_non_alphanumeric": "The username can only contain alphanumeric characters and spaces. It cannot contain only spaces.",
         "change_username_success": "Username has been changed successfuly.",
         "change_password_error": "Error while changing password. Try again later.",
+        "change_password_error_too_short": "Password must be at least 4 characters long.",
         "change_password_success": "Password has been changed successfuly.",
         "fetch_detailed_waste_error": "No point found with the given ID.",
         "download_fail": "Error while downloading data. Try again later."

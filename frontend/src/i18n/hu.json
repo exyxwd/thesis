@@ -9,7 +9,8 @@
     "status": {
         "stillhere": "Még szennyezett",
         "cleaned": "Megtisztítva",
-        "updateneeded": "Frissítés szükséges"
+        "updateneeded": "Frissítés szükséges",
+        "more": "Még több"
     },
     "details": {
         "createTime": "Létrehozás ideje",
@@ -62,9 +63,9 @@
         "country": "Ország",
         "num_fit_for_filters": "Kiválasztott szemét",
         "download_btn_text": "Kiválasztott pontok adatainak letöltése",
-        "country_warning": "Válassz országot!",
-        "size_warning": "Válassz méretet!",
-        "state_warning": "Válassz állapotot!"
+        "country_warning": "Válasszon országot!",
+        "size_warning": "Válasszon méretet!",
+        "state_warning": "Válasszon állapotot!"
     },
     "sizes": {
         "bag": "Belefér egy zsákba",
@@ -127,13 +128,17 @@
     "user": {
         "username": "Felhasználónév",
         "password": "Jelszó",
-        "login": "Belépés",
+        "login": "Bejelentkezés",
         "logout": "Kijelentkezés",
         "forgotten_password": "Elfelejtett jelszó",
         "register": "Regisztráció",
         "register_user": "Új felhasználó regisztrálása",
         "wrong_creds": "Hibás felhasználónév vagy jelszó.",
-        "registry_fail": "Sikertelen regisztráció.",
+        "login_error": "Hiba történt, próbálja újra a bejelentkezést.",
+        "registry_fail": "Hiba történt a felhasználó regisztrálása során.",
+        "taken_username": "A felhasználónév már foglalt, válasszon másikat.",
+        "too_short_creds": "A felhasználónév és a jelszó legalább 4 karakter hosszú kell legyen az elején és végén lévő szóközöket nem számítva.",
+        "non_alphanumeric_username": "A felhasználónév csak betűket, számokat és szóközöket tartalmazhat. Csak szóközökből nem állhat.",
         "registry_success": "Sikeres regisztráció.",
         "select_role": "Hatáskör választása",
         "role": "Hatáskör",
@@ -230,13 +235,18 @@
         "hide_waste_success": "A kiválasztott pont sikeresen el lett rejtve.",
         "update_logs_error": "Hiba a napló betöltése során.",
         "delete_log_success": "A kiválasztott rekord(ok) sikeresen törölve.",
+        "delete_user_error_self": "Saját felhasználó törlése nem lehetséges.",
         "delete_log_error": "Hiba a rekord(ok) törlése közben. Próbálja újra később.",
         "fetch_users_error": "Hiba a felhasználók betöltése során. Próbálja újra később.",
         "delete_user_success": "A kiválasztott felhasználó sikeresen törölve.",
         "delete_user_error": "Hiba a felhasználó törlése közben. Próbálja újra később.",
         "change_username_error": "Hiba a felhasználónév módosítása közben. Próbálja újra később.",
+        "change_username_error_non_alphanumeric": "A felhasználónév csak betűket, számokat és szóközöket tartalmazhat. Csak szóközökből nem állhat.",
+        "change_username_error_taken": "A felhasználónév foglalt, válasszon másikat.",
+        "change_username_error_too_short": "A felhasználónév legalább 4 karakter hosszú kell legyen az elején és végén lévő szóközöket nem számítva.",
         "change_username_success": "A felhasználónév sikeresen módosítva.",
         "change_password_error": "Hiba a jelszó módosítása közben. Próbálja újra később.",
+        "change_password_error_too_short": "A jelszó legalább 4 karakter hosszú kell legyen.",
         "change_password_success": "A jelszó sikeresen módosítva.",
         "fetch_detailed_waste_error": "Ezzel az azonosítóval nincs nyilvántartva pont.",
         "download_fail": "Hiba a pontok adatainak letöltése során. Próbálja újra később."
