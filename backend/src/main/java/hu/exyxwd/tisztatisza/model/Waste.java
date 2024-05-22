@@ -77,7 +77,7 @@ public class Waste {
     @Enumerated(EnumType.STRING)
     private WasteStatus status;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<WasteType> types = new HashSet<>();;
 
