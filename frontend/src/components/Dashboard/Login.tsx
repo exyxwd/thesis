@@ -95,7 +95,7 @@ const Login: React.FC = (): React.ReactElement => {
                                 value={username}
                                 onChange={handleUsernameChange}
                                 autoComplete="username"
-                                maxLength={25}
+                                maxLength={50}
                                 required
                             />
                         </div>
@@ -108,7 +108,7 @@ const Login: React.FC = (): React.ReactElement => {
                                 value={password}
                                 onChange={handlePasswordChange}
                                 autoComplete="current-password"
-                                maxLength={25}
+                                maxLength={50}
                                 required
                             />
                             {invalidCreds ? <p className='invalid-creds-text'><Trans i18nKey="user.wrong_creds">Hibás jelszó vagy felhasználónév.</Trans></p> : <></>}

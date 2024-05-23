@@ -91,7 +91,7 @@ const Register: React.FC = (): React.ReactElement => {
                                 id="username"
                                 value={registerData.username}
                                 onChange={handleInputChange}
-                                maxLength={25}
+                                maxLength={50}
                                 required
                             />
                         </div>
@@ -104,7 +104,7 @@ const Register: React.FC = (): React.ReactElement => {
                                     id="password"
                                     value={registerData.password}
                                     onChange={handleInputChange}
-                                    maxLength={25}
+                                    maxLength={50}
                                     required
                                 />
                                 <span className='material-symbols-outlined show-password-icon' onClick={togglePasswordVisibility}>
