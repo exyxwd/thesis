@@ -46,6 +46,7 @@ const TimeSlider = (): React.ReactElement => {
                     value={st.getTime()}
                     onChange={(e) => handleTimeChange(e)}
                     onMouseUp={(e) => handleInput(e)}
+                    onTouchEnd={(e) => handleInput(e)}
                 />
                 <input
                     type='date'
