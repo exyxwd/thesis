@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.User;
 import hu.exyxwd.tisztatisza.security.JwtUtil;
+import hu.exyxwd.tisztatisza.service.ValidationService;
 import hu.exyxwd.tisztatisza.repository.UserRepository;
 
 @RestController
@@ -30,6 +31,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ValidationService validationService;
 
     private JwtUtil jwtUtil;
 
@@ -92,23 +96,15 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User registerRequest) {
         String username = registerRequest.getUsername();
         String password = registerRequest.getPassword();
-         // Check if the username is alphanumeric and does not entirely made up from spaces
-        if (!username.matches("[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+") || username.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username must be alphanumeric, can contain spaces, and cannot be all spaces");
-        }
-        // Check if the username or password is too long
-        if (username.length() > 255 || password.length() > 255) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password is too long");
+
+        String usernameValidation = validationService.validateUsername(username);
+        if (usernameValidation != null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
         }
 
-        // Check if the username or password is too short
-        if (username.length() < 4 || password.length() < 4) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password is too short");
-        }
-
-        // Check if the username is already taken
-        if (userRepository.existsByUsername(username)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
+        String passwordValidation = validationService.validatePassword(password);
+        if (passwordValidation != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
         }
 
         // Save the new user in the database
@@ -142,21 +138,9 @@ public class UserController {
         }
 
         String newUsername = request.get("newUsername").trim();
-        // Check if the new username is alphanumeric and does not entirely made up from spaces
-        if (!newUsername.matches("[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+") || newUsername.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username must be alphanumeric, can contain spaces, and cannot be all spaces");
-        }
-        // Check if the new username is too long
-        if (newUsername.length() > 255) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New username is too long");
-        }
-        // Check if the new username is too short
-        if (newUsername.length() < 4) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New username is too short");
-        }
-        // Check if the new username is already taken
-        if (userRepository.existsByUsername(newUsername) && !newUsername.equals(username)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
+        String usernameValidation = validationService.validateUsername(newUsername);
+        if (usernameValidation != null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
         }
 
         user.setUsername(newUsername);
@@ -173,13 +157,9 @@ public class UserController {
         }
 
         String newPassword = request.get("newPassword");
-        // Check if the new password is too long
-        if (newPassword.length() > 255) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password is too long");
-        }
-        // Check if the new password is too short
-        if (newPassword.length() < 4) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New password is too short");
+        String passwordValidation = validationService.validatePassword(newPassword);
+        if (passwordValidation != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

@@ -2,7 +2,7 @@ package hu.exyxwd.tisztatisza.dto;
 
 import lombok.*;
 import jakarta.validation.constraints.*;
-
+// TODO: Not used, remove it
 @Getter
 @Setter
 @NoArgsConstructor
