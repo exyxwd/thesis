@@ -210,7 +210,7 @@
         "note2": " keretében valósul meg. A program szakmai támogatója a ",
         "link1": "Tiszta Víz, Boldog Tisza program",
         "link2": "Környezetvédelmi Szolgáltatók és Gyártók Szövetsége",
-        "loading_error": "Hiba az adatok betöltése során. Próbálja újra később."
+        "loading_error": "Hiba az adatok betöltése során. Próbálja újra később!"
     },
     "date": {
         "less_than_a_day": "Kevesebb, mint egy nap",
@@ -227,28 +227,29 @@
         "sponsor": "Támogatóink"
     },
     "notifications": {
-        "logout_fail": "Sikertelen kijelentkezés. Próbálja újra később.",
-        "fetch_hidden_wastes_error": "Hiba a rejtett pontok betöltése során. Próbálja újra később.",
-        "unhide_waste_error": "Hiba a pont láthatóvá tétele során. Próbálja újra később.",
-        "hide_waste_error": "Hiba a pont elrejtése során. Próbálja újra később.",
+        "logout_fail": "Sikertelen kijelentkezés. Próbálja újra később!",
+        "fetch_hidden_wastes_error": "Hiba a rejtett pontok betöltése során. Próbálja újra később!",
+        "unhide_waste_error": "Hiba a pont láthatóvá tétele során. Próbálja újra később!",
+        "hide_waste_error": "Hiba a pont elrejtése során. Próbálja újra később!",
         "unhide_waste_success": "A kiválasztott pont sikeresen láthatóvá lett téve.",
         "hide_waste_success": "A kiválasztott pont sikeresen el lett rejtve.",
         "update_logs_error": "Hiba a napló betöltése során.",
         "delete_log_success": "A kiválasztott rekord(ok) sikeresen törölve.",
         "delete_user_error_self": "Saját felhasználó törlése nem lehetséges.",
-        "delete_log_error": "Hiba a rekord(ok) törlése közben. Próbálja újra később.",
-        "fetch_users_error": "Hiba a felhasználók betöltése során. Próbálja újra később.",
+        "delete_log_error": "Hiba a rekord(ok) törlése során. Próbálja újra később!",
+        "fetch_users_error": "Hiba a felhasználók betöltése során. Próbálja újra később!",
         "delete_user_success": "A kiválasztott felhasználó sikeresen törölve.",
-        "delete_user_error": "Hiba a felhasználó törlése közben. Próbálja újra később.",
-        "change_username_error": "Hiba a felhasználónév módosítása közben. Próbálja újra később.",
+        "delete_user_error": "Hiba a felhasználó törlése során. Próbálja újra később!",
+        "change_username_error": "Hiba a felhasználónév módosítása során. Próbálja újra később!",
         "change_username_error_non_alphanumeric": "A felhasználónév csak betűket, számokat és szóközöket tartalmazhat. Csak szóközökből nem állhat.",
-        "change_username_error_taken": "A felhasználónév foglalt, válasszon másikat.",
+        "change_username_error_taken": "A felhasználónév foglalt, válasszon másikat!",
         "change_username_error_too_short": "A felhasználónév legalább 4 karakter hosszú kell legyen az elején és végén lévő szóközöket nem számítva.",
         "change_username_success": "A felhasználónév sikeresen módosítva.",
-        "change_password_error": "Hiba a jelszó módosítása közben. Próbálja újra később.",
+        "change_password_error": "Hiba a jelszó módosítása során. Próbálja újra később!",
         "change_password_error_too_short": "A jelszó legalább 4 karakter hosszú kell legyen.",
         "change_password_success": "A jelszó sikeresen módosítva.",
         "fetch_detailed_waste_error": "Ezzel az azonosítóval nincs nyilvántartva pont.",
-        "download_fail": "Hiba a pontok adatainak letöltése során. Próbálja újra később."
+        "download_fail": "Hiba a pontok adatainak letöltése során. Próbálja újra később!",
+        "no_waste_selected": "Nincs kiválasztott pont. Módosítsa a szűrőket a letöltéshez!"
     }
 }
