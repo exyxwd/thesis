@@ -99,7 +99,11 @@ const DownloadButton: React.FC = (): React.ReactElement => {
         });
 
     const downloadHandler = () => {
-        setShouldFetch(true);
+        if (selectedWastes.length > 0) {
+            setShouldFetch(true);
+        } else {
+            showNotification(NotificationType.Error, "no_waste_selected");
+        }
     }
 
     return (
