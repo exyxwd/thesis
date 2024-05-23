@@ -134,7 +134,7 @@
     background-color: $filter-background;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
     .filter-item:hover {
         color: $filter-background;
         transition: all 100ms ease-in;
@@ -232,6 +232,12 @@
     border: none;
     outline: none;
     background-color: $filter-background;
+}
+
+@media (max-width: 768px) {
+    #date-input {
+        width: 95%;
+    }
 }
 
 #time-slider {
