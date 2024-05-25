@@ -36,26 +36,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    private Claims parseJwtClaims(String token) {
-        return jwtParser.parseSignedClaims(token).getPayload();
-    }
-
-    public Claims resolveClaims(HttpServletRequest req) {
-        try {
-            String token = resolveToken(req);
-            if (token != null) {
-                return parseJwtClaims(token);
-            }
-            return null;
-        } catch (ExpiredJwtException ex) {
-            req.setAttribute("expired", ex.getMessage());
-            throw ex;
-        } catch (Exception ex) {
-            req.setAttribute("invalid", ex.getMessage());
-            throw ex;
-        }
-    }
-
     public String resolveToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
