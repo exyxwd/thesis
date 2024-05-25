@@ -4,7 +4,6 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -23,31 +22,22 @@ import hu.exyxwd.tisztatisza.repository.UserRepository;
 @RequestMapping("/api/auth")
 public class UserController {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     AuthenticationManager authenticationManager;
 
-    @Autowired
     UserRepository userRepository;
 
-    @Autowired
     ValidationService validationService;
 
     private JwtUtil jwtUtil;
 
-    public UserController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
-
-    @Autowired
     public UserController(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-            UserRepository userRepository, JwtUtil jwtUtil) {
+            UserRepository userRepository, ValidationService validationService, JwtUtil jwtUtil) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.validationService = validationService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -99,12 +89,17 @@ public class UserController {
 
         String usernameValidation = validationService.validateUsername(username);
         if (usernameValidation != null) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
+            return ResponseEntity.status(usernameValidation == "Username is too short" ? HttpStatus.BAD_REQUEST
+                    : HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
         }
 
         String passwordValidation = validationService.validatePassword(password);
         if (passwordValidation != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
 
         // Save the new user in the database
@@ -140,7 +135,12 @@ public class UserController {
         String newUsername = request.get("newUsername").trim();
         String usernameValidation = validationService.validateUsername(newUsername);
         if (usernameValidation != null) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
+            return ResponseEntity.status(usernameValidation == "Username is too short" ? HttpStatus.BAD_REQUEST
+                    : HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
+        }
+
+        if (userRepository.existsByUsername(newUsername)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
         }
 
         user.setUsername(newUsername);

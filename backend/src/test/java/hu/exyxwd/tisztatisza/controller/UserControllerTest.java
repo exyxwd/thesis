@@ -1,5 +1,6 @@
 package hu.exyxwd.tisztatisza.controller;
 
+import org.mockito.*;
 import org.junit.jupiter.api.*;
 import org.springframework.http.*;
 import org.springframework.security.core.context.*;
@@ -8,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.mockito.Mockito;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,24 +18,28 @@ import java.security.Principal;
 
 import hu.exyxwd.tisztatisza.dto.*;
 import hu.exyxwd.tisztatisza.model.User;
-import hu.exyxwd.tisztatisza.dto.UserInfoDTO;
 import hu.exyxwd.tisztatisza.security.JwtUtil;
+import hu.exyxwd.tisztatisza.service.ValidationService;
 import hu.exyxwd.tisztatisza.repository.UserRepository;
 
 public class UserControllerTest {
+    @Mock
     private JwtUtil jwtUtil;
+    @InjectMocks
     private UserController userController;
+    @Mock
+    private ValidationService validationService;
+    @Mock
     private UserRepository userRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
     private AuthenticationManager authenticationManager;
 
     @BeforeEach
     public void init() {
-        authenticationManager = Mockito.mock(AuthenticationManager.class);
-        jwtUtil = Mockito.mock(JwtUtil.class);
-        userRepository = Mockito.mock(UserRepository.class);
-        passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        userController = new UserController(passwordEncoder, authenticationManager, userRepository, jwtUtil);
+        MockitoAnnotations.openMocks(this);
+        userController = new UserController(passwordEncoder, authenticationManager, userRepository, validationService, jwtUtil);
     }
 
     @Test
