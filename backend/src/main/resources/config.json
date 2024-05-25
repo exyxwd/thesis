@@ -1,6 +1,7 @@
 {
-    "Login:Password": "",
     "Login:GoogleAPIKey": "",
-    "Login:AuthToken": "",
-    "Login:Email": ""
+    "Login:Email": "",
+    "Login:Password": "",
+    "AuthToken": "e3VzZXJSb2xlOiAnc3VwZXJBZG1pbid9",
+    "UseStoredToken": true
 }
