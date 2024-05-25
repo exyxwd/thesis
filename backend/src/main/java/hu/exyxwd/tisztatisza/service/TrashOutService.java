@@ -58,25 +58,30 @@ public class TrashOutService {
         requestBody.put("email", (String) config.get("Login:Email"));
         requestBody.put("password", (String) config.get("Login:Password"));
         requestBody.put("returnSecureToken", true);
-    
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-    
+
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate
+                    .postForEntity(GOOGLE_PASSWORD_URL + config.get("Login:GoogleAPIKey"), entity, String.class);
     
-        ResponseEntity<String> response = restTemplate
-                .postForEntity(GOOGLE_PASSWORD_URL + config.get("Login:GoogleAPIKey"), entity, String.class);
-    
-        if (response.getStatusCode() == HttpStatus.OK) {
-            try {
-                ObjectNode responseBody = (ObjectNode) mapper.readTree(response.getBody());
-                return responseBody.get("idToken").asText();
-            } catch (IOException e) {
-                System.out.println("Error occurred while trying to parse response body: " + e.getMessage());
+            if (response.getStatusCode() == HttpStatus.OK) {
+                try {
+                    ObjectNode responseBody = (ObjectNode) mapper.readTree(response.getBody());
+                    return responseBody.get("idToken").asText();
+                } catch (IOException e) {
+                    System.out.println("Error occurred while trying to parse response body from Google.");
+                    return null;
+                }
+            } else {
+                System.out.println("Error occurred while trying to get token from Google: " + response.getStatusCode());
                 return null;
             }
-        } else {
-            System.out.println("Error occurred while trying to get token: " + response.getStatusCode());
+        } catch (HttpClientErrorException e) {
+            System.out.println("Error occurred while trying to get the authentication token. The provided Google API key or credentials might be invalid. ");
             return null;
         }
     }
@@ -95,8 +100,7 @@ public class TrashOutService {
                         String.class);
                 return response.getBody();
             } catch (HttpClientErrorException.Unauthorized e) {
-                System.out.println("Error occurred while trying to get wastes from TrashOut (Attempt "
-                        + attempt + "). The token might not be correct: "
+                System.out.println("Error occurred while trying to get wastes from TrashOut. The token might not be correct: "
                         + e.getStatusCode());
                 return null;
             } catch (HttpServerErrorException e) {
@@ -159,11 +163,22 @@ public class TrashOutService {
 
     @Transactional
     public void updateDatabase() {
-        String authToken = config.get("Login:AuthToken").toString();
+        String authToken;
+        if ((boolean) config.get("UseStoredToken")) {
+            authToken = config.get("AuthToken").toString();
+        } else {
+            authToken = getToken();
+        }
+
+        if (authToken == null || authToken.isEmpty()) {
+            System.out.println("The database update failed because of invalid authentication token.");
+            return;
+        }
+
         String wasteList = getWasteListFromTrashOut(authToken);
 
         if (wasteList == null) {
-            System.err.println("Error: wasteList is null");
+            System.out.println("The database update failed because of invalid data from TrashOut.");
             return;
         }
 
