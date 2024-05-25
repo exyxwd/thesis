@@ -1,23 +1,21 @@
 package hu.exyxwd.tisztatisza.service;
 
-import hu.exyxwd.tisztatisza.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import hu.exyxwd.tisztatisza.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Base64;
 import java.security.SecureRandom;
 import javax.annotation.PostConstruct;
 
+import hu.exyxwd.tisztatisza.model.User;
+import hu.exyxwd.tisztatisza.repository.UserRepository;
+
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public String generateRandomPassword(int charLength) {
         SecureRandom random = new SecureRandom();
