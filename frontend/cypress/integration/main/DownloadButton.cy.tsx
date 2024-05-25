@@ -1,12 +1,27 @@
 import mount from '../utils.cy';
 import DownloadButton from 'components/Main/DownloadButton';
+import { MinimalTrashData, TrashCountry, TrashSize, TrashStatus } from 'models/models';
 
 /**
  * Test suite for the DownloadButton component.
  */
 describe('DownloadButton', () => {
     beforeEach(() => {
-        mount(<DownloadButton />);
+        const selectedWastes: MinimalTrashData[] = [
+            {
+                id: 1,
+                latitude: 0,
+                longitude: 0,
+                country: TrashCountry.Hungary,
+                size: TrashSize.Car,
+                status: TrashStatus.StillHere,
+                types: [],
+                river: '',
+                updateTime: '',
+                hidden: false
+            }
+        ];
+        mount(<DownloadButton selectedWastes={selectedWastes} />);
     });
 
     it('renders the download button', () => {
