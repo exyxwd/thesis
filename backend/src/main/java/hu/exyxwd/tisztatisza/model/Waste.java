@@ -99,7 +99,7 @@ public class Waste {
     @Override
     public int hashCode() {
         return Objects.hash(id, country, locality, sublocality, size,
-                status, types, createTime, updateTime, imageUrl, note);
+                status, types, createTime, updateTime, note);
     }
 
     @Override
@@ -121,7 +121,6 @@ public class Waste {
                 Objects.equals(types, waste.types) &&
                 Objects.equals(createTime, waste.createTime) &&
                 Objects.equals(updateTime, waste.updateTime) &&
-                Objects.equals(imageUrl, waste.imageUrl) &&
                 Objects.equals(note, waste.note);
     }
 }
