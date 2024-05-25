@@ -3,10 +3,9 @@ import { useQuery } from 'react-query';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { useSelectedWastes } from './FilterContext';
 import { fetchMultipleWasteById } from 'API/queryUtils';
 import { useShowNotification } from './NotificationContext';
-import { ExpandedTrashData, NotificationType } from 'models/models';
+import { ExpandedTrashData, MinimalTrashData, NotificationType } from 'models/models';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)
@@ -81,21 +80,29 @@ function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => stri
 }
 
 /**
+ * Interface for the DownloadButton component props
+ * 
+ * @property {MinimalTrashData[]} selectedWastes The selected waste dumps to download
+ */
+interface DownloadButtonProps {
+    selectedWastes: MinimalTrashData[];
+}
+
+/**
  * Creates the download button for selected waste dumps and triggers the download
  *
  * @returns {React.ReactElement} Download button
  */
-const DownloadButton: React.FC = (): React.ReactElement => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({ selectedWastes }): React.ReactElement => {
     const [shouldFetch, setShouldFetch] = useState<boolean>(false);
     const showNotification = useShowNotification();
-    const selectedWastes = useSelectedWastes();
     const { t } = useTranslation();
 
     // Fetch the selected waste dumps data and trigger the download on success
     useQuery('filteredData', () => fetchMultipleWasteById(selectedWastes.map(item => item.id)),
         {
             enabled: shouldFetch, onSuccess: (fetchedData) => { downloadData(fetchedData, t); setShouldFetch(false); },
-            onError: () => showNotification(NotificationType.Error, "download_fail")
+            onError: () => { showNotification(NotificationType.Error, "download_fail"); setShouldFetch(false); }
         });
 
     const downloadHandler = () => {

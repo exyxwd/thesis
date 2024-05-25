@@ -9,7 +9,7 @@ import { MinimalTrashData, filterRivers } from 'models/models';
 import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
 import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
-
+// TODO: ?
 /**
  * Grouped waste filters
  */
@@ -175,7 +175,7 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
                                         <Trans i18nKey="filter_names.num_fit_for_filters"></Trans>
                                     </div>
                                     <div className='col-8 filter-counter-button'>
-                                        {wasteData ? <DownloadButton /> : <></>}
+                                        {wasteData ? <DownloadButton selectedWastes={selectedWastes}/> : <></>}
                                     </div>
                                 </div>
                             </div>
