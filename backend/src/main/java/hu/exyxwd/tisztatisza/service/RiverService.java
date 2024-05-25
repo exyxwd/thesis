@@ -84,7 +84,7 @@ public class RiverService {
         for (Waste waste : wastes) {
             // Calculate the nearby rivers for every waste where the rivers field is null
             if (waste.getRiver() == null) {
-                String closestRiver = getClosestRiver(waste, 400);
+                String closestRiver = getClosestRiver(waste, 500);
                 waste.setRiver(closestRiver);
                 wasteRepository.save(waste);
             }
