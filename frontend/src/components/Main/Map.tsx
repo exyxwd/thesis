@@ -4,12 +4,12 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import blueMarkerIcon from 'images/markers/marker_blue.png';
-import markerShadow from 'images/markers/marker_shadow.png';
-import greyMarkerIcon from 'images/markers/marker_grey.png';
 import greenMarkerIcon from 'images/markers/marker_green.png';
+import greyMarkerIcon from 'images/markers/marker_grey.png';
+import markerShadow from 'images/markers/marker_shadow.png';
 import yellowMarkerIcon from 'images/markers/marker_yellow.png';
 
-import { ExpandedTrashData } from 'models/models';
+import { ExpandedWasteData } from 'models/models';
 import { useSelectedWastes } from './FilterContext';
 
 /**
@@ -19,7 +19,7 @@ import { useSelectedWastes } from './FilterContext';
  * @property {(data: number) => void} onMarkerClick Function to handle clicks on markers
  */
 interface MapProps {
-    selectedWaste: ExpandedTrashData | undefined;
+    selectedWaste: ExpandedWasteData | undefined;
 }
 
 /**

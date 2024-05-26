@@ -1,4 +1,4 @@
-import { ExpandedTrashData, MinimalTrashData, River, TrashType, filterRivers } from "./models";
+import { ExpandedWasteData, MinimalWasteData, River, WasteType, filterRivers } from "./models";
 
 /**
  * Calculates the range of the slider (minimum and maximum) and the default value
@@ -23,11 +23,11 @@ export function calcRange(): { min: number, max: number, def: number } {
 /**
  * Decides whether a waste dump is fit for the active filters
  *
- * @param {MinimalTrashData} e The data of the waste dump
+ * @param {MinimalWasteData} e The data of the waste dump
  * @param {string[]} activeFilters The currently active filters
  * @returns {boolean} Whether the waste dump is fit for the active filters
  */
-export const isFitForFilters = (authenticated: boolean, e: MinimalTrashData | ExpandedTrashData, activeFilters: string[],
+export const isFitForFilters = (authenticated: boolean, e: MinimalWasteData | ExpandedWasteData, activeFilters: string[],
     selectedTime: Date, filteredRivers: (string[] | undefined)): boolean => {
     // Visibility
     if (e.hidden && !authenticated) return false;
@@ -50,7 +50,7 @@ export const isFitForFilters = (authenticated: boolean, e: MinimalTrashData | Ex
     // Types
     const typeFit = activeFilters.every((filter) => {
         const formattedFilter = filter.charAt(0).toUpperCase() + filter.slice(1).toLowerCase();
-        return !(TrashType[formattedFilter as keyof typeof TrashType] && !e.types.includes(TrashType[formattedFilter as keyof typeof TrashType]));
+        return !(WasteType[formattedFilter as keyof typeof WasteType] && !e.types.includes(WasteType[formattedFilter as keyof typeof WasteType]));
     });
     if (!typeFit) return false;
 

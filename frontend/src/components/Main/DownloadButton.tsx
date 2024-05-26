@@ -1,11 +1,11 @@
-import * as XLSX from 'xlsx';
-import { useQuery } from 'react-query';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import * as XLSX from 'xlsx';
 
 import { fetchMultipleWasteById } from 'API/queryUtils';
+import { ExpandedWasteData, MinimalWasteData, NotificationType } from 'models/models';
 import { useShowNotification } from './NotificationContext';
-import { ExpandedTrashData, MinimalTrashData, NotificationType } from 'models/models';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)
@@ -27,11 +27,11 @@ function formatDateTime(inputDateTime: string): string {
 /**
  * Prepares data for download (translates it, sets column widths) and downloads it as xlsx
  *
- * @param {ExpandedTrashData[]} fetchedData The data to download
+ * @param {ExpandedWasteData[]} fetchedData The data to download
  * @param {(key: string) => string} t The translation function
  * @returns {void}
  */
-function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => string): void {
+function downloadData(fetchedData: ExpandedWasteData[], t: (key: string) => string): void {
     // Translate the data and format the date, exclude the hidden field (the warning is disabled because the hidden field is not used to be excluded)
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const translatedData = fetchedData.map(({ hidden, ...item }) => ({
@@ -82,10 +82,10 @@ function downloadData(fetchedData: ExpandedTrashData[], t: (key: string) => stri
 /**
  * Interface for the DownloadButton component props
  * 
- * @property {MinimalTrashData[]} selectedWastes The selected waste dumps to download
+ * @property {MinimalWasteData[]} selectedWastes The selected waste dumps to download
  */
 interface DownloadButtonProps {
-    selectedWastes: MinimalTrashData[];
+    selectedWastes: MinimalWasteData[];
 }
 
 /**

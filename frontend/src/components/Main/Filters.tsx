@@ -1,14 +1,14 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
+import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
+import { MinimalWasteData, filterRivers } from 'models/models';
+import DownloadButton from './DownloadButton';
+import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
 import FilterItem from './FilterItem';
 import TimeSlider from './TimeSlider';
-import DownloadButton from './DownloadButton';
-import { MinimalTrashData, filterRivers } from 'models/models';
-import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
-import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
 // TODO: ?
 /**
  * Grouped waste filters
@@ -39,11 +39,11 @@ const filterNames: FilterName = {
  *
  * @param {boolean} isLoading Whether the data is still loading (has not fetched yet)
  * @param {boolean} isError Whether an error occurred while fetching the data
- * @param {MinimalTrashData[]} wasteData The data to filter
+ * @param {MinimalWasteData[]} wasteData The data to filter
  */
 interface filterProps {
     isLoading: boolean;
-    wasteData: MinimalTrashData[];
+    wasteData: MinimalWasteData[];
     isError: boolean | unknown;
 }
 

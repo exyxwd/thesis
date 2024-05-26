@@ -1,4 +1,4 @@
-import { ExpandedTrashData, MinimalTrashData, RegisterData, UpdateLog, UserDataType } from 'models/models';
+import { ExpandedWasteData, MinimalWasteData, RegisterData, UpdateLog, UserDataType } from 'models/models';
 
 // Get the XSRF-TOKEN cookie with regex
 const getCsrfToken = () => document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*=\s*([^;]*).*$)|^.*$/, '$1');
@@ -23,9 +23,9 @@ export class FetchError extends Error {
  * Fetches detailed data of a waste dump
  *
  * @param {number} id - id of the waste dump
- * @returns {ExpandedTrashData} - detailed data of the waste dump
+ * @returns {ExpandedWasteData} - detailed data of the waste dump
  */
-export const fetchWasteById = async (id: number): Promise<ExpandedTrashData> => {
+export const fetchWasteById = async (id: number): Promise<ExpandedWasteData> => {
     const response = await fetch(`/api/wastes/${id}`, { method: 'GET' });
     if (!response.ok) {
         throw new Error('Network response was not ok.');
@@ -37,9 +37,9 @@ export const fetchWasteById = async (id: number): Promise<ExpandedTrashData> => 
  * Fetches detailed data of waste dumps from multiple given ids
  *
  * @param {number[]} ids - ids of the waste dumps
- * @returns {SidebarTrashData} - detailed data of the waste dumps
+ * @returns {ExpandedWasteData} - detailed data of the waste dumps
  */
-export const fetchMultipleWasteById = async (ids: number[]): Promise<ExpandedTrashData[]> => {
+export const fetchMultipleWasteById = async (ids: number[]): Promise<ExpandedWasteData[]> => {
     const requestData = {
         ids: ids
     };
@@ -63,9 +63,9 @@ export const fetchMultipleWasteById = async (ids: number[]): Promise<ExpandedTra
 /**
  * Fetches reduced data of waste dumps fitting the default filters
  *
- * @returns {MinimalTrashData[]} - reduced data of default filter fitting waste dumps
+ * @returns {MinimalWasteData[]} - reduced data of default filter fitting waste dumps
  */
-export const fetchFilteredWasteData = async (): Promise<MinimalTrashData[]> => {
+export const fetchFilteredWasteData = async (): Promise<MinimalWasteData[]> => {
     const response = await fetch('/api/wastes/mapDataFiltered', { method: 'GET' });
     if (!response.ok) {
         throw new Error('Network response was not ok.');
@@ -76,9 +76,9 @@ export const fetchFilteredWasteData = async (): Promise<MinimalTrashData[]> => {
 /**
  * Fetches reduced data of waste dumps not fitting the default filters
  *
- * @returns {MinimalTrashData[]} - reduced data of default filter fitting waste dumps
+ * @returns {MinimalWasteData[]} - reduced data of default filter fitting waste dumps
  */
-export const fetchFilteredInverseWasteData = async (): Promise<MinimalTrashData[]> => {
+export const fetchFilteredInverseWasteData = async (): Promise<MinimalWasteData[]> => {
     const response = await fetch('/api/wastes/mapDataFilteredInverse', { method: 'GET' });
     if (!response.ok) {
         throw new Error('Network response was not ok.');
@@ -331,9 +331,9 @@ export const hideWaste = async (id: number, hiddenStatus: boolean): Promise<bool
 /**
  * Gets all hidden wastes from the server
  *
- * @returns {ExpandedTrashData[]} - all hidden wastes
+ * @returns {ExpandedWasteData[]} - all hidden wastes
  */
-export const fetchHiddenWastes = async (): Promise<ExpandedTrashData[]> => {
+export const fetchHiddenWastes = async (): Promise<ExpandedWasteData[]> => {
     const response = await fetch(`/api/wastes/hidden`, {
         method: 'GET',
         headers: {

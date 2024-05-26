@@ -1,9 +1,8 @@
-import { useMutation } from 'react-query';
-import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBiohazard,
     faBottleWater,
@@ -22,25 +21,26 @@ import {
     faTrashCan,
     faWineGlassEmpty
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { hideWaste } from 'API/queryUtils';
-import { useShowNotification } from './NotificationContext';
 import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { ExpandedTrashData, NotificationType } from 'models/models';
 import {
     useActiveFilters, useSelectedTime, useSelectedWastes,
     useSetActiveFilters, useSetSelectedTime, useSetSelectedWastes
 } from 'components/Main/FilterContext';
+import { ExpandedWasteData, NotificationType } from 'models/models';
+import { useShowNotification } from './NotificationContext';
 
 /**
  * The properties of the waste information panel
  *
  * @interface WasteInfoPanelProps
- * @property {ExpandedTrashData} data The data of the selected waste dump
+ * @property {ExpandedWasteData} data The data of the selected waste dump
  * @property {() => void} onClose Function to trigger on close of the info panel
  */
 interface WasteInfoPanelProps {
-    data: ExpandedTrashData;
+    data: ExpandedWasteData;
     onClose: () => void;
 }
 
@@ -199,7 +199,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
 
     if (!data) return (<></>)
 
-    const trashDate = new Date(data.updateTime);
+    const wasteUpdateTime = new Date(data.updateTime);
 
     return (
         <div id='waste-panel' ref={panelRef}>
@@ -208,13 +208,13 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                     <span className='waste-panel-close-symbol material-symbols-outlined'>close</span>
                 </button>
             </div>
-            <div className='row waste-panel-trash-image-container'>
+            <div className='row waste-panel-image-container'>
                 {!imageLoaded && (
                     <div className='img-loader' />
                 )}
                 <img
                     key={data.imageUrl}
-                    className={imageLoaded ? 'waste-panel-trash-image' : 'waste-panel-trash-image hidden'}
+                    className={imageLoaded ? 'waste-panel-image' : 'waste-panel-image hidden'}
                     src={data.imageUrl}
                     onLoad={handleImageLoad}
                 />
@@ -255,7 +255,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
                 </div>
                 <div className='col-6 waste-panel-header-item justify-content-center'>
                     <FontAwesomeIcon className='header-item-icon' icon={faClock} />
-                    {timeSince(trashDate)}
+                    {timeSince(wasteUpdateTime)}
                 </div>
             </div>
             <div className='row'>

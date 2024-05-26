@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { useMutation, useQuery } from 'react-query';
 import { Trans, useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from 'react-query';
 
-import Pagination from './Pagination';
 import { fetchHiddenWastes, hideWaste } from 'API/queryUtils';
-import { ExpandedTrashData, NotificationType } from 'models/models';
 import { useShowNotification } from 'components/Main/NotificationContext';
+import { ExpandedWasteData, NotificationType } from 'models/models';
+import Pagination from './Pagination';
 
 const HiddenWastes: React.FC = () => {
     const recordsPerPage = 16;
-    const [hiddenWastes, setHiddenWastes] = useState<ExpandedTrashData[]>([]);
+    const [hiddenWastes, setHiddenWastes] = useState<ExpandedWasteData[]>([]);
     const [indexOfFirstRecord, setIndexOfFirstRecord] = React.useState<number>(0);
     const [indexOfLastRecord, setIndexOfLastRecord] = React.useState<number>(recordsPerPage);
     const currentRecords = hiddenWastes.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -18,7 +18,7 @@ const HiddenWastes: React.FC = () => {
     const showNotification = useShowNotification();
     const { t } = useTranslation();
 
-    const { isFetching, isLoading, error, refetch } = useQuery<ExpandedTrashData[]>('fetchHiddenWastes', fetchHiddenWastes, {
+    const { isFetching, isLoading, error, refetch } = useQuery<ExpandedWasteData[]>('fetchHiddenWastes', fetchHiddenWastes, {
         enabled: false,
         onSuccess: (data) => {
             setHiddenWastes(data);

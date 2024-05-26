@@ -1,11 +1,11 @@
 // TODO: docs
-export enum TrashStatus {
+export enum WasteStatus {
     StillHere = 'STILLHERE',
     Cleaned = 'CLEANED',
     More = 'MORE'
 }
 
-export enum TrashCountry {
+export enum WasteCountry {
     Hungary = 'HUNGARY',
     Ukraine = 'UKRAINE',
     Romania = 'ROMANIA',
@@ -13,13 +13,13 @@ export enum TrashCountry {
     Slovakia = 'SLOVAKIA'
 }
 
-export enum TrashSize {
+export enum WasteSize {
     Bag = 'BAG',
     Wheelbarrow = 'WHEELBARROW',
     Car = 'CAR'
 }
 
-export enum TrashType {
+export enum WasteType {
     Plastic = 'PLASTIC',
     Metal = 'METAL',
     Glass = 'GLASS',
@@ -33,30 +33,30 @@ export enum TrashType {
     DeadAnimals = 'DEADANIMALS'
 }
 
-export interface MinimalTrashData {
+export interface MinimalWasteData {
     id: number;
     latitude: number;
     longitude: number;
-    country: TrashCountry;
-    size: TrashSize;
-    status: TrashStatus;
-    types: TrashType[];
+    country: WasteCountry;
+    size: WasteSize;
+    status: WasteStatus;
+    types: WasteType[];
     river: string;
     updateTime: string;
     hidden: boolean;
 }
 
-export interface ExpandedTrashData {
+export interface ExpandedWasteData {
     id: number;
     latitude: number;
     longitude: number;
-    country: TrashCountry;
+    country: WasteCountry;
     locality: string;
     sublocality: string;
     river: string;
-    size: TrashSize;
-    status: TrashStatus;
-    types: TrashType[];
+    size: WasteSize;
+    status: WasteStatus;
+    types: WasteType[];
     createTime: string;
     updateTime: string;
     updateNeeded: boolean;

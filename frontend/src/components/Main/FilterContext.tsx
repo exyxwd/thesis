@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 import { calcRange } from 'models/functions';
-import { MinimalTrashData } from 'models/models';
+import { MinimalWasteData } from 'models/models';
 
 const ActiveFiltersContext = createContext<{
     activeFilters: string[];
@@ -10,8 +10,8 @@ const ActiveFiltersContext = createContext<{
     selectedTime: Date;
     setSelectedTime: React.Dispatch<React.SetStateAction<Date>>;
 
-    selectedWastes: MinimalTrashData[];
-    setSelectedWastes: React.Dispatch<React.SetStateAction<MinimalTrashData[]>>;
+    selectedWastes: MinimalWasteData[];
+    setSelectedWastes: React.Dispatch<React.SetStateAction<MinimalWasteData[]>>;
 } | undefined>(undefined);
 
 /**
@@ -56,7 +56,7 @@ export const useSetSelectedTime = (): React.Dispatch<React.SetStateAction<Date>>
     return context.setSelectedTime;
 }
 
-export const useSelectedWastes = (): MinimalTrashData[] => {
+export const useSelectedWastes = (): MinimalWasteData[] => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {
         throw new Error('useSelectedWastes must be used within an ActiveFiltersProvider');
@@ -64,7 +64,7 @@ export const useSelectedWastes = (): MinimalTrashData[] => {
     return context.selectedWastes;
 }
 
-export const useSetSelectedWastes = (): React.Dispatch<React.SetStateAction<MinimalTrashData[]>> => {
+export const useSetSelectedWastes = (): React.Dispatch<React.SetStateAction<MinimalWasteData[]>> => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {
         throw new Error('useSetSelectedWastes must be used within an ActiveFiltersProvider');
@@ -82,7 +82,7 @@ export const useSetSelectedWastes = (): React.Dispatch<React.SetStateAction<Mini
 export const ActiveFiltersProvider: React.FC<{ children: React.ReactNode }> = ({ children }: { children: React.ReactNode; }): React.ReactElement => {
     const [activeFilters, setActiveFilters] = useState<string[]>(["HUNGARY", "STILLHERE", "BAG"]);
     const [selectedTime, setSelectedTime] = useState<Date>(new Date(calcRange().def));
-    const [selectedWastes, setSelectedWastes] = useState<MinimalTrashData[]>([]);
+    const [selectedWastes, setSelectedWastes] = useState<MinimalWasteData[]>([]);
 
     return (
         <ActiveFiltersContext.Provider value={{ activeFilters, setActiveFilters, selectedTime, setSelectedTime, selectedWastes, setSelectedWastes }}>

@@ -52,17 +52,17 @@
     font-variation-settings: 'wght' 700;
 }
 
-.waste-panel-trash-image-container {
+.waste-panel-image-container {
     height: 400px;
     outline: 3px solid white;
 }
 
-.waste-panel-trash-image {
+.waste-panel-image {
     height: 400px;
     width: 100%;
 }
 
-.waste-panel-trash-image.hidden {
+.waste-panel-image.hidden {
     position: absolute;
     margin: -999px;
 }

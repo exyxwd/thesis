@@ -4,15 +4,15 @@ import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Map from 'components/Main/Map';
-import Filters from 'components/Main/Filters';
-import WasteInfoPanel from 'components/Main/WasteInfoPanel';
-import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { getFilteredRivers, isFitForFilters } from 'models/functions';
-import { useShowNotification } from 'components/Main/NotificationContext';
-import { ExpandedTrashData, MinimalTrashData, NotificationType, filterRivers } from 'models/models';
 import { fetchFilteredInverseWasteData, fetchFilteredWasteData, fetchWasteById } from 'API/queryUtils';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import { useActiveFilters, useSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
+import Filters from 'components/Main/Filters';
+import Map from 'components/Main/Map';
+import { useShowNotification } from 'components/Main/NotificationContext';
+import WasteInfoPanel from 'components/Main/WasteInfoPanel';
+import { getFilteredRivers, isFitForFilters } from 'models/functions';
+import { ExpandedWasteData, MinimalWasteData, NotificationType, filterRivers } from 'models/models';
 
 /**
  * The main page of the application, renders the map, the filters and the waste information panel.
@@ -29,20 +29,20 @@ const MainPage: React.FC = (): React.ReactElement => {
     const authenticated = useAuthenticated();
     const showNotification = useShowNotification();
     const setSelectedWastes = useSetSelectedWastes();
-    const [wasteData, setWasteData] = useState<MinimalTrashData[]>([]);
+    const [wasteData, setWasteData] = useState<MinimalWasteData[]>([]);
     const filteredRivers = useMemo(() => getFilteredRivers(filterRivers.filter((river) => activeFilters.some((filter) => river.name == filter))), [activeFilters]);
 
-    const { data: detailedWasteData, error: detailedWasteDataError } = useQuery<ExpandedTrashData>(
+    const { data: detailedWasteData, error: detailedWasteDataError } = useQuery<ExpandedWasteData>(
         ['detailedWasteData', selectedMarkerId],
         () => fetchWasteById(Number(selectedMarkerId!)),
         { enabled: !!selectedMarkerId, retry: 1 }
     );
-    const { data: filteredWasteData, error: filteredWasteFetchError } = useQuery<MinimalTrashData[]>(
+    const { data: filteredWasteData, error: filteredWasteFetchError } = useQuery<MinimalWasteData[]>(
         'filteredWastes',
         fetchFilteredWasteData,
         { staleTime: Infinity, cacheTime: Infinity }
     );
-    const { data: inverseFilteredWasteData, error: inverseFilteredWasteFetchError, isLoading } = useQuery<MinimalTrashData[]>(
+    const { data: inverseFilteredWasteData, error: inverseFilteredWasteFetchError, isLoading } = useQuery<MinimalWasteData[]>(
         'inverseFilteredWastes',
         fetchFilteredInverseWasteData,
         { staleTime: Infinity, cacheTime: Infinity, enabled: !!filteredWasteData }
