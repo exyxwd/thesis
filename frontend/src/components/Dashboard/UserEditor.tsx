@@ -179,7 +179,7 @@ const UserEditor = (): React.ReactElement => {
                     {currentRecords.map((user) => {
                         return (
                             <tr key={user.username} className='user-table-row'>
-                                <td >{user.username}</td>
+                                <td >{user.username.length > 25 ? `${user.username.substring(0, 25)}...` : user.username}</td>
                                 <td>
                                     <Dropdown>
                                         <Dropdown.Toggle variant="secondary" id="dropdown-basic">
@@ -224,7 +224,7 @@ const UserEditor = (): React.ReactElement => {
                                 <div className="position-relative">
                                     <Form.Control
                                         type={showPassword ? "text" : "password"}
-                                        maxLength={50}
+                                        maxLength={25}
                                         placeholder={t('user-editor.new_password')}
                                         value={inputValue}
                                         onChange={handleInputChange}
@@ -248,7 +248,7 @@ const UserEditor = (): React.ReactElement => {
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control type="text" maxLength={50} placeholder={t('user-editor.new_username')} value={inputValue} onChange={handleInputChange} />
+                            <Form.Control type="text" maxLength={25} placeholder={t('user-editor.new_username')} value={inputValue} onChange={handleInputChange} />
                         </Modal.Body>
                     </>
                 }

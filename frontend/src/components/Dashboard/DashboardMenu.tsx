@@ -80,7 +80,7 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
             <aside className={menuOpen ? "dashboard-sidebar is-active" : "dashboard-sidebar"}>
                 <div className='user-data-container'>
                     <span className="material-symbols-outlined account-icon">account_circle</span>
-                    <div className='user-name'>&emsp;{username}</div>
+                    <div className='user-name'>&emsp;{username.length > 12 ? `${username.substring(0, 12)}...` : username}</div>
                 </div>
                 <nav className="menu">
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard'} className={`menu-item ${location.pathname === `/dashboard` ? 'is-active' : ''}`}>
