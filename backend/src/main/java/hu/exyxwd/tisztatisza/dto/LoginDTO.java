@@ -3,6 +3,7 @@ package hu.exyxwd.tisztatisza.dto;
 import lombok.*;
 import jakarta.validation.constraints.NotEmpty;
 
+/** DTO for login. */
 @Setter
 @Getter
 @AllArgsConstructor

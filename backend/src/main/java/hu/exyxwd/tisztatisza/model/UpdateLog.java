@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
+/** Entity for database update logs. */
 @Entity
 @Getter
 @Setter

@@ -16,16 +16,19 @@ public interface WasteRepository extends JpaRepository<Waste, Long> {
     @Query("SELECT w FROM Waste w WHERE w.updateTime < :date")
     List<Waste> findAllOlderThan(@Param("date") LocalDateTime date);
 
+    /** Find all wastes with the given country, size, status and update time. */
     @EntityGraph(attributePaths = { "types" })
     @Query("SELECT w FROM Waste w WHERE w.country = :country AND w.size = :size AND w.status = :status AND w.updateTime > :updateTime")
     List<Waste> findByFilters(@Param("country") Waste.WasteCountry country, @Param("size") Waste.WasteSize size,
             @Param("status") Waste.WasteStatus status, @Param("updateTime") LocalDateTime updateTime);
 
+    /** Find all wastes not with the given country, size, status and update time. */
     @EntityGraph(attributePaths = { "types" })
     @Query("SELECT w FROM Waste w WHERE w.country != :country OR w.size != :size OR w.status != :status OR w.updateTime < :updateTime")
     List<Waste> findByFiltersInverse(@Param("country") Waste.WasteCountry country, @Param("size") Waste.WasteSize size,
             @Param("status") Waste.WasteStatus status, @Param("updateTime") LocalDateTime updateTime);
 
+    /** Find all hidden wastes. */
     @EntityGraph(attributePaths = { "types" })
     List<Waste> findByHidden(boolean hidden);
 

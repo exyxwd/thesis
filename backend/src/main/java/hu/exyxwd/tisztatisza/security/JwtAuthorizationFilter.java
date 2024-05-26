@@ -19,6 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hu.exyxwd.tisztatisza.model.User;
 
+/**
+ * This class is responsible for filtering the incoming requests on endpoints
+ * where authentication is needed
+ * and checking the authorization token. If the token is valid, it will set the
+ * authentication
+ * object in the security context.
+ */
 @Component
 @AllArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -34,24 +41,28 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         try {
             String accessToken = jwtUtil.resolveToken(request);
+            // Check if token exists
             if (accessToken == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // Check if token is valid
             Claims claims = jwtUtil.getClaimsFromToken(accessToken);
             if (claims == null || !jwtUtil.validateClaims(claims)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // Set the authentication object in the security context
             String username = claims.getSubject();
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // Refresh token
             User user = new User(username, "");
             String newToken = jwtUtil.createToken(user);
-    
+
             response.setHeader(HttpHeaders.SET_COOKIE, "token=" + newToken + "; Path=/api; HttpOnly; SameSite=Strict");
         } catch (Exception e) {
             errorDetails.put("message", "Authentication Error");

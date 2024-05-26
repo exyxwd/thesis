@@ -22,6 +22,11 @@ import java.util.stream.Collectors;
 import hu.exyxwd.tisztatisza.model.*;
 import hu.exyxwd.tisztatisza.repository.*;
 
+/**
+ * This service is responsible for fetching data from the TrashOut API and
+ * updating the database with the new data. It also logs these changes into the
+ * database.
+ */
 @Service
 public class TrashOutService {
     private static final String GOOGLE_PASSWORD_URL = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
@@ -50,9 +55,15 @@ public class TrashOutService {
         }
     }
 
-    // Get authentication token from Google Identity Toolkit for later TrashOut API
-    // requests
+    /**
+     * Gets the authentication token from the Google Identity Toolkit using the
+     * provided email, password and Google API key
+     *
+     * @return The authentication token for the TrashOut API on success, otherwise
+     *         null.
+     */
     public String getToken() {
+        // Get data from config file
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode requestBody = mapper.createObjectNode();
         requestBody.put("email", (String) config.get("Login:Email"));
@@ -65,10 +76,12 @@ public class TrashOutService {
         HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
 
         try {
+            // Send request for token
             ResponseEntity<String> response = restTemplate
                     .postForEntity(GOOGLE_PASSWORD_URL + config.get("Login:GoogleAPIKey"), entity, String.class);
-    
+
             if (response.getStatusCode() == HttpStatus.OK) {
+                // Parse response body
                 try {
                     ObjectNode responseBody = (ObjectNode) mapper.readTree(response.getBody());
                     return responseBody.get("idToken").asText();
@@ -81,11 +94,18 @@ public class TrashOutService {
                 return null;
             }
         } catch (HttpClientErrorException e) {
-            System.out.println("Error occurred while trying to get the authentication token. The provided Google API key or credentials might be invalid. ");
+            System.out.println(
+                    "Error occurred while trying to get the authentication token. The provided Google API key or credentials might be invalid. ");
             return null;
         }
     }
 
+    /**
+     * Gets the waste data from the TrashOut API using a authentication token.
+     *
+     * @param token The authentication token for the TrashOut API.
+     * @return The waste data from the TrashOut API on success, otherwise null.
+     */
     public String getWasteListFromTrashOut(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -100,8 +120,9 @@ public class TrashOutService {
                         String.class);
                 return response.getBody();
             } catch (HttpClientErrorException.Unauthorized e) {
-                System.out.println("Error occurred while trying to get wastes from TrashOut. The token might not be correct: "
-                        + e.getStatusCode());
+                System.out.println(
+                        "Error occurred while trying to get wastes from TrashOut. The token might not be correct: "
+                                + e.getStatusCode());
                 return null;
             } catch (HttpServerErrorException e) {
                 System.out.println("Error occurred while trying to get wastes from TrashOut (Attempt " + attempt + "): "
@@ -112,6 +133,12 @@ public class TrashOutService {
         return null;
     }
 
+    /**
+     * Parses the JSON object from the TrashOut API into a Waste object.
+     *
+     * @param wasteJSON The JSON object from the TrashOut API.
+     * @return The Waste object parsed from the JSON object.
+     */
     public Waste parseWaste(ObjectNode wasteJSON) {
         Waste waste = new Waste();
 
@@ -161,8 +188,13 @@ public class TrashOutService {
         return waste;
     }
 
+    /**
+     * Updates the database with the new waste data from the TrashOut API, also logs
+     * the update.
+     */
     @Transactional
     public void updateDatabase() {
+        // Get authentication token with the method given in the config file
         String authToken;
         if ((boolean) config.get("UseStoredToken")) {
             authToken = config.get("AuthToken").toString();
@@ -182,17 +214,23 @@ public class TrashOutService {
             return;
         }
 
-        LocalDateTime XYearsAgo = OffsetDateTime.now().minusYears(6).toLocalDateTime();
+        LocalDateTime SixYearsAgo = OffsetDateTime.now().minusYears(6).toLocalDateTime();
 
-        Integer deleteCount = deleteOldWastes(XYearsAgo);
+        Integer deleteCount = deleteOldWastes(SixYearsAgo);
 
-        List<Waste> wastesToSave = processWasteList(wasteList, XYearsAgo);
+        List<Waste> wastesToSave = processWasteList(wasteList, SixYearsAgo);
 
         wasteRepository.saveAll(wastesToSave);
 
         saveUpdateLog(wastesToSave, deleteCount);
     }
 
+    /**
+     * Deletes all wastes in database inactive since the given date.
+     *
+     * @param XYearsAgo The date to compare the waste's update time to.
+     * @return The number of deleted wastes.
+     */
     public Integer deleteOldWastes(LocalDateTime XYearsAgo) {
         List<Waste> oldWastes = wasteRepository.findAllOlderThan(XYearsAgo);
         for (Waste waste : oldWastes) {
@@ -204,7 +242,16 @@ public class TrashOutService {
         return oldWastes.size();
     }
 
+    /**
+     * Processes the wastes from the TrashOut API and returns the list of wastes to
+     * save into database.
+     *
+     * @param wasteList The JSON string of the waste list from the TrashOut API.
+     * @param XYearsAgo The date to compare the waste's update time to.
+     * @return The list of wastes to save into the database.
+     */
     public List<Waste> processWasteList(String wasteList, LocalDateTime XYearsAgo) {
+        // Process the waste list
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode wasteArray = null;
         try {
@@ -213,11 +260,14 @@ public class TrashOutService {
             e.printStackTrace();
             return new ArrayList<>();
         }
+
         List<Waste> existingWastes = wasteRepository.findAll();
         Map<Long, Waste> existingWastesMap = existingWastes.stream()
                 .collect(Collectors.toMap(Waste::getId, Function.identity()));
         List<Waste> wastesToSave = new ArrayList<>();
 
+        // Compare the new wastes with the existing ones and save the new ones or the
+        // ones with new activity.
         for (JsonNode o : wasteArray) {
             try {
                 ObjectNode wasteJSON = (ObjectNode) o;
@@ -237,6 +287,12 @@ public class TrashOutService {
         return wastesToSave;
     }
 
+    /**
+     * Saves the waste update log into the database.
+     *
+     * @param wastesToSave The list of wastes to save into the database.
+     * @param deleteCount  The number of deleted wastes.
+     */
     public void saveUpdateLog(List<Waste> wastesToSave, Integer deleteCount) {
         Integer updateCount = wastesToSave.size();
         Long totalCount = wasteRepository.count();

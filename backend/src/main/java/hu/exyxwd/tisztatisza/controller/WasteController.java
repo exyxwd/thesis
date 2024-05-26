@@ -15,7 +15,7 @@ import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.dto.mapper.WasteMapper;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
 
-// TODO: years ago to config
+/** Controller for handling waste related requests. */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/wastes")
@@ -27,7 +27,12 @@ public class WasteController {
     @Autowired
     private WasteMapper wasteMapper;
 
-    // get waste by id rest api
+    /**
+     * Get a waste's detailed data.
+     * 
+     * @param id The id of the waste.
+     * @return Contains the detailed data of the waste.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getWasteById(@PathVariable Long id) {
         Optional<Waste> waste = wasteRepository.findById(id);
@@ -39,7 +44,11 @@ public class WasteController {
         return ResponseEntity.ok(wasteMapper.toDetailedWasteDTO(waste.get()));
     }
 
-    // get wastes by ids rest api
+    /**
+     * Get wastes detailed data.
+     * @param requestData Contains the ids of the wastes.
+     * @return Contains the detailed data of the wastes.
+     */
     @PostMapping("/filteredWastes")
     public ResponseEntity<?> getWastesByIds(@RequestBody Map<String, List<Long>> requestData) {
         List<Long> ids = requestData.get("ids");
@@ -50,6 +59,11 @@ public class WasteController {
         return ResponseEntity.ok(wastes.stream().map(wasteMapper::toDetailedWasteDTO).collect(Collectors.toList()));
     }
 
+    /**
+     * Get all wastes fitting the default filters.
+     *
+     * @return Contains data of the wastes fitting the default filters.
+     */
     @GetMapping("/mapDataFiltered")
     public ResponseEntity<List<MapDataDTO>> getFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
@@ -59,6 +73,11 @@ public class WasteController {
         return ResponseEntity.ok(wastes.stream().map(wasteMapper::toMapData).collect(Collectors.toList()));
     }
 
+    /**
+     * Get all wastes not fitting default filters.
+     *
+     * @return Contains data of the wastes not fitting default filters.
+     */
     @GetMapping("/mapDataFilteredInverse")
     public ResponseEntity<List<MapDataDTO>> getInverseFilteredWastes() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
@@ -68,7 +87,13 @@ public class WasteController {
         return ResponseEntity.ok(wastes.stream().map(wasteMapper::toMapData).collect(Collectors.toList()));
     }
 
-    // set hidden field of a waste by id rest api
+    /**
+     * Change the hidden status of a waste (visibility).
+     *
+     * @param id The id of the waste.
+     * @param body Contains the new hidden status.
+     * @return Indicates the result of the operation.
+     */
     @PutMapping("/{id}/hidden")
     public ResponseEntity<?> setHidden(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
         Optional<Waste> waste = wasteRepository.findById(id);
@@ -82,7 +107,11 @@ public class WasteController {
         return ResponseEntity.ok().build();
     }
 
-    // get all hidden wastes rest api
+    /**
+     * Get all hidden wastes.
+     *
+     * @return Contains data of the hidden wastes.
+     */
     @GetMapping("/hidden")
     public ResponseEntity<List<DetailedWasteDTO>> getHiddenWastes() {
         List<Waste> wastes = wasteRepository.findByHidden(true);

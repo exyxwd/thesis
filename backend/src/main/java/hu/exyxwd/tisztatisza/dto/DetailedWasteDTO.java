@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 
+/** DTO for detailed wastes. */
 @Getter
 @Setter
 @NoArgsConstructor

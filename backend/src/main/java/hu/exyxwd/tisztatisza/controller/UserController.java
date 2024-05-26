@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 import java.security.Principal;
+import lombok.AllArgsConstructor;
 import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -18,7 +19,11 @@ import hu.exyxwd.tisztatisza.security.JwtUtil;
 import hu.exyxwd.tisztatisza.service.ValidationService;
 import hu.exyxwd.tisztatisza.repository.UserRepository;
 
+/**
+ * Controller for handling user related requests.
+ */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/auth")
 public class UserController {
 
@@ -32,15 +37,13 @@ public class UserController {
 
     private JwtUtil jwtUtil;
 
-    public UserController(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-            UserRepository userRepository, ValidationService validationService, JwtUtil jwtUtil) {
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.validationService = validationService;
-        this.jwtUtil = jwtUtil;
-    }
-
+    /**
+     * Login the user with the given credentials.
+     *
+     * @param loginReq Contains the username and password.
+     * @param response To set the cookie.
+     * @return Indicates the result of the operation.
+     */
     @ResponseBody
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginReq, HttpServletResponse response) {
@@ -62,6 +65,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Get the information of the authenticated user.
+     *
+     * @param principal Contains the authenticated user.
+     * @return Contains the username of the authenticated user.
+     */
     @GetMapping("/userInfo")
     public ResponseEntity<?> userInfo(Principal principal) {
         if (principal == null) {
@@ -74,6 +83,12 @@ public class UserController {
         return ResponseEntity.ok(userInfoDto);
     }
 
+    /**
+     * Logout the authenticated user.
+     *
+     * @param response To clear the JWT token.
+     * @return Indicates the result of the operation.
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // Clear the JWT token by setting the cookie to an empty string and setting its
@@ -82,17 +97,25 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Register a new user with the given credentials.
+     *
+     * @param registerRequest Contains the username and password.
+     * @return Indicates the result of the operation.
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User registerRequest) {
         String username = registerRequest.getUsername();
         String password = registerRequest.getPassword();
 
+        // Validate the username
         String usernameValidation = validationService.validateUsername(username);
         if (usernameValidation != null) {
             return ResponseEntity.status(usernameValidation == "Username is too short" ? HttpStatus.BAD_REQUEST
                     : HttpStatus.UNPROCESSABLE_ENTITY).body(usernameValidation);
         }
 
+        // Validate the password
         String passwordValidation = validationService.validatePassword(password);
         if (passwordValidation != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(passwordValidation);
@@ -109,6 +132,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Get the usernames of all users.
+     *
+     * @return Contains the usernames of all users.
+     */
     @GetMapping("/users")
     public ResponseEntity<List<Map<String, String>>> getUsers() {
         List<User> users = userRepository.findAll();
@@ -124,6 +152,12 @@ public class UserController {
         return ResponseEntity.ok(usernames);
     }
 
+    /**
+     * Change the username of the user with the given username.
+     * @param username The username of the user whose username to change.
+     * @param request Contains the new username.
+     * @return Indicates the result of the operation.
+     */
     @PutMapping("/users/{username}/username")
     public ResponseEntity<?> changeUsername(@PathVariable String username, @RequestBody Map<String, String> request) {
 
@@ -132,6 +166,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
+        // Validate the new username
         String newUsername = request.get("newUsername").trim();
         String usernameValidation = validationService.validateUsername(newUsername);
         if (usernameValidation != null) {
@@ -149,6 +184,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Change the password of the user with the given username.
+     *
+     * @param username The username of the user whose password to change.
+     * @param request Contains the new password.
+     * @return Indicates the result of the operation.
+     */
     @PutMapping("/users/{username}/password")
     public ResponseEntity<?> changePassword(@PathVariable String username, @RequestBody Map<String, String> request) {
         User user = userRepository.findByUsername(username);
@@ -156,6 +198,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
+        // Validate the new password
         String newPassword = request.get("newPassword");
         String passwordValidation = validationService.validatePassword(newPassword);
         if (passwordValidation != null) {
@@ -168,6 +211,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Delete the user with the given username.
+     *
+     * @param username The username of the user to delete.
+     * @return Indicates the result of the operation.
+     */
     @DeleteMapping("/users/{username}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();

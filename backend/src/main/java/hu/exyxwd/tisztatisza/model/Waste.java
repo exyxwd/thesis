@@ -7,6 +7,7 @@ import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+/** Entity for waste information. */
 @Entity
 @Table(name = "wastes", indexes = {
         @Index(columnList = "country"),

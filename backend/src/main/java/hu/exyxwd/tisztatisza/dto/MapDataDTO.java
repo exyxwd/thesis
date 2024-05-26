@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 
+/** DTO to represent the waste data the map needs. */
 @Getter
 @Setter
 public class MapDataDTO {

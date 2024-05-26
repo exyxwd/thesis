@@ -3,6 +3,7 @@ package hu.exyxwd.tisztatisza.model;
 import lombok.*;
 import jakarta.persistence.*;
 
+/** Entity for user information. */
 @Entity
 @Getter
 @Setter

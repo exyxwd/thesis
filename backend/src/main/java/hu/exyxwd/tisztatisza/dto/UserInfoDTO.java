@@ -3,6 +3,7 @@ package hu.exyxwd.tisztatisza.dto;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
+/** DTO for user information. */
 @Getter
 @Setter
 @NoArgsConstructor

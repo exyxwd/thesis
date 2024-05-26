@@ -14,8 +14,10 @@ import java.util.concurrent.TimeUnit;
 
 import hu.exyxwd.tisztatisza.model.User;
 
+/* The JwtUtil class contains the util functions for creating and validating JWT tokens. */
 @Component
 public class JwtUtil {
+    // The validity of the access token in minutes
     private long accessTokenValidity = 60;
 
     private final JwtParser jwtParser;
@@ -26,6 +28,12 @@ public class JwtUtil {
         this.jwtParser = Jwts.parser().verifyWith((SecretKey) key).build();
     }
 
+    /**
+     * Create a JWT token for the user.
+     *
+     * @param user The user to create the token for.
+     * @return The JWT token.
+     */
     public String createToken(User user) {
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
@@ -36,6 +44,12 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Resolve the token from the cookies in the request.
+     *
+     * @param request The request to resolve the token from.
+     * @return The token from the request.
+     */
     public String resolveToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -48,6 +62,12 @@ public class JwtUtil {
         return null;
     }
 
+    /**
+     * Validate the token claims by checking it's expiry.
+     *
+     * @param claims The claims to validate.
+     * @return True if the claims are valid, false otherwise.
+     */
     public boolean validateClaims(Claims claims) throws AuthenticationException {
         try {
             return claims.getExpiration().after(new Date());
