@@ -1,4 +1,4 @@
-// TODO: docs here
+/** ############### WASTE INFO PANEL OPEN TRANSITION ############### **/
 @keyframes open {
     from {
         left: -500px;
@@ -9,13 +9,7 @@
     }
 }
 
-.close-button-container {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 0 0 0 50%;
-    top: 0;
-    right: 0;
-}
+/** ############### WASTE INFO PANEL ############### **/
 
 #waste-panel {
     position: fixed;
@@ -35,6 +29,16 @@
     animation-fill-mode: forwards;
 }
 
+/** ############### CLOSE BUTTON ############### **/
+
+.close-button-container {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 0 0 0 50%;
+    top: 0;
+    right: 0;
+}
+
 .waste-panel-close-btn {
     border: none;
     padding: 10px;
@@ -52,6 +56,8 @@
     font-variation-settings: 'wght' 700;
 }
 
+/** ############### WASTE IMAGE ############### **/
+
 .waste-panel-image-container {
     height: 400px;
     outline: 3px solid white;
@@ -66,6 +72,8 @@
     position: absolute;
     margin: -999px;
 }
+
+/** ############### WASTE PANEL DATA ############### **/
 
 .waste-panel-base {
     margin-top: 10px;
@@ -130,6 +138,8 @@
     margin-left: -10px;
 }
 
+/** ############### HIDE WASTE BUTTON ############### **/
+
 .hide-btn-container{
     padding: 10px;
     display: flex;
@@ -142,6 +152,7 @@
     cursor: pointer;
 }
 
+/** ############### RESPONSIBILITY ############### **/
 
 @media (max-width: 768px) {
     #waste-panel {

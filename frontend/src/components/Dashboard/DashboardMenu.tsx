@@ -59,7 +59,7 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
     });
 
     /**
-     * Close dsahboard sidebar on click elsewhere
+     * Close dashboard sidebar on click elsewhere
     *
     * @param {MouseEvent} e The click event
     */
@@ -84,25 +84,25 @@ const DashboardMenu: React.FC = (): React.ReactElement => {
                 </div>
                 <nav className="menu">
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard'} className={`menu-item ${location.pathname === `/dashboard` ? 'is-active' : ''}`}>
-                        <Trans i18nKey="menu.main_page">Főoldal</Trans>
+                        <Trans i18nKey="menus.main_page">Főoldal</Trans>
                     </Link>
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard/register'} className={`menu-item ${location.pathname === `/dashboard/register` ? 'is-active' : ''}`}>
-                        <Trans i18nKey="menu.add_user">Felhasználó hozzáadása</Trans>
+                        <Trans i18nKey="menus.add_user">Felhasználó hozzáadása</Trans>
                     </Link>
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard/users'} className={`menu-item ${location.pathname === `/dashboard/users` ? 'is-active' : ''}`}>
-                        <Trans i18nKey="menu.manage_user">Felhasználók kezelése</Trans>
+                        <Trans i18nKey="menus.manage_user">Felhasználók kezelése</Trans>
                     </Link>
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard/hiddens'} className={`menu-item ${location.pathname === `/dashboard/hiddens` ? 'is-active' : ''}`}>
-                        <Trans i18nKey="menu.hidden-locations">Rejtett pontok</Trans>
+                        <Trans i18nKey="menus.hidden-locations">Rejtett pontok</Trans>
                     </Link>
                     <Link onClick={() => setMenuOpen(false)} to={'/dashboard/logs'} className={`menu-item ${location.pathname === `/dashboard/logs` ? 'is-active' : ''}`}>
-                        <Trans i18nKey="menu.logs">Napló</Trans>
+                        <Trans i18nKey="menus.logs">Napló</Trans>
                     </Link>
                 </nav>
                 <div className='logout-area'>
                     <button className="logout-btn btn" onClick={handleLogout}>
                         <span className="material-symbols-outlined">logout</span>
-                        <p className='logout-text'><Trans i18nKey="menu.logout">Kijelentkezés</Trans></p>
+                        <p className='logout-text'><Trans i18nKey="menus.logout">Kijelentkezés</Trans></p>
                     </button>
                 </div>
             </aside>

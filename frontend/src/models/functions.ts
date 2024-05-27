@@ -57,6 +57,12 @@ export const isFitForFilters = (authenticated: boolean, e: MinimalWasteData | Ex
     return true;
 }
 
+/**
+ * Returns the rivers that are selectable
+ *
+ * @param activeFilters The currently active filters
+ * @returns The rivers that are selectable
+ */
 export const getSelectableRivers = (activeFilters: string[]): string[] => {
     const selectedRivers = filterRivers.filter((river) => activeFilters.includes(river.name));
 
@@ -64,25 +70,41 @@ export const getSelectableRivers = (activeFilters: string[]): string[] => {
         return ["DUNA", "ZALA"];
     }
 
+    // Find the highest ranked river
     const highestRankRiver = selectedRivers.reduce((acc, cur) => cur.rank > acc.rank ? cur : acc);
+
+    // Return the selected rivers names and the tributaries names of the highest ranked river
     return [...selectedRivers.map(river => river.name), ...highestRankRiver.tributaries];
 }
 
+/**
+ * Maps river names to River objects
+ *
+ * @param stringRivers The river names
+ * @returns The River objects that correspond to the river names
+ */
 export const getRiversByString = (stringRivers: string[]): River[] => {
     return filterRivers.filter((river) => stringRivers.includes(river.name))
 }
 
-
+/**
+ * Returns the river names that are selected
+ *
+ * @param selectedRivers The currently selected rivers
+ * @returns The names of the rivers that are selected
+ */
 export const getFilteredRivers = (selectedRivers: River[]): (string[] | undefined) => {
     if (selectedRivers.length === 0) {
         return undefined;
     }
 
+    // Find the highest ranked river
     const highestRankRiver = selectedRivers.reduce((acc, cur) => cur.rank > acc.rank ? cur : acc);
 
     let riversToCheck: River[] = [highestRankRiver];
     let returnStrings: string[] = [];
 
+    // Check the tributaries of the highest ranked river
     while (riversToCheck.length > 0) {
         const currentlyChecking = riversToCheck.shift();
         riversToCheck = [...riversToCheck, ...getRiversByString(currentlyChecking!.tributaries)];

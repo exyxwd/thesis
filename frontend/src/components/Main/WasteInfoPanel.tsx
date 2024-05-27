@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { Trans, useTranslation } from 'react-i18next';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -24,13 +24,13 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { hideWaste } from 'API/queryUtils';
+import { useShowNotification } from './NotificationContext';
+import { ExpandedWasteData, NotificationType } from 'models/models';
 import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import {
     useActiveFilters, useSelectedTime, useSelectedWastes,
     useSetActiveFilters, useSetSelectedTime, useSetSelectedWastes
 } from 'components/Main/FilterContext';
-import { ExpandedWasteData, NotificationType } from 'models/models';
-import { useShowNotification } from './NotificationContext';
 
 /**
  * The properties of the waste information panel
@@ -70,6 +70,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
     const activeFilters = useActiveFilters();
     const selectedTime = useSelectedTime();
 
+    // Update the hidden status of the waste in the selected wastes on any status change
     useEffect(() => {
         setSelectedWastes(prevWastes => {
             return prevWastes.map(waste => {
@@ -165,6 +166,7 @@ const WasteInfoPanel = ({ data, onClose }: WasteInfoPanelProps): React.ReactElem
         setImageLoaded(true);
     };
 
+    // Make sure that the active filters include the currently selected waste
     useEffect(() => {
         if (data) {
             const newFilters = [...activeFilters];

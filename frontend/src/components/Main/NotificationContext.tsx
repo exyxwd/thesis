@@ -9,6 +9,11 @@ interface NotificationContextProps {
 
 const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
 
+/**
+ * Hook to show a notification
+ *
+ * @returns {function} The function to show a notification
+ */
 export const useShowNotification = (): ((mode: NotificationType, message: string) => void) => {
     const context = useContext(NotificationContext);
     if (!context) {
@@ -17,7 +22,13 @@ export const useShowNotification = (): ((mode: NotificationType, message: string
     return context.showNotification;
 };
 
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+/**
+ * Provider for the notification context to show notifications
+ *
+ * @param param0 The children of the provider
+ * @returns {React.ReactElement} The notification provider wrapping its children and the notification panel
+ */
+export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }): React.ReactElement => {
     const [mode, setMode] = useState<NotificationType>(NotificationType.Info);
     const [message, setMessage] = useState<string>('');
 
@@ -26,6 +37,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         setMessage(message);
     };
 
+    // Show the notification for 5 seconds
     useEffect(() => {
         if (message !== '') {
             const timer = setTimeout(() => {

@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
-import { MinimalWasteData, filterRivers } from 'models/models';
-import DownloadButton from './DownloadButton';
-import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
 import FilterItem from './FilterItem';
 import TimeSlider from './TimeSlider';
-// TODO: ?
+import DownloadButton from './DownloadButton';
+import { MinimalWasteData, filterRivers } from 'models/models';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
+import { useActiveFilters, useSelectedTime, useSelectedWastes, useSetActiveFilters } from './FilterContext';
+import { getFilteredRivers, getRiversByString, getSelectableRivers, isFitForFilters } from 'models/functions';
+
 /**
  * Grouped waste filters
  */
@@ -26,6 +26,9 @@ interface FilterName {
     [key: string]: string | undefined
 }
 
+/**
+ * Filter names
+ */
 const filterNames: FilterName = {
     locality: "Place",
     size: "Size",
@@ -48,8 +51,11 @@ interface filterProps {
 }
 
 /**
- * Sets up the filter menu
+ * Filter menu component
  *
+ * @param {filterProps} param0 isLoading: Whether the data is still loading (has not fetched yet),
+ * wasteData: The data to filter,
+ * isError: Whether an error occurred while fetching the data
  * @returns {React.ReactElement} The filter menu
  */
 const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactElement => {
@@ -64,6 +70,7 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
     const authenticated = useAuthenticated();
     const {data: filterMap, refetch: updateCounts} = useQuery<Map<string,number>>('filtercounts', () => filterCount());
 
+    // Close the filter menu on click outside
     useEffect(() => {
         document.addEventListener("click", handleClickElsewhere, true);
         return () => {
@@ -79,6 +86,11 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
         setCountFitForFilters(selectedWastes.length);
     }, [selectedWastes, activeFilters, selectedTime]);
 
+    /**
+     * Calculates the number of wastes that would fit every filter if it was selected
+     *
+     * @returns {Promise<Map<string,number>>} Filter name and calculated number pairs
+     */
     async function filterCount():Promise<Map<string,number>> {
         const map = new Map<string,number>();
         
@@ -112,6 +124,11 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
         return map;
     }
 
+    /**
+     * Closes the filter menu if the click was outside of it
+     *
+     * @param e The event
+     */
     const handleClickElsewhere = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (filterRef.current && !filterRef.current.contains(target)) {
@@ -119,6 +136,12 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
         }
     }
 
+    /**
+     * Shows a warning if a filter is not selected that would narrow down the selection
+     *
+     * @param category The category of the filter
+     * @returns {boolean} Whether the warning should be shown
+     */
     function showWarning(category: string): boolean {
         switch (category) {
             case 'country':
@@ -132,9 +155,16 @@ const Filters = ({ wasteData, isError, isLoading }: filterProps): React.ReactEle
         }
     }
 
+    /**
+     * Sets the active filters on filter click
+     *
+     * @param filter The filter clicked
+     */
     const setFilterState = useCallback((filter: string) => {
         if (activeFilters.includes(filter)) {
             setActiveFilters(prevFilters => prevFilters.filter((str) => str !== filter));
+
+            // Unselect rivers if their rank is higher than the unselected river
             const riverUnselected = getRiversByString([filter]);
             if (riverUnselected.length > 0) {
                 const rankOfUnselectedRiver = riverUnselected[0].rank;

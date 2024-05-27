@@ -1,11 +1,11 @@
+import * as XLSX from 'xlsx';
+import { useQuery } from 'react-query';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import * as XLSX from 'xlsx';
 
 import { fetchMultipleWasteById } from 'API/queryUtils';
-import { ExpandedWasteData, MinimalWasteData, NotificationType } from 'models/models';
 import { useShowNotification } from './NotificationContext';
+import { ExpandedWasteData, MinimalWasteData, NotificationType } from 'models/models';
 
 /**
  * ISO datetime format to human readable format (yyyy. mm. dd. hh:mm)

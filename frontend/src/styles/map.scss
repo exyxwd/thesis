@@ -1,32 +1,22 @@
-.marker-cluster-small {
-	background-color: rgba(255, 255, 255, 255);
-}
+$cluster-color: #4DB7FE;
 
-.marker-cluster-small div {
-	background-color: rgba(77, 183, 254, 255);
-}
+/* ################################ CLUSTER COLORS ################################ */
 
-.marker-cluster-medium {
-	background-color: rgba(255, 255, 255, 255);
-}
-
-.marker-cluster-medium div {
-	background-color: rgba(77, 183, 254, 255);
-}
-
+.marker-cluster-small,
+.marker-cluster-medium,
 .marker-cluster-large {
-	background-color: rgba(255, 255, 255, 255);
-}
+    background-color: white;
 
-.marker-cluster-large div {
-	background-color: rgba(77, 183, 254, 255);
+    div {
+        background-color: $cluster-color;
+    }
 }
 
 .marker-cluster {
 	background-color: rgba(0, 0, 0, 0);
-	// background-clip: padding-box;
-	// border-radius: 20px;
 }
+
+/* ################################ CLUSTER SIZES ################################ */
 
 .marker-cluster div span {
 	font-weight: bold;
@@ -42,7 +32,7 @@
 	text-align: center;
 	border-radius: 25px;
 	color: white;
-	border: 2px solid rgba(255, 255, 255, 255);
+	border: 2px solid white;
 	outline: solid rgba(0, 0, 0, 0.1) 4px;
 	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
@@ -50,6 +40,9 @@
 .marker-cluster span {
 	line-height: 37px;
 }
+
+/* ################################ CLUSTER TRANSITIONS ################################ */
+
 
 .leaflet-cluster-anim .leaflet-marker-icon,
 .leaflet-cluster-anim .leaflet-marker-shadow {
@@ -60,7 +53,6 @@
 }
 
 .leaflet-cluster-spider-leg {
-	/* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
 	-webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out, -webkit-stroke-opacity 0.3s ease-in;
 	-moz-transition: -moz-stroke-dashoffset 0.3s ease-out, -moz-stroke-opacity 0.3s ease-in;
 	-o-transition: -o-stroke-dashoffset 0.3s ease-out, -o-stroke-opacity 0.3s ease-in;

@@ -1,9 +1,9 @@
-import React from "react";
-import { Dropdown } from "react-bootstrap";
-import "flag-icons/css/flag-icons.min.css";
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import 'flag-icons/css/flag-icons.min.css';
 
-import { languages } from "i18n/i18n";
-import { i18n as i18nType } from "i18next";
+import { languages } from 'i18n/i18n';
+import { i18n as i18nType } from 'i18next';
 
 
 interface NavigationProps {
@@ -20,14 +20,14 @@ const LanguageSelector: React.FC<NavigationProps> = ({
     i18n,
 }: NavigationProps): React.ReactElement => {
     return (
-        <Dropdown className="language-selector">
-            <Dropdown.Toggle variant="secondary" className="language-dropdown">
+        <Dropdown className='language-selector'>
+            <Dropdown.Toggle variant='secondary' className='language-dropdown'>
                 <span className={`fi fi-${languages[i18n.resolvedLanguage || 'hu'].flag}`}></span>
             </Dropdown.Toggle>
-            <Dropdown.Menu className="language-dropdown-menu">
+            <Dropdown.Menu className='language-dropdown-menu'>
                 {Object.keys(languages).map((lng) => (
                     <Dropdown.Item key={lng} onClick={() => i18n.changeLanguage(lng)}>
-                        <div className="flag-container">
+                        <div className='flag-container'>
                             {languages[lng].nativeName}
                             <span className={`fi fi-${languages[lng].flag}`}></span>
                         </div>

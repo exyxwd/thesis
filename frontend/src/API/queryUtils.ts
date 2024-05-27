@@ -151,6 +151,7 @@ export const postLogout = async (): Promise<boolean> => {
 
 /**
  * Posts admin initiated register request data to the server
+ *
  * @param {RegisterData} data - the data of the new user needed for registration
  */
 export const postRegisterData = async (data: RegisterData): Promise<boolean> => {
@@ -173,7 +174,7 @@ export const postRegisterData = async (data: RegisterData): Promise<boolean> => 
 
 /**
  * Fetches existing users
- * 
+ *
  * @returns {UserDataType[]} - names of all existing users
  */
 export const fetchUsers = async (): Promise<UserDataType[]> => {
@@ -187,6 +188,7 @@ export const fetchUsers = async (): Promise<UserDataType[]> => {
 
 /**
  * Posts password change request data to the server
+ *
  * @param {string} username - username of the user
  * @param {string} newPassword - new password of the user
  */
@@ -214,7 +216,7 @@ export const postPasswordChange = async (username: string, newPassword: string):
 
 /**
  * Posts username change request data to the server
- * 
+ *
  * @param {string} oldUsername - old username of the user
  * @param {string} newUsername - new username of the user
  */
@@ -242,7 +244,7 @@ export const postUsernameChange = async (oldUsername: string, newUsername: strin
 
 /**
  * Sends a DELETE request to the server to delete a user
- * 
+ *
  * @param {string} username - username of the user to delete
  * @returns {boolean} - true if the delete was successful, false otherwise
  */

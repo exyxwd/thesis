@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * Interface for the pagination component
@@ -25,6 +25,21 @@ const Pagination: React.FC<PaginationProps> = ({ totalRecords, recordsPerPage, h
     const totalPages = Math.ceil(totalRecords / recordsPerPage);
     const [currentPage, setCurrentPage] = useState(1);
 
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+            const indexOfLastRecord = totalPages * recordsPerPage;
+            const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+            handlePageChange(indexOfFirstRecord, indexOfLastRecord);
+        }
+    }, [currentPage, totalPages, recordsPerPage, handlePageChange]);
+
+
+    /**
+     * Handles the click on a page number
+     *
+     * @param {number} pageNumber The page number clicked
+     */
     const handlePageClick = (pageNumber: number) => {
         setCurrentPage(pageNumber);
         const indexOfLastRecord = pageNumber * recordsPerPage;
@@ -32,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalRecords, recordsPerPage, h
         handlePageChange(indexOfFirstRecord, indexOfLastRecord);
     };
     return (
-        <ul className="pagination justify-content-center" style={{ position: 'fixed', bottom: 0 }}>
+        <ul className="pagination justify-content-center">
             <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                 <button className="page-link" onClick={() => handlePageClick(1)}>
                     &lt;&lt;
@@ -60,12 +75,12 @@ const Pagination: React.FC<PaginationProps> = ({ totalRecords, recordsPerPage, h
                     );
                 }
             })}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <li className={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}>
                 <button className="page-link" onClick={() => handlePageClick(currentPage + 1)}>
                     &gt;
                 </button>
             </li>
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <li className={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}>
                 <button className="page-link" onClick={() => handlePageClick(totalPages)}>
                     &gt;&gt;
                 </button>

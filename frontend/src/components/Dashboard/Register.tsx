@@ -20,6 +20,7 @@ const Register: React.FC = (): React.ReactElement => {
         password: '',
     });
 
+    // Reset error messages when the user starts typing
     useEffect(() => {
         if (registerData.username || registerData.password) {
             setSuccessfulRegistry(false);
@@ -51,6 +52,11 @@ const Register: React.FC = (): React.ReactElement => {
         }
     );
 
+    /**
+     * Handles the input change, sets the register data
+     *
+     * @param event The input change event
+     */
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRegisterData(prevRegisterData => ({
             ...prevRegisterData,
@@ -58,6 +64,11 @@ const Register: React.FC = (): React.ReactElement => {
         }));
     };
 
+    /**
+     * Handles the register form submission, checks the data and sets the error message if needed
+     *
+     * @param evt The form event
+     */
     const handleRegister = (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         const alphanumericRegex = /^[a-zA-Z0-9 ÁáÉéÍíÓóÖöŐőÚúÜüŰű]+$/i;

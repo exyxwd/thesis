@@ -1,18 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-
 import { Trans } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { fetchFilteredInverseWasteData, fetchFilteredWasteData, fetchWasteById } from 'API/queryUtils';
-import { useAuthenticated } from 'components/Dashboard/AuthContext';
-import { useActiveFilters, useSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
-import Filters from 'components/Main/Filters';
 import Map from 'components/Main/Map';
-import { useShowNotification } from 'components/Main/NotificationContext';
+import Filters from 'components/Main/Filters';
 import WasteInfoPanel from 'components/Main/WasteInfoPanel';
+import { useAuthenticated } from 'components/Dashboard/AuthContext';
 import { getFilteredRivers, isFitForFilters } from 'models/functions';
+import { useShowNotification } from 'components/Main/NotificationContext';
 import { ExpandedWasteData, MinimalWasteData, NotificationType, filterRivers } from 'models/models';
+import { fetchFilteredInverseWasteData, fetchFilteredWasteData, fetchWasteById } from 'API/queryUtils';
+import { useActiveFilters, useSelectedTime, useSetSelectedWastes } from 'components/Main/FilterContext';
 
 /**
  * The main page of the application, renders the map, the filters and the waste information panel.
@@ -48,20 +47,24 @@ const MainPage: React.FC = (): React.ReactElement => {
         { staleTime: Infinity, cacheTime: Infinity, enabled: !!filteredWasteData }
     );
 
+    // Filter the waste data based on the active filters
     useEffect(() => {
         setSelectedWastes(wasteData.filter((waste) => isFitForFilters(authenticated, waste, activeFilters, selectedTime, filteredRivers)));
     }, [wasteData, activeFilters, selectedTime, filteredRivers, authenticated, setSelectedWastes]);
 
+    // Merge the filtered and inverse filtered waste data
     useEffect(() => {
         setWasteData([...(filteredWasteData || []), ...(inverseFilteredWasteData || [])]);
     }, [filteredWasteData, inverseFilteredWasteData]);
 
+    // Redirect to the main page if the user is not authenticated and the waste point is hidden
     useEffect(() => {
         if (detailedWasteData && detailedWasteData.hidden && !authenticated) {
             navigate('/');
         }
     } , [detailedWasteData, authenticated, navigate]);
 
+    // Show error notification if the detailed waste data fetch failed
     useEffect(() => {
         if (detailedWasteDataError) {
             showNotification(NotificationType.Error, 'fetch_detailed_waste_error');

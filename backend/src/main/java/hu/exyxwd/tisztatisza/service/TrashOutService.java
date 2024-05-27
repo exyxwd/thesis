@@ -281,6 +281,8 @@ public class TrashOutService {
                     wastesToSave.add(newWaste);
                 }
             } catch (IllegalArgumentException e) {
+                // Skip the waste if any of its data is missing or does not fit the requirements
+                // (e.g. not Hungary neighboring country, etc.)
                 continue;
             }
         }

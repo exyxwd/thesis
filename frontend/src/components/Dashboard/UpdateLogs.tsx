@@ -8,7 +8,12 @@ import { NotificationType, UpdateLog } from 'models/models';
 import { deleteLogs, fetchUpdateLogs } from 'API/queryUtils';
 import { useShowNotification } from 'components/Main/NotificationContext';
 
-const UpdateLogs: React.FC = () => {
+/**
+ * Component for displaying the update logs
+ *
+ * @returns {React.ReactElement} The update logs table
+ */
+const UpdateLogs: React.FC = (): React.ReactElement => {
     const recordsPerPage = 40;
     const deleteMutation = useMutation(deleteLogs);
     const [logs, setLogs] = useState<UpdateLog[]>([]);
@@ -23,13 +28,6 @@ const UpdateLogs: React.FC = () => {
             enabled: false,
             onSuccess: (data) => {
                 setLogs(data.reverse());
-                if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
-                    const newIndexOfLastRecord = indexOfFirstRecord;
-                    const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
-
-                    setIndexOfLastRecord(newIndexOfLastRecord);
-                    setIndexOfFirstRecord(newIndexOfFirstRecord);
-                }
             },
             onError: () => {
                 showNotification(NotificationType.Error, 'update_logs_error');
@@ -40,20 +38,23 @@ const UpdateLogs: React.FC = () => {
         refetch();
     }, [refetch]);
 
+    // Handle the selection of all logs on the current page
     const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedLogs(event.target.checked ? currentRecords.map(log => log.id) || [] : []);
     };
 
+    // Handle the selection of one log
     const handleSelectLog = (id: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedLogs(prevSelectedLogs => event.target.checked ? [...prevSelectedLogs, id] : prevSelectedLogs.filter(logId => logId !== id));
     };
 
+    // Handle the deletion of selected logs by triggering the delete mutation
     const handleDeleteSelected = async () => {
         if (!selectedLogs.length) return;
         deleteMutation.mutate(selectedLogs, {
             onSuccess: () => {
-                setSelectedLogs([]);
                 showNotification(NotificationType.Success, 'delete_log_success');
+                setSelectedLogs([]);
                 refetch();
             },
             onError: () => {

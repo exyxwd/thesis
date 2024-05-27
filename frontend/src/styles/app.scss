@@ -5,7 +5,6 @@ $secondary-base: rgb(95, 107, 139);
 $dwnbtn: rgb(70, 191, 66);
 $dwnbtn-hover: rgb(20, 141, 26);
 $filter-background: rgb(250, 249, 246);
-// $link: rgb(19, 131, 206);
 
 $nav-height: 63px;
 
@@ -129,8 +128,7 @@ body {
 
 .filter-loading-error {
     @extend .loading-error;
-
-    position:absolute;
+    position: absolute;
 }
 
 /* ################################ NOTIFICATIONS ################################ */
@@ -183,5 +181,4 @@ body {
 
 .notification-msg {
     margin-left: 30px;
-
 }

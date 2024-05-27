@@ -32,7 +32,7 @@ i18n
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-        debug: true,
+        debug: false,
         resources,
         fallbackLng: 'hu',
         supportedLngs: ['hu', 'en'],

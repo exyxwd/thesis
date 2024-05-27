@@ -25,7 +25,7 @@ interface MapProps {
 /**
  * Sets up the map and its markers
  *
- * @param {MapProps} param0 garbages: The data of the garbage dumps, onMarkerClick: The function to handle tselectedWastehe click on a marker 
+ * @param {MapProps} param0 wastes: The data of the waste dumps, onMarkerClick: The function to handle tselectedWastehe click on a marker
  * @returns {React.ReactElement} The map
  */
 const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactElement => {
@@ -41,6 +41,7 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Refresh the map
     useEffect(() => {
         if (!selectedMarkerId && cameFromMarker) {
             setCameFromMarker(false);
@@ -62,6 +63,7 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
         selectedWastes.forEach((e) => {
             let iconUrl: string;
 
+            // Set the marker icon based on the waste status, hidden status or if it is selected
             if (e.id == Number(selectedMarkerId)) iconUrl = yellowMarkerIcon
             else if (e.hidden) iconUrl = greyMarkerIcon
             else if (e.status === 'STILLHERE' || e.status === 'MORE') iconUrl = blueMarkerIcon
@@ -80,11 +82,13 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
             if (clusterLayer.current) {
                 const marker = L.marker(L.latLng(e.latitude, e.longitude), { icon: markerIcon }).addTo(clusterLayer.current);
 
+                // Trigger the waste panel opening on marker click
                 marker.on('click', () => {
                     setCameFromMarker(true);
                     navigate(`/waste/${e.id}`, { state: { key: "markerClick" } });
                 });
 
+                // If the user navigated to page by an url of a marker, fly to the marker
                 if (location.pathname === `/waste/${e.id}` && location.state?.key !== 'markerClick' && map.current) {
                     map.current.flyTo([selectedWaste!.latitude, selectedWaste!.longitude], 17, { duration: 2.5 });
                 }
@@ -99,11 +103,13 @@ const Map: React.FC<MapProps> = memo(({ selectedWaste }: MapProps): React.ReactE
             return;
         }
 
+        // Set up the map and set it to Hungary
         map.current = L.map('map', { doubleClickZoom: false, attributionControl: false }).setZoom(7).setView(L.latLng(47.1611615, 19.5057541));
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             minZoom: 5
         }).addTo(map.current);
+        // Change the position of the leaflet text to the other corner
         L.control.attribution({ position: 'bottomleft' }).addTo(map.current);
     });
 

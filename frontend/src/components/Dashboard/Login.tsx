@@ -44,6 +44,7 @@ const Login: React.FC = (): React.ReactElement => {
             retry: 0
         });
 
+    // If the user is authenticated, redirect to the dashboard page the user was going originally
     useEffect(() => {
         if (authenticated && location.state?.from) {
             navigate(location.state.from);
@@ -53,6 +54,10 @@ const Login: React.FC = (): React.ReactElement => {
         }
     }, [authenticated, location.state?.from, navigate])
 
+    /**
+     * Function to handle successful login, sets the authenticated state to true
+     * and navigates to the dashboard page the user was going originally
+     */
     const onSuccessfulLogin = () => {
         setAuthenticated(true);
         setInvalidCreds(false);
@@ -73,6 +78,11 @@ const Login: React.FC = (): React.ReactElement => {
         setPassword(event.target.value);
     };
 
+    /**
+     * Handles the login form submission, manages error displaying
+     *
+     * @param evt The form event
+     */
     const handleLogin = (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         setInvalidCreds(false);

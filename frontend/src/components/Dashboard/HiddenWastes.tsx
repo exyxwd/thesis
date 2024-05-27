@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { Trans, useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { fetchHiddenWastes, hideWaste } from 'API/queryUtils';
-import { useShowNotification } from 'components/Main/NotificationContext';
-import { ExpandedWasteData, NotificationType } from 'models/models';
 import Pagination from './Pagination';
+import { fetchHiddenWastes, hideWaste } from 'API/queryUtils';
+import { ExpandedWasteData, NotificationType } from 'models/models';
+import { useShowNotification } from 'components/Main/NotificationContext';
 
-const HiddenWastes: React.FC = () => {
+/**
+ * Component for displaying hidden waste points
+ *
+ * @returns {JSX.Element} The hidden wastes in card format
+ */
+const HiddenWastes: React.FC = (): JSX.Element => {
     const recordsPerPage = 16;
     const [hiddenWastes, setHiddenWastes] = useState<ExpandedWasteData[]>([]);
     const [indexOfFirstRecord, setIndexOfFirstRecord] = React.useState<number>(0);
@@ -47,16 +52,13 @@ const HiddenWastes: React.FC = () => {
         },
     });
 
+    /**
+     * Handles the unhiding of a waste point
+     *
+     * @param id The id of the waste point to unhide
+     */
     const handleHideWaste = (id: number) => {
         hideWasteMutation.mutate({ id, hiddenStatus: false });
-
-        if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
-            const newIndexOfLastRecord = indexOfFirstRecord;
-            const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
-
-            setIndexOfLastRecord(newIndexOfLastRecord);
-            setIndexOfFirstRecord(newIndexOfFirstRecord);
-        }
     };
 
     const handlePageChange = (indexOfFirstRecord: number, indexOfLastRecord: number) => {

@@ -20,9 +20,8 @@ import DashboardMain from 'components/Dashboard/DashboardMain';
 import ProtectedRoute from 'components/Dashboard/ProtectedRoute';
 import { useSetAuthenticated } from 'components/Dashboard/AuthContext';
 
-// TODO About page and contact page
 /**
- * Main App component
+ * Main App component, handles routing and authentication
  *
  * @returns {React.ReactElement} The main app component
  */

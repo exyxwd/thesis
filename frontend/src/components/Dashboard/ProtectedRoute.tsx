@@ -22,6 +22,7 @@ const ProtectedRoute = (): React.ReactElement => {
             onError: (error: FetchError) => { if (error.status === 403) { setAuthenticated(false) } },
         });
 
+    // If the user is authenticated, render the children routes, otherwise redirect to the login page passing the current location
     return authenticated ? <><DashboardMenu /> <Outlet /></> : <Navigate to={`/dashboard/login`} replace state={{ from: location }} />;
 };
 

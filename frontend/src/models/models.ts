@@ -1,10 +1,29 @@
-// TODO: docs
+/**
+ * Enumeration representing the status of a waste
+ * 
+ * @readonly
+ * @enum {string}
+ * @property {string} StillHere - Waste is still present
+ * @property {string} Cleaned - Waste has been cleaned
+ * @property {string} More - More waste since last update
+ */
 export enum WasteStatus {
     StillHere = 'STILLHERE',
     Cleaned = 'CLEANED',
     More = 'MORE'
 }
 
+/**
+ * Enumeration representing the country of a waste
+ *
+ * @readonly
+ * @enum {string}
+ * @property {string} Hungary - Hungary
+ * @property {string} Ukraine - Ukraine
+ * @property {string} Romania - Romania
+ * @property {string} Serbia - Serbia
+ * @property {string} Slovakia - Slovakia
+ */
 export enum WasteCountry {
     Hungary = 'HUNGARY',
     Ukraine = 'UKRAINE',
@@ -13,12 +32,38 @@ export enum WasteCountry {
     Slovakia = 'SLOVAKIA'
 }
 
+/**
+ * Enumeration representing the size of a waste
+ *
+ * @readonly
+ * @enum {string}
+ * @property {string} Bag - Waste fits into a bag
+ * @property {string} Wheelbarrow - Waste fits into a wheelbarrow
+ * @property {string} Car - Vehicle is needed
+ */
 export enum WasteSize {
     Bag = 'BAG',
     Wheelbarrow = 'WHEELBARROW',
     Car = 'CAR'
 }
 
+/**
+ * Enumeration representing the type of a waste
+ *
+ * @readonly
+ * @enum {string}
+ * @property {string} Plastic - Plastic
+ * @property {string} Metal - Metal
+ * @property {string} Glass - Glass
+ * @property {string} Domestic - Domestic
+ * @property {string} Construction - Construction
+ * @property {string} Liquid - Liquid
+ * @property {string} Dangerous - Dangerous
+ * @property {string} Automotive - Automotive
+ * @property {string} Electronic - Electronic
+ * @property {string} Organic - Organic
+ * @property {string} DeadAnimals - Animal remains
+ */
 export enum WasteType {
     Plastic = 'PLASTIC',
     Metal = 'METAL',
@@ -32,6 +77,21 @@ export enum WasteType {
     Organic = 'ORGANIC',
     DeadAnimals = 'DEADANIMALS'
 }
+/**
+ * Interface representing the reduced data of a waste
+ *
+ * @interface
+ * @property {number} id - id of the waste
+ * @property {number} latitude - latitude of the waste
+ * @property {number} longitude - longitude of the waste
+ * @property {string} country - country the waste is in
+ * @property {TrashSize} size - size of the waste
+ * @property {TrashStatus} status - status of the waste
+ * @property {TrashType[]} types - types of the waste
+ * @property {string} river - river near the waste
+ * @property {string} updateTime - time of the last update
+ * @property {boolean} hidden - whether the waste is hidden or not
+ */
 
 export interface MinimalWasteData {
     id: number;
@@ -46,6 +106,26 @@ export interface MinimalWasteData {
     hidden: boolean;
 }
 
+/**
+ * Interface representing the more detailed data of a waste
+ *
+ * @interface
+ * @property {number} id - id of the waste
+ * @property {number} latitude - latitude of the waste
+ * @property {number} longitude - longitude of the waste
+ * @property {string} country - country the waste is in
+ * @property {string} locality - more specific locality of the waste
+ * @property {string} sublocality - even more specific locality of the waste
+ * @property {TrashSize} size - size of the waste
+ * @property {TrashStatus} status - status of the waste
+ * @property {TrashType[]} types - types of the waste
+ * @property {string} createTime - the initial time of the report's creation
+ * @property {string} updateTime - the time of the report's last update
+ * @property {string} note - note recorded for the waste
+ * @property {string} imageUrl - URL of the image of the waste
+ * @property {string} river - river near the waste
+ * @property {boolean} hidden - whether the waste is hidden or not
+ */
 export interface ExpandedWasteData {
     id: number;
     latitude: number;
@@ -59,21 +139,43 @@ export interface ExpandedWasteData {
     types: WasteType[];
     createTime: string;
     updateTime: string;
-    updateNeeded: boolean;
     note: string;
     imageUrl: string;
     hidden: boolean;
 }
 
+/**
+ * Interface representing the register data submitted by the user
+ *
+ * @interface
+ * @property {string} username - username of the user
+ * @property {string} password - password of the user
+ */
 export interface RegisterData {
     username: string;
     password: string;
 }
 
+/**
+ * Interface representing the data of the user
+ *
+ * @interface
+ * @property {string} username - username of the user
+ */
 export type UserDataType = {
     username: string;
 }
 
+/**
+ * Interface representing the database update logs
+ * 
+ * @interface
+ * @property {number} id - id of the log
+ * @property {string} updateTime - time of the update
+ * @property {number} updateCount - number of updated wastes
+ * @property {number} deleteCount - number of deleted wastes
+ * @property {number} totalCount - total number of wastes after the update
+ */
 export interface UpdateLog {
     id: number;
     updateTime: string;
@@ -82,18 +184,38 @@ export interface UpdateLog {
     totalCount: number;
 }
 
+/**
+ * Enumeration representing the type of a notification
+ *
+ * @enum {string}
+ * @property {string} Error - Error notification
+ * @property {string} Success - Success notification
+ * @property {string} Info - Information notification
+ */
 export enum NotificationType {
     Error = 'ERROR',
     Success = 'SUCCESS',
     Info = 'INFO'
 }
 
+/**
+ * Interface representing a river and its data
+ *
+ * @interface
+ * @property {string} name - name of the river
+ * @property {string[]} tributaries - names of the tributaries of the river
+ * @property {number} rank - rank of the river, rank 1 means its a main river,
+ * rank 2 that it is a tributary of a main river, etc.
+ */
 export interface River {
     name: string;
     tributaries: string[];
     rank: number;
 }
 
+/**
+ * Data of the rivers that are selectable. Includes the names, tributeris and ranks of the rivers.
+ */
 export const filterRivers: River[] = [
     {
         name: 'DUNA',

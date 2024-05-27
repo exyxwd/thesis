@@ -34,6 +34,11 @@ const NavBar: React.FC<NavigationProps> = ({ i18n }: NavigationProps): React.Rea
         }
     }, []);
 
+    /**
+     * Handles the click event outside of the navigation bar to close the navigation if open
+     *
+     * @param e The click event
+     */
     const handleClickElsewhere = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (navRef.current && !navRef.current.contains(target)) {

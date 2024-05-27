@@ -12,17 +12,20 @@ const TimeSlider = (): React.ReactElement => {
     const [st, setSt] = useState(new Date(calcRange().def));
     const setSelectedTime = useSetSelectedTime();
 
+    // While sliding the time slider, update the selected time
     const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTime = new Date(Number(e.target.value));
         setSt(newTime);
     };
 
+    // When the user releases the time slider, set the selected time
     const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
         const newTime = new Date(Number((e.target as HTMLInputElement).value));
         setSelectedTime(newTime);
         setSt(newTime);
     };
 
+    // When the user changes the date input, update the selected time
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             const newTime = new Date(e.target.value);

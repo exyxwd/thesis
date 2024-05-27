@@ -15,7 +15,7 @@ const ActiveFiltersContext = createContext<{
 } | undefined>(undefined);
 
 /**
- * Getter for active garbage filters
+ * Getter for active waste filters
  *
  * @returns {string[]} The currently active filters
  */
@@ -27,6 +27,11 @@ export const useActiveFilters = (): string[] => {
     return context.activeFilters;
 };
 
+/**
+ * Getter for the selected time
+ *
+ * @returns {Date} The currently selected time
+ */
 export const useSelectedTime = (): Date => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {
@@ -36,7 +41,7 @@ export const useSelectedTime = (): Date => {
 }
 
 /**
- * Setter for the active garbage filters
+ * Setter for the active waste filters
  *
  * @returns {React.Dispatch<React.SetStateAction<string[]>>} The function to set the active filters
  */
@@ -48,6 +53,11 @@ export const useSetActiveFilters = (): React.Dispatch<React.SetStateAction<strin
     return context.setActiveFilters;
 };
 
+/**
+ * Setter for the selected time
+ *
+ * @returns {React.Dispatch<React.SetStateAction<Date>} The function to set the selected time
+ */
 export const useSetSelectedTime = (): React.Dispatch<React.SetStateAction<Date>> => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {
@@ -56,6 +66,11 @@ export const useSetSelectedTime = (): React.Dispatch<React.SetStateAction<Date>>
     return context.setSelectedTime;
 }
 
+/**
+ * Getter for the selected wastes
+ *
+ * @returns {MinimalWasteData[]} The currently selected wastes
+ */
 export const useSelectedWastes = (): MinimalWasteData[] => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {
@@ -64,6 +79,11 @@ export const useSelectedWastes = (): MinimalWasteData[] => {
     return context.selectedWastes;
 }
 
+/**
+ * Setter for the selected wastes
+ *
+ * @returns {React.Dispatch<React.SetStateAction<MinimalWasteData[]>>} The function to set the selected wastes
+ */
 export const useSetSelectedWastes = (): React.Dispatch<React.SetStateAction<MinimalWasteData[]>> => {
     const context = useContext(ActiveFiltersContext)
     if (!context) {

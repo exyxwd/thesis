@@ -1,6 +1,15 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 
+/**
+ * Interface for the props of the FilterItem component
+ *
+ * @interface Props
+ * @property {string} content The name of the filter
+ * @property {boolean} selected Whether the filter is selected or not
+ * @property {number | undefined} count The count of the filter if it were selected
+ * @property {(content: string) => void} OnSelect Function to handle the selection of the filter
+ */
 interface Props {
     content: string;
     selected: boolean;
@@ -11,9 +20,9 @@ interface Props {
 /**
  * Sets up the individial waste filter items
  *
- * @param {Props} param0 content: content of the filter item,
- * OnSelect: function to handle the selection of the filter item,
- * selected: whether the filter item is selected or not
+ * @param {Props} param0 content: content of the filter,
+ * OnSelect: function to handle the selection of the filter,
+ * selected: whether the filter is selected or not
  * @returns {React.ReactElement} Waste filter item
  */
 const FilterItem = ({ content, selected, count, OnSelect }: Props): React.ReactElement => {

@@ -1,12 +1,12 @@
-import { useQuery } from 'react-query';
 import React, { useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
 import { Button, Dropdown, Form, Modal } from 'react-bootstrap';
+import { Trans, useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 
-import Pagination from './Pagination';
-import { NotificationType, UserDataType } from 'models/models';
-import { useShowNotification } from 'components/Main/NotificationContext';
 import { deleteUser, FetchError, fetchUsers, postPasswordChange, postUsernameChange } from 'API/queryUtils';
+import { useShowNotification } from 'components/Main/NotificationContext';
+import { NotificationType, UserDataType } from 'models/models';
+import Pagination from './Pagination';
 
 /**
  * Enumeration for the different user editing operations
@@ -47,6 +47,7 @@ const UserEditor = (): React.ReactElement => {
     const [indexOfFirstRecord, setIndexOfFirstRecord] = useState<number>(0);
     const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord);
 
+    // Function to show the modal with the selected operation
     const handleShow = (username: string, operation: Operation) => {
         setInputValue('');
         setShowModal(true);
@@ -63,13 +64,6 @@ const UserEditor = (): React.ReactElement => {
                 // Sort users by username
                 setUserData([...data].sort((a, b) => { return a.username.localeCompare(b.username) }));
                 setShouldFetchUsers(false);
-                if (currentRecords.length === 1 && indexOfFirstRecord !== 0) {
-                    const newIndexOfLastRecord = indexOfFirstRecord;
-                    const newIndexOfFirstRecord = newIndexOfLastRecord - recordsPerPage;
-
-                    setIndexOfLastRecord(newIndexOfLastRecord);
-                    setIndexOfFirstRecord(newIndexOfFirstRecord);
-                }
             },
             onError: () => {
                 setShouldFetchUsers(false);
@@ -113,8 +107,8 @@ const UserEditor = (): React.ReactElement => {
         {
             enabled: shouldPostDelete, onSuccess: () => {
                 setShouldPostDelete(false);
-                setShouldFetchUsers(true);
                 showNotification(NotificationType.Success, 'delete_user_success');
+                setShouldFetchUsers(true);
             },
             onError: (error: FetchError) => {
                 if (error.status === 409) showNotification(NotificationType.Error, 'delete_user_error_self');
@@ -164,14 +158,14 @@ const UserEditor = (): React.ReactElement => {
                 <thead>
                     <tr className='user-table-head sticky-top'>
                         <th>
-                            <Trans i18nKey="user-editor.username">Felhasználónév</Trans>
+                            <Trans i18nKey="user_editor.username">Felhasználónév</Trans>
                             <span onClick={() => setUserData(prevUserData => prevUserData.slice().reverse())}
                                 className="material-symbols-outlined sort-icon">
                                 swap_vert
                             </span>
                         </th>
                         <th>
-                            <Trans i18nKey="user-editor.edit">Módosítás</Trans>
+                            <Trans i18nKey="user_editor.edit">Módosítás</Trans>
                         </th>
                     </tr>
                 </thead>
@@ -187,13 +181,13 @@ const UserEditor = (): React.ReactElement => {
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
                                             <Dropdown.Item onClick={() => handleShow(user.username, Operation.ChangePassword)}>
-                                                <Trans i18nKey="user-editor.change_password">Jelszó megváltoztatása</Trans>
+                                                <Trans i18nKey="user_editor.change_password">Jelszó megváltoztatása</Trans>
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={() => handleShow(user.username, Operation.Rename)}>
-                                                <Trans i18nKey="user-editor.change_username">Felhasználónév megváltoztatása</Trans>
+                                                <Trans i18nKey="user_editor.change_username">Felhasználónév megváltoztatása</Trans>
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={() => handleShow(user.username, Operation.Delete)}>
-                                                <Trans i18nKey="user-editor.delete_user">Felhasználó törlése</Trans>
+                                                <Trans i18nKey="user_editor.delete_user">Felhasználó törlése</Trans>
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -215,7 +209,7 @@ const UserEditor = (): React.ReactElement => {
                     <>
                         <Modal.Header closeButton>
                             <Modal.Title>
-                                <Trans i18nKey="user-editor.change_password_of">A felhasználó jelszavának megváltoztatása</Trans>
+                                <Trans i18nKey="user_editor.change_password_of">A felhasználó jelszavának megváltoztatása</Trans>
                                 <br />({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
@@ -225,7 +219,7 @@ const UserEditor = (): React.ReactElement => {
                                     <Form.Control
                                         type={showPassword ? "text" : "password"}
                                         maxLength={25}
-                                        placeholder={t('user-editor.new_password')}
+                                        placeholder={t('user_editor.new_password')}
                                         value={inputValue}
                                         onChange={handleInputChange}
                                         id="password"
@@ -243,34 +237,34 @@ const UserEditor = (): React.ReactElement => {
                     <>
                         <Modal.Header closeButton>
                             <Modal.Title >
-                                <Trans i18nKey="user-editor.change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>
+                                <Trans i18nKey="user_editor.change_username_of">A felhasználó felhasználónevének megváltoztatása</Trans>
                                 <br />({selectedUser})
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form.Control type="text" maxLength={25} placeholder={t('user-editor.new_username')} value={inputValue} onChange={handleInputChange} />
+                            <Form.Control type="text" maxLength={25} placeholder={t('user_editor.new_username')} value={inputValue} onChange={handleInputChange} />
                         </Modal.Body>
                     </>
                 }
                 {selectedOperation == Operation.Delete &&
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            <Trans i18nKey="user-editor.confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>
+                            <Trans i18nKey="user_editor.confirm_delete">Biztosan törölni akarja a felhasználót?</Trans>
                             <br />({selectedUser})
                         </Modal.Title>
                     </Modal.Header>
                 }
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        <Trans i18nKey="user-editor.exit">Kilépés</Trans>
+                        <Trans i18nKey="user_editor.exit">Kilépés</Trans>
                     </Button>
                     {selectedOperation == Operation.ChangePassword || selectedOperation == Operation.Rename ?
                         <Button variant="primary" onClick={handleSaveChanges}>
-                            <Trans i18nKey="user-editor.save">Mentés</Trans>
+                            <Trans i18nKey="user_editor.save">Mentés</Trans>
                         </Button>
                         :
                         <Button variant="danger" onClick={handleSaveChanges}>
-                            <Trans i18nKey="user-editor.delete">Törlés</Trans>
+                            <Trans i18nKey="user_editor.delete">Törlés</Trans>
                         </Button>
                     }
                 </Modal.Footer>

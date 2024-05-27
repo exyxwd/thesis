@@ -4,12 +4,17 @@
         "map": "Térkép",
         "contact": "Kapcsolat",
         "about_us": "Rólunk",
-        "dashboard": "Kezelőfelület"
+        "dashboard": "Kezelőfelület",
+        "main_page": "Főoldal",
+        "add_user": "Felhasználó hozzáadása",
+        "manage_user": "Felhasználók kezelése",
+        "logs": "Napló",
+        "logout": "Kijelentkezés",
+        "hidden-locations": "Rejtett pontok"
     },
     "status": {
         "stillhere": "Még szennyezett",
         "cleaned": "Megtisztítva",
-        "updateneeded": "Frissítés szükséges",
         "more": "Még több"
     },
     "details": {
@@ -22,7 +27,7 @@
         "id": "Azonosító",
         "sublocality": "Terület",
         "locality": "Helység",
-        "country": "Country",
+        "country": "Ország",
         "size": "Méret",
         "status": "Státusz",
         "types": "Típusok",
@@ -85,36 +90,6 @@
         "organic": "Szerves hulladék",
         "deadanimals": "Állati tetemek"
     },
-    "location": {
-        "Country": "Ország",
-        "Tisza": "Tisza",
-        "Kraszna": "Kraszna",
-        "Bodrog": "Bodrog",
-        "Szamos": "Szamos",
-        "Túr": "Túr",
-        "Kőrös-ér": "Kőrös-ér",
-        "Duna": "Duna",
-        "Place": "Hely",
-        "subLocality": "Terület",
-        "locality": "Helység",
-        "accessibilities": "Megközelíthetőség",
-        "ByCar": "Autóval",
-        "UnderWater": "Víz alatt",
-        "InCave": "Barlangban",
-        "NotForGeneralCleanup": "Nem általános takarításra"
-    },
-    "size": {
-        "Size": "Méret",
-        "size": "Méret"
-    },
-    "type": {
-        "Type": "Típus",
-        "types": "Típusok"
-    },
-    "state": {
-        "State": "Állapot",
-        "status": "Állapot"
-    },
     "country": {
         "country": "Ország",
         "rivers": "Folyók",
@@ -145,7 +120,7 @@
         "Editor": "Szerkesztő",
         "Admin": "Adminisztrátor"
     },
-    "user-editor": {
+    "user_editor": {
         "username": "Felhasználónév",
         "change_password": "Jelszó módosítása",
         "change_username": "Felhasználónév módosítása",
@@ -166,32 +141,12 @@
         "unhide": "Láthatóvá tevés",
         "no_data": "Nincsenek rejtett pontok."
     },
-    "menu": {
-        "main_page": "Főoldal",
-        "add_user": "Felhasználó hozzáadása",
-        "manage_user": "Felhasználók kezelése",
-        "logs": "Napló",
-        "logout": "Kijelentkezés",
-        "hidden-locations": "Rejtett pontok"
-    },
     "logs": {
         "update-time": "Frissítés ideje",
         "update-count": "Frissítettek száma",
         "delete-count": "Töröltek száma",
         "total-count": "Összesen",
         "update-num": "Frissítések száma"
-    },
-    "location_types": {
-        "Anchor": "Folyómentő horgonyhely",
-        "Center": "Folyómentő központ",
-        "Restaurant": "Folyómentő étterem/büfé",
-        "Adopted_Bank": "Örökbefogadott partszakasz",
-        "School": "Folyómentő iskola",
-        "Floating_Port": "Folyómentő lebegő kikötő",
-        "Vehicle": "Folyómentő jármű",
-        "Past_PET_Cup_event": "PET Kupa verseny",
-        "Plastic_Pirates_observation_point": "Plastic Pirates mérési pont",
-        "add_location": "Lokáció hozzáadása"
     },
     "about": {
         "title": "A térképről",
