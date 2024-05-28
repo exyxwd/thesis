@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.*;
 import java.util.*;
 import lombok.Getter;
-import java.nio.file.Files;
 
 import hu.exyxwd.tisztatisza.model.Waste;
 import hu.exyxwd.tisztatisza.repository.WasteRepository;
@@ -42,8 +41,8 @@ public class RiverService {
     public void loadRivers() {
         try {
             // Load geojson file with river data
-            File file = new ClassPathResource("osm_rivers.geojson").getFile();
-            String content = new String(Files.readAllBytes(file.toPath()));
+            InputStream in = new ClassPathResource("osm_rivers.geojson").getInputStream();
+            String content = new String(in.readAllBytes());
             ObjectNode node = mapper.readValue(content, ObjectNode.class);
 
             // Define the source and target coordinate reference systems

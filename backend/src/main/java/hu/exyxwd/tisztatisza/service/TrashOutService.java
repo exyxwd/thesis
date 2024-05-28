@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.json.simple.parser.*;
 import org.json.simple.JSONObject;
 import org.springframework.http.*;
 import org.springframework.web.client.*;
 import org.springframework.stereotype.Service;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +47,12 @@ public class TrashOutService {
         this.updateLogRepository = updateLogRepository;
 
         this.restTemplate = new RestTemplate();
-        JSONParser parser = new JSONParser();
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            this.config = (JSONObject) parser.parse(new FileReader("src/main/resources/config.json"));
-        } catch (IOException | ParseException e) {
+            InputStream in = new ClassPathResource("config.json").getInputStream();
+            String content = new String(in.readAllBytes());
+            this.config = mapper.readValue(content, JSONObject.class);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
