@@ -61,20 +61,24 @@ public class WasteControllerTest {
         assertTrue(response.getBody() instanceof List<?>, "Getting wastes by given IDs response body should be a list");
 
         List<?> list = (List<?>) response.getBody();
-        for (Object o : list) {
-            assertTrue(o instanceof DetailedWasteDTO,
-                    "In getting wastes by given IDs each element in the list should be a DetailedWasteDTO");
+        if (list != null) {
+            for (Object o : list) {
+                assertTrue(o instanceof DetailedWasteDTO,
+                        "In getting wastes by given IDs each element in the list should be a DetailedWasteDTO");
+            }
+
+            List<DetailedWasteDTO> detailedWastes = list.stream()
+                    .map(o -> (DetailedWasteDTO) o)
+                    .collect(Collectors.toList());
+
+            assertNotNull(response, "Getting wastes by given IDs response should not be null");
+            assertNotNull(detailedWastes, "Getting wastes by given IDs body should not be null");
+            assertEquals(1, detailedWastes.size(),
+                    "Getting wastes by given IDs response does not contain the expected number of elements");
+            assertEquals(dto, detailedWastes.get(0), "Getting wastes by given IDs response body is incorrect");
+        } else {
+            fail("Getting wastes by given IDs response body is null");
         }
-
-        List<DetailedWasteDTO> detailedWastes = list.stream()
-                .map(o -> (DetailedWasteDTO) o)
-                .collect(Collectors.toList());
-
-        assertNotNull(response, "Getting wastes by given IDs response should not be null");
-        assertNotNull(detailedWastes, "Getting wastes by given IDs body should not be null");
-        assertEquals(1, detailedWastes.size(),
-                "Getting wastes by given IDs response does not contain the expected number of elements");
-        assertEquals(dto, detailedWastes.get(0), "Getting wastes by given IDs response body is incorrect");
     }
 
     @Test
