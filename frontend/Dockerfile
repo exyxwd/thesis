@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY bun.lockb ./
 RUN apt-get update && apt-get install -y unzip
-RUN bun install --production
+RUN bun install
 COPY . .
 RUN bun run build
 

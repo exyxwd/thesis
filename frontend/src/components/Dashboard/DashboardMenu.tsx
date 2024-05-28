@@ -9,7 +9,6 @@ import { fetchUserinfo, postLogout } from 'API/queryUtils';
 import { NotificationType, UserDataType } from 'models/models';
 import { useShowNotification } from 'components/Main/NotificationContext';
 
-// TODO: User name and icon formatting
 /**
  * Menu for the dashboard
  *
