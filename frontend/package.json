@@ -1,6 +1,6 @@
 {
   "name": "tisztatiszafrontend",
-  "homepage": "https://exyxwd.github.io/thesis/frontend",
+  "homepage": ".",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -22,7 +22,6 @@
     "@types/leaflet.markercluster": "^1.5.4",
     "@types/mocha": "^10.0.6",
     "bootstrap": "^5.3.3",
-    "cypress": "^13.9.0",
     "eslint-plugin-cypress": "^3.2.0",
     "flag-icons": "^7.2.0",
     "i18next-browser-languagedetector": "^8.0.0",
@@ -47,11 +46,12 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "cypress": "^13.10.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "react-query": "^3.39.3",
-    "sass": "^1.77.1",
+    "sass": "^1.77.2",
     "typescript": "^5.2.2"
   }
 }

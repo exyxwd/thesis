@@ -25,7 +25,7 @@ export default defineConfig({
         // }
     },
     plugins: [react(), tsconfigPaths()],
-    base: "./frontend",
+    base: "./",
     build: {
         outDir: 'dist',
       },
